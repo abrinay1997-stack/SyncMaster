@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncMaster - Soporte Técnico LiveSync Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-headset"></i>
+                <h1>SyncMaster</h1>
+            </div>
+            <nav class="nav">
+                <a href="#inicio" class="nav-link active" data-section="inicio">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a href="#chat" class="nav-link" data-section="chat">
+                    <i class="fas fa-comments"></i> Chat en Vivo
+                </a>
+                <a href="#tickets" class="nav-link" data-section="tickets">
+                    <i class="fas fa-ticket-alt"></i> Tickets
+                </a>
+                <a href="#conocimiento" class="nav-link" data-section="conocimiento">
+                    <i class="fas fa-book"></i> Base de Conocimientos
+                </a>
+                <a href="#faq" class="nav-link" data-section="faq">
+                    <i class="fas fa-question-circle"></i> FAQ
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Inicio Section -->
+        <section id="inicio" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <h2>Bienvenido a SyncMaster</h2>
+                    <p class="subtitle">Centro de Soporte Técnico y Atención al Cliente para LiveSync Pro</p>
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <h3>24/7</h3>
+                            <p>Soporte Disponible</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3>+1000</h3>
+                            <p>Clientes Satisfechos</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-bolt"></i>
+                            <h3>&lt;15min</h3>
+                            <p>Tiempo de Respuesta</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>¿Cómo podemos ayudarte hoy?</h3>
+                    <div class="action-grid">
+                        <button class="action-card" data-action="chat">
+                            <i class="fas fa-comments"></i>
+                            <h4>Chat en Vivo</h4>
+                            <p>Habla con un agente ahora</p>
+                        </button>
+                        <button class="action-card" data-action="ticket">
+                            <i class="fas fa-ticket-alt"></i>
+                            <h4>Crear Ticket</h4>
+                            <p>Reporta un problema</p>
+                        </button>
+                        <button class="action-card" data-action="conocimiento">
+                            <i class="fas fa-book"></i>
+                            <h4>Documentación</h4>
+                            <p>Explora guías y tutoriales</p>
+                        </button>
+                        <button class="action-card" data-action="faq">
+                            <i class="fas fa-question-circle"></i>
+                            <h4>Preguntas Frecuentes</h4>
+                            <p>Encuentra respuestas rápidas</p>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recent-updates">
+                    <h3>Actualizaciones Recientes</h3>
+                    <div class="update-list">
+                        <div class="update-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Sistema Operativo</h4>
+                                <p>Todos los servicios funcionando correctamente</p>
+                                <span class="update-time">Actualizado hace 5 minutos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat" class="section">
+            <div class="container">
+                <div class="chat-container">
+                    <div class="chat-sidebar">
+                        <h3>Soporte en Línea</h3>
+                        <div class="agent-status">
+                            <div class="status-indicator online"></div>
+                            <span>Agentes disponibles</span>
+                        </div>
+                        <div class="chat-info">
+                            <p><i class="fas fa-info-circle"></i> Nuestro equipo está listo para ayudarte</p>
+                        </div>
+                    </div>
+                    <div class="chat-main">
+                        <div class="chat-header">
+                            <h3>Chat de Soporte - LiveSync Pro</h3>
+                            <span class="chat-status">En línea</span>
+                        </div>
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message bot">
+                                <div class="message-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <p>¡Hola! Soy el asistente de SyncMaster. ¿En qué puedo ayudarte hoy con LiveSync Pro?</p>
+                                    <span class="message-time">Ahora</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chatInput" placeholder="Escribe tu mensaje aquí..." />
+                            <button id="sendMessage" class="btn-send">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="quick-replies">
+                            <button class="quick-reply" data-message="¿Cómo instalo LiveSync Pro?">Instalación</button>
+                            <button class="quick-reply" data-message="¿Cómo configuro la sincronización?">Configuración</button>
+                            <button class="quick-reply" data-message="Tengo un problema de conexión">Problemas de conexión</button>
+                            <button class="quick-reply" data-message="¿Cómo actualizo la aplicación?">Actualizaciones</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tickets Section -->
+        <section id="tickets" class="section">
+            <div class="container">
+                <h2>Sistema de Tickets</h2>
+                <div class="tickets-layout">
+                    <div class="ticket-form-container">
+                        <h3>Crear Nuevo Ticket</h3>
+                        <form id="ticketForm" class="ticket-form">
+                            <div class="form-group">
+                                <label for="ticketName">Nombre Completo</label>
+                                <input type="text" id="ticketName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketEmail">Email</label>
+                                <input type="email" id="ticketEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketCategory">Categoría</label>
+                                <select id="ticketCategory" required>
+                                    <option value="">Seleccionar categoría</option>
+                                    <option value="tecnico">Problema Técnico</option>
+                                    <option value="instalacion">Instalación</option>
+                                    <option value="configuracion">Configuración</option>
+                                    <option value="sincronizacion">Sincronización</option>
+                                    <option value="rendimiento">Rendimiento</option>
+                                    <option value="facturacion">Facturación</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketPriority">Prioridad</label>
+                                <select id="ticketPriority" required>
+                                    <option value="baja">Baja</option>
+                                    <option value="media" selected>Media</option>
+                                    <option value="alta">Alta</option>
+                                    <option value="critica">Crítica</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketSubject">Asunto</label>
+                                <input type="text" id="ticketSubject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketDescription">Descripción del Problema</label>
+                                <textarea id="ticketDescription" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i> Enviar Ticket
+                            </button>
+                        </form>
+                    </div>
+                    <div class="tickets-list-container">
+                        <h3>Mis Tickets</h3>
+                        <div class="tickets-list" id="ticketsList">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>No tienes tickets activos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Base de Conocimientos Section -->
+        <section id="conocimiento" class="section">
+            <div class="container">
+                <h2>Base de Conocimientos</h2>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="knowledgeSearch" placeholder="Buscar en la documentación...">
+                </div>
+                <div class="knowledge-grid">
+                    <div class="knowledge-category">
+                        <div class="category-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>Primeros Pasos</h3>
+                        <ul class="knowledge-list">
+                            <li><a href="#" data-article="instalacion">Instalación de LiveSync Pro</a></li>
+                            <li><a href="#" data-article="configuracion-inicial">Configuración Inicial</a></li>
+                            <li><a href="#" data-article="primer-proyecto">Crear tu Primer Proyecto</a></li>
+                            <li><a href="#" data-article="sincronizacion-basica">Sincronización Básica</a></li>
+                        </ul>
+                    </div>
+                    <div class="knowledge-category">
+                        <div class="category-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3>Configuración</h3>
+                        <ul class="knowledge-list">
+                            <li><a href="#" data-article="configuracion-avanzada">Configuración Avanzada</a></li>
+                            <li><a href="#" data-article="sincronizacion-automatica">Sincronización Automática</a></li>
+                            <li><a href="#" data-article="gestion-conflictos">Gestión de Conflictos</a></li>
+                            <li><a href="#" data-article="backup">Backup y Restauración</a></li>
+                        </ul>
+                    </div>
+                    <div class="knowledge-category">
+                        <div class="category-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Solución de Problemas</h3>
+                        <ul class="knowledge-list">
+                            <li><a href="#" data-article="problemas-conexion">Problemas de Conexión</a></li>
+                            <li><a href="#" data-article="errores-sincronizacion">Errores de Sincronización</a></li>
+                            <li><a href="#" data-article="rendimiento">Optimización de Rendimiento</a></li>
+                            <li><a href="#" data-article="logs">Interpretación de Logs</a></li>
+                        </ul>
+                    </div>
+                    <div class="knowledge-category">
+                        <div class="category-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Seguridad</h3>
+                        <ul class="knowledge-list">
+                            <li><a href="#" data-article="encriptacion">Encriptación de Datos</a></li>
+                            <li><a href="#" data-article="autenticacion">Autenticación y Permisos</a></li>
+                            <li><a href="#" data-article="mejores-practicas">Mejores Prácticas de Seguridad</a></li>
+                            <li><a href="#" data-article="auditoria">Auditoría y Logs de Seguridad</a></li>
+                        </ul>
+                    </div>
+                    <div class="knowledge-category">
+                        <div class="category-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>API y Desarrollo</h3>
+                        <ul class="knowledge-list">
+                            <li><a href="#" data-article="api-docs">Documentación de API</a></li>
+                            <li><a href="#" data-article="webhooks">Webhooks</a></li>
+                            <li><a href="#" data-article="integraciones">Integraciones</a></li>
+                            <li><a href="#" data-article="plugins">Desarrollo de Plugins</a></li>
+                        </ul>
+                    </div>
+                    <div class="knowledge-category">
+                        <div class="category-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Aplicaciones Móviles</h3>
+                        <ul class="knowledge-list">
+                            <li><a href="#" data-article="app-ios">App iOS</a></li>
+                            <li><a href="#" data-article="app-android">App Android</a></li>
+                            <li><a href="#" data-article="sincronizacion-movil">Sincronización Móvil</a></li>
+                            <li><a href="#" data-article="offline-mode">Modo Offline</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="section">
+            <div class="container">
+                <h2>Preguntas Frecuentes</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿Qué es LiveSync Pro?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>LiveSync Pro es una solución avanzada de sincronización en tiempo real que permite mantener tus archivos y datos actualizados entre múltiples dispositivos y plataformas. Ofrece sincronización automática, gestión de conflictos, encriptación de extremo a extremo y soporte para equipos de trabajo colaborativo.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿Cómo instalo LiveSync Pro?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>La instalación es simple:</p>
+                            <ol>
+                                <li>Descarga el instalador desde nuestro sitio oficial</li>
+                                <li>Ejecuta el instalador y sigue las instrucciones en pantalla</li>
+                                <li>Inicia sesión con tu cuenta o crea una nueva</li>
+                                <li>Selecciona las carpetas que deseas sincronizar</li>
+                                <li>¡Listo! La sincronización comenzará automáticamente</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿Mis datos están seguros?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Absolutamente. LiveSync Pro utiliza encriptación AES-256 de extremo a extremo para proteger tus datos. Esto significa que tus archivos están encriptados en tu dispositivo antes de ser enviados y solo tú tienes las claves de desencriptación. Además, cumplimos con los estándares GDPR y certificaciones ISO 27001.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿Qué hago si hay un conflicto de sincronización?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>LiveSync Pro detecta automáticamente los conflictos y te ofrece varias opciones:</p>
+                            <ul>
+                                <li>Mantener ambas versiones (se crean copias con timestamps)</li>
+                                <li>Elegir la versión más reciente</li>
+                                <li>Elegir manualmente qué versión conservar</li>
+                                <li>Fusionar cambios (para archivos de texto)</li>
+                            </ul>
+                            <p>Puedes configurar reglas automáticas para resolver conflictos según tus preferencias.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿Cuántos dispositivos puedo sincronizar?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Depende de tu plan:</p>
+                            <ul>
+                                <li><strong>Plan Básico:</strong> Hasta 3 dispositivos</li>
+                                <li><strong>Plan Pro:</strong> Hasta 10 dispositivos</li>
+                                <li><strong>Plan Enterprise:</strong> Dispositivos ilimitados</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿LiveSync Pro funciona offline?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Sí, puedes trabajar offline sin problemas. Todos los cambios se guardarán localmente y se sincronizarán automáticamente cuando vuelvas a tener conexión a internet. El sistema gestiona inteligentemente los cambios offline y resuelve conflictos cuando sea necesario.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿Cómo contacto con soporte técnico?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Tenemos múltiples canales de soporte:</p>
+                            <ul>
+                                <li><strong>Chat en vivo:</strong> Disponible 24/7 en esta plataforma</li>
+                                <li><strong>Tickets:</strong> Crea un ticket para problemas no urgentes</li>
+                                <li><strong>Email:</strong> support@livesyncpro.com</li>
+                                <li><strong>Teléfono:</strong> +1-800-LIVESYNC (plan Pro y Enterprise)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>¿Puedo recuperar archivos eliminados?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Sí, LiveSync Pro mantiene un historial de versiones de todos tus archivos. Puedes recuperar archivos eliminados o versiones anteriores desde:</p>
+                            <ul>
+                                <li>La papelera de LiveSync (30 días de retención)</li>
+                                <li>El historial de versiones (hasta 90 días según tu plan)</li>
+                                <li>Backups automáticos (si está habilitado)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="articleTitle"></h2>
+                <button class="modal-close" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="articleContent">
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 SyncMaster - Soporte para LiveSync Pro. Todos los derechos reservados.</p>
+            <div class="footer-links">
+                <a href="#">Términos de Servicio</a>
+                <a href="#">Política de Privacidad</a>
+                <a href="#">Contacto</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="knowledge-base.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
