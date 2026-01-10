@@ -193,7 +193,7 @@ function initChat() {
 
         // Respuestas sobre soporte
         if (message.includes('soporte') || message.includes('ayuda') || message.includes('contacto')) {
-            return 'Canales de soporte para LiveSync Pro:\n\n💬 Chat: Aquí mismo (24/7 automático)\n🎫 Tickets: Sección Tickets de esta plataforma\n📧 Email: support@livesyncpro.com\n🐛 Bugs: GitHub Issues\n📚 Docs: Base de Conocimientos aquí\n\nTiempo de respuesta: <15 minutos (promedio)\n\n¿Prefieres crear un ticket o seguir por chat?';
+            return 'Canales de soporte para LiveSync Pro:\n\n💬 Chat: Aquí mismo (24/7 automático)\n🎫 Tickets: Sección Tickets de esta plataforma\n📧 Email: abrinay@livesyncpro.com\n🐛 Bugs: GitHub Issues\n📚 Docs: Base de Conocimientos aquí\n\nTiempo de respuesta: <15 minutos (promedio)\n\n¿Prefieres crear un ticket o seguir por chat?';
         }
 
         // Respuesta por defecto

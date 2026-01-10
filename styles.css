@@ -1,18 +1,22 @@
 /* Reset y Variables */
 :root {
-    --primary-color: #2563eb;
-    --primary-dark: #1e40af;
-    --primary-light: #3b82f6;
-    --secondary-color: #10b981;
-    --danger-color: #ef4444;
-    --warning-color: #f59e0b;
-    --dark: #1f2937;
-    --dark-light: #374151;
-    --gray: #6b7280;
-    --light-gray: #f3f4f6;
+    --primary-color: #06b6d4;      /* cyan-500 */
+    --primary-dark: #0891b2;       /* cyan-600 */
+    --primary-light: #22d3ee;      /* cyan-400 */
+    --secondary-color: #10b981;    /* emerald-500 */
+    --secondary-light: #34d399;    /* emerald-400 */
+    --danger-color: #ef4444;       /* red-500 */
+    --warning-color: #f59e0b;      /* amber-500 */
+    --dark: #020617;               /* slate-950 */
+    --dark-light: #0f172a;         /* slate-900 */
+    --dark-card: #1e293b;          /* slate-800 */
+    --gray: #64748b;               /* slate-500 */
+    --gray-light: #94a3b8;         /* slate-400 */
+    --gray-dark: #475569;          /* slate-600 */
+    --light-gray: #1e293b;         /* slate-800 for dark theme */
     --white: #ffffff;
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
     --border-radius: 8px;
     --transition: all 0.3s ease;
 }
@@ -26,8 +30,8 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
-    color: var(--dark);
-    background-color: var(--light-gray);
+    color: var(--white);
+    background-color: var(--dark);
 }
 
 .container {
@@ -118,7 +122,7 @@ body {
 .hero {
     text-align: center;
     padding: 3rem 0;
-    background: var(--white);
+    background: var(--dark-card);
     border-radius: var(--border-radius);
     margin-bottom: 2rem;
     box-shadow: var(--shadow);
@@ -127,12 +131,12 @@ body {
 .hero h2 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: var(--primary-color);
+    color: var(--primary-light);
 }
 
 .subtitle {
     font-size: 1.2rem;
-    color: var(--gray);
+    color: var(--gray-light);
     margin-bottom: 2rem;
 }
 
@@ -150,23 +154,23 @@ body {
 
 .stat-card i {
     font-size: 2.5rem;
-    color: var(--primary-color);
+    color: var(--primary-light);
     margin-bottom: 0.5rem;
 }
 
 .stat-card h3 {
     font-size: 2rem;
-    color: var(--dark);
+    color: var(--white);
     margin-bottom: 0.5rem;
 }
 
 .stat-card p {
-    color: var(--gray);
+    color: var(--gray-light);
 }
 
 /* Quick Actions */
 .quick-actions {
-    background: var(--white);
+    background: var(--dark-card);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -176,7 +180,7 @@ body {
 .quick-actions h3 {
     text-align: center;
     margin-bottom: 2rem;
-    color: var(--dark);
+    color: var(--white);
     font-size: 1.8rem;
 }
 
@@ -187,7 +191,7 @@ body {
 }
 
 .action-card {
-    background: var(--light-gray);
+    background: var(--dark-light);
     padding: 2rem;
     border-radius: var(--border-radius);
     border: 2px solid transparent;
@@ -197,31 +201,31 @@ body {
 }
 
 .action-card:hover {
-    border-color: var(--primary-color);
+    border-color: var(--primary-light);
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
 }
 
 .action-card i {
     font-size: 3rem;
-    color: var(--primary-color);
+    color: var(--primary-light);
     margin-bottom: 1rem;
 }
 
 .action-card h4 {
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .action-card p {
-    color: var(--gray);
+    color: var(--gray-light);
     font-size: 0.9rem;
 }
 
 /* Recent Updates */
 .recent-updates {
-    background: var(--white);
+    background: var(--dark-card);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -229,7 +233,7 @@ body {
 
 .recent-updates h3 {
     margin-bottom: 1.5rem;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .update-list {
@@ -242,31 +246,31 @@ body {
     display: flex;
     gap: 1rem;
     padding: 1rem;
-    background: var(--light-gray);
+    background: var(--dark-light);
     border-radius: var(--border-radius);
     align-items: flex-start;
 }
 
 .update-item i {
     font-size: 1.5rem;
-    color: var(--secondary-color);
+    color: var(--secondary-light);
     margin-top: 0.25rem;
 }
 
 .update-item h4 {
     margin-bottom: 0.25rem;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .update-item p {
-    color: var(--gray);
+    color: var(--gray-light);
     font-size: 0.9rem;
 }
 
 .update-time {
     display: block;
     font-size: 0.8rem;
-    color: var(--gray);
+    color: var(--gray-light);
     margin-top: 0.5rem;
 }
 
@@ -279,7 +283,7 @@ body {
 }
 
 .chat-sidebar {
-    background: var(--white);
+    background: var(--dark-card);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -287,7 +291,7 @@ body {
 
 .chat-sidebar h3 {
     margin-bottom: 1rem;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .agent-status {
@@ -295,7 +299,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 1rem;
-    background: var(--light-gray);
+    background: var(--dark-light);
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
 }
@@ -304,7 +308,7 @@ body {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: var(--secondary-color);
+    background: var(--secondary-light);
     animation: pulse 2s infinite;
 }
 
@@ -319,14 +323,14 @@ body {
 
 .chat-info {
     padding: 1rem;
-    background: #dbeafe;
+    background: var(--dark-light);
     border-radius: var(--border-radius);
-    color: var(--primary-dark);
+    color: var(--primary-light);
     font-size: 0.9rem;
 }
 
 .chat-main {
-    background: var(--white);
+    background: var(--dark-card);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     display: flex;
@@ -343,7 +347,7 @@ body {
 }
 
 .chat-status {
-    color: var(--secondary-color);
+    color: var(--secondary-light);
     font-size: 0.9rem;
 }
 
@@ -390,24 +394,24 @@ body {
 }
 
 .message.bot .message-avatar {
-    background: var(--primary-color);
-    color: var(--white);
+    background: var(--primary-light);
+    color: var(--dark);
 }
 
 .message.user .message-avatar {
-    background: var(--secondary-color);
-    color: var(--white);
+    background: var(--secondary-light);
+    color: var(--dark);
 }
 
 .message-content {
-    background: var(--light-gray);
+    background: var(--dark-light);
     padding: 1rem;
     border-radius: var(--border-radius);
 }
 
 .message.user .message-content {
-    background: var(--primary-color);
-    color: var(--white);
+    background: var(--primary-light);
+    color: var(--dark);
 }
 
 .message-content p {
@@ -416,11 +420,11 @@ body {
 
 .message-time {
     font-size: 0.75rem;
-    color: var(--gray);
+    color: var(--gray-light);
 }
 
 .message.user .message-time {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.6);
 }
 
 .chat-input-container {
@@ -433,7 +437,9 @@ body {
 .chat-input-container input {
     flex: 1;
     padding: 0.75rem;
-    border: 2px solid var(--light-gray);
+    border: 2px solid var(--dark-light);
+    background: var(--dark-light);
+    color: var(--white);
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: var(--transition);
@@ -441,21 +447,22 @@ body {
 
 .chat-input-container input:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary-light);
 }
 
 .btn-send {
     padding: 0.75rem 1.5rem;
-    background: var(--primary-color);
-    color: var(--white);
+    background: var(--primary-light);
+    color: var(--dark);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
+    font-weight: 600;
 }
 
 .btn-send:hover {
-    background: var(--primary-dark);
+    background: var(--primary-color);
 }
 
 .quick-replies {
@@ -467,8 +474,9 @@ body {
 
 .quick-reply {
     padding: 0.5rem 1rem;
-    background: var(--light-gray);
-    border: 1px solid var(--gray);
+    background: var(--dark-light);
+    color: var(--white);
+    border: 1px solid var(--gray-dark);
     border-radius: 20px;
     font-size: 0.85rem;
     cursor: pointer;
@@ -476,9 +484,9 @@ body {
 }
 
 .quick-reply:hover {
-    background: var(--primary-color);
-    color: var(--white);
-    border-color: var(--primary-color);
+    background: var(--primary-light);
+    color: var(--dark);
+    border-color: var(--primary-light);
 }
 
 /* Tickets Section */
@@ -490,7 +498,7 @@ body {
 
 .ticket-form-container,
 .tickets-list-container {
-    background: var(--white);
+    background: var(--dark-card);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -499,7 +507,7 @@ body {
 .ticket-form-container h3,
 .tickets-list-container h3 {
     margin-bottom: 1.5rem;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .form-group {
@@ -509,7 +517,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--dark);
+    color: var(--white);
     font-weight: 500;
 }
 
@@ -518,7 +526,9 @@ body {
 .form-group textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid var(--light-gray);
+    border: 2px solid var(--dark-light);
+    background: var(--dark-light);
+    color: var(--white);
     border-radius: var(--border-radius);
     font-size: 1rem;
     font-family: inherit;
@@ -529,14 +539,14 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary-light);
 }
 
 .btn-primary {
     width: 100%;
     padding: 1rem;
-    background: var(--primary-color);
-    color: var(--white);
+    background: var(--primary-light);
+    color: var(--dark);
     border: none;
     border-radius: var(--border-radius);
     font-size: 1rem;
@@ -550,7 +560,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
+    background: var(--primary-color);
 }
 
 .tickets-list {
@@ -561,13 +571,14 @@ body {
 
 .ticket-item {
     padding: 1rem;
-    border: 2px solid var(--light-gray);
+    border: 2px solid var(--dark-light);
+    background: var(--dark-light);
     border-radius: var(--border-radius);
     transition: var(--transition);
 }
 
 .ticket-item:hover {
-    border-color: var(--primary-color);
+    border-color: var(--primary-light);
 }
 
 .ticket-header {
@@ -579,7 +590,7 @@ body {
 
 .ticket-id {
     font-size: 0.85rem;
-    color: var(--gray);
+    color: var(--gray-light);
     font-weight: 600;
 }
 
@@ -612,19 +623,19 @@ body {
 
 .ticket-subject {
     font-weight: 600;
-    color: var(--dark);
+    color: var(--white);
     margin-bottom: 0.5rem;
 }
 
 .ticket-category {
     font-size: 0.85rem;
-    color: var(--gray);
+    color: var(--gray-light);
 }
 
 .empty-state {
     text-align: center;
     padding: 3rem;
-    color: var(--gray);
+    color: var(--gray-light);
 }
 
 .empty-state i {
@@ -635,7 +646,7 @@ body {
 
 /* Knowledge Base */
 .search-box {
-    background: var(--white);
+    background: var(--dark-card);
     padding: 1rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -646,13 +657,15 @@ body {
 }
 
 .search-box i {
-    color: var(--gray);
+    color: var(--gray-light);
     font-size: 1.2rem;
 }
 
 .search-box input {
     flex: 1;
     border: none;
+    background: transparent;
+    color: var(--white);
     font-size: 1rem;
     outline: none;
 }
@@ -664,7 +677,7 @@ body {
 }
 
 .knowledge-category {
-    background: var(--white);
+    background: var(--dark-card);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -679,8 +692,8 @@ body {
 .category-icon {
     width: 60px;
     height: 60px;
-    background: var(--primary-color);
-    color: var(--white);
+    background: var(--primary-light);
+    color: var(--dark);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -691,7 +704,7 @@ body {
 
 .knowledge-category h3 {
     margin-bottom: 1rem;
-    color: var(--dark);
+    color: var(--white);
 }
 
 .knowledge-list {
@@ -703,7 +716,7 @@ body {
 }
 
 .knowledge-list a {
-    color: var(--primary-color);
+    color: var(--primary-light);
     text-decoration: none;
     transition: var(--transition);
     display: flex;
@@ -712,7 +725,7 @@ body {
 }
 
 .knowledge-list a:hover {
-    color: var(--primary-dark);
+    color: var(--primary-color);
     padding-left: 0.5rem;
 }
 
@@ -723,7 +736,7 @@ body {
 
 /* FAQ */
 .faq-container {
-    background: var(--white);
+    background: var(--dark-card);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     overflow: hidden;
@@ -747,16 +760,16 @@ body {
 }
 
 .faq-question:hover {
-    background: var(--light-gray);
+    background: var(--dark-light);
 }
 
 .faq-question h3 {
-    color: var(--dark);
+    color: var(--white);
     font-size: 1.1rem;
 }
 
 .faq-question i {
-    color: var(--primary-color);
+    color: var(--primary-light);
     transition: var(--transition);
 }
 
@@ -778,7 +791,7 @@ body {
 .faq-answer ul,
 .faq-answer ol {
     padding: 0 1.5rem 1.5rem;
-    color: var(--gray);
+    color: var(--gray-light);
 }
 
 .faq-answer ul,
@@ -810,7 +823,7 @@ body {
 }
 
 .modal-content {
-    background: var(--white);
+    background: var(--dark-card);
     border-radius: var(--border-radius);
     max-width: 800px;
     width: 90%;
@@ -833,7 +846,7 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--gray);
+    color: var(--gray-light);
     transition: var(--transition);
 }
 
@@ -848,7 +861,7 @@ body {
 
 /* Footer */
 .footer {
-    background: var(--dark);
+    background: var(--dark-light);
     color: var(--white);
     padding: 2rem 0;
     margin-top: 3rem;
