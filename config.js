@@ -5,7 +5,7 @@ const CONFIG = {
         name: 'SyncMaster',
         version: '1.0.0',
         description: 'Centro de Soporte Técnico para LiveSync Pro - Sistema de Diseño Acústico',
-        supportEmail: 'support@livesyncpro.com',
+        supportEmail: 'abrinay@livesyncpro.com',
         supportPhone: '+1-800-ACOUSTIC',
         website: 'https://abrinay1997-stack.github.io/SyncMaster',
         githubRepo: 'https://github.com/abrinay1997-stack/SyncMaster'

@@ -388,7 +388,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 Si necesitas ayuda con SyncMaster:
 
-- 📧 Email: support@livesyncpro.com
+- 📧 Email: abrinay@livesyncpro.com
 - 💬 Chat: Disponible en la aplicación
 - 🐛 Issues: [GitHub Issues](https://github.com/abrinay1997-stack/SyncMaster/issues)
 - 📖 Documentación: [Docs](https://docs.livesyncpro.com)
