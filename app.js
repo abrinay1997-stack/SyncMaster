@@ -205,7 +205,23 @@ function initChat() {
 function initTicketSystem() {
     const ticketForm = document.getElementById('ticketForm');
     const ticketsList = document.getElementById('ticketsList');
-    let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+
+    // Cargar tickets con manejo de errores
+    let tickets = [];
+    try {
+        const storedTickets = localStorage.getItem('tickets');
+        tickets = storedTickets ? JSON.parse(storedTickets) : [];
+    } catch (e) {
+        console.error('Error cargando tickets desde localStorage:', e);
+        showNotification('No se pudieron cargar tickets anteriores. Puede que el almacenamiento esté corrupto.', 'error');
+        tickets = [];
+        // Limpiar localStorage corrupto
+        try {
+            localStorage.removeItem('tickets');
+        } catch (removeError) {
+            console.error('No se pudo limpiar localStorage:', removeError);
+        }
+    }
 
     // Mostrar tickets existentes
     displayTickets();
@@ -226,10 +242,33 @@ function initTicketSystem() {
         };
 
         tickets.push(ticket);
-        localStorage.setItem('tickets', JSON.stringify(tickets));
 
-        // Mostrar mensaje de éxito
-        alert('✅ Ticket creado exitosamente!\n\nID: ' + ticket.id + '\n\nRecibirás una respuesta en tu email dentro de las próximas 2 horas.');
+        try {
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+        } catch (e) {
+            showNotification('Error al guardar el ticket. Tu navegador puede tener el almacenamiento lleno.', 'error');
+            console.error('Error guardando ticket:', e);
+            return;
+        }
+
+        // Crear contenido del email
+        const emailBody = `
+Ticket ID: ${ticket.id}
+Nombre: ${ticket.name}
+Email: ${ticket.email}
+Categoría: ${getCategoryName(ticket.category)}
+Prioridad: ${ticket.priority.toUpperCase()}
+Asunto: ${ticket.subject}
+
+Descripción:
+${ticket.description}
+
+---
+Enviado: ${ticket.date}
+        `.trim();
+
+        // Mostrar confirmación con opciones
+        showTicketConfirmation(ticket.id, ticket.email, emailBody);
 
         // Limpiar formulario
         ticketForm.reset();
@@ -357,9 +396,40 @@ function initKnowledgeBase() {
 
         if (article) {
             articleTitle.textContent = article.title;
-            articleContent.innerHTML = article.content;
+            // Sanitizar contenido antes de insertar
+            articleContent.innerHTML = sanitizeHTML(article.content);
             modal.classList.add('active');
         }
+    }
+
+    // Función de sanitización básica de HTML
+    function sanitizeHTML(html) {
+        // Crear un elemento temporal
+        const temp = document.createElement('div');
+        temp.textContent = html;
+
+        // Convertir back a string y luego parsear solo tags seguros
+        const text = temp.innerHTML;
+
+        // Permitir solo tags específicos seguros
+        const allowedTags = ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'code', 'pre', 'blockquote', 'hr', 'a'];
+        const tagRegex = /<(\/?)([\w]+)([^>]*)>/gi;
+
+        // Si el contenido ya tiene tags HTML válidos desde knowledge-base.js
+        // (que es controlado por nosotros), proceder con cuidado
+        if (html.includes('<')) {
+            // Remover atributos peligrosos
+            let safe = html.replace(/on\w+\s*=\s*["'][^"']*["']/gi, '') // Remover onclick, onerror, etc
+                          .replace(/javascript:/gi, '') // Remover javascript: URLs
+                          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remover <script>
+                          .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '') // Remover <iframe>
+                          .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '') // Remover <object>
+                          .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, ''); // Remover <embed>
+
+            return safe;
+        }
+
+        return text;
     }
 }
 
@@ -379,29 +449,105 @@ function initQuickActions() {
     });
 }
 
+// Sistema de confirmación de tickets
+function showTicketConfirmation(ticketId, email, emailBody) {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>✅ Ticket Guardado Localmente</h3>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1rem; color: var(--gray-light);">
+                    <strong>ID del Ticket:</strong> ${ticketId}
+                </p>
+                <div style="padding: 1rem; background: var(--dark-light); border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--warning-color);">
+                    <p style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Importante:</strong> Este ticket se ha guardado solo en tu navegador.
+                    </p>
+                    <p style="font-size: 0.9rem; color: var(--gray-light);">
+                        Para recibir soporte real, debes enviarlo al equipo por email.
+                    </p>
+                </div>
+                <p style="margin-bottom: 1rem; color: var(--gray-light);">
+                    Elige una opción para contactar al equipo de soporte:
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <button onclick="window.location.href='mailto:abrinay@livesyncpro.com?subject=Ticket ${ticketId}&body=${encodeURIComponent(emailBody)}'"
+                            style="padding: 0.75rem; background: var(--primary-light); color: var(--dark); border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <i class="fas fa-envelope"></i> Enviar por Email
+                    </button>
+                    <button onclick="navigator.clipboard.writeText(\`${emailBody.replace(/`/g, '\\`')}\`).then(() => { showNotification('Contenido copiado al portapapeles', 'success'); })"
+                            style="padding: 0.75rem; background: var(--dark-light); color: var(--white); border: 2px solid var(--primary-light); border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <i class="fas fa-copy"></i> Copiar Contenido
+                    </button>
+                    <button onclick="this.closest('.modal').remove()"
+                            style="padding: 0.75rem; background: transparent; color: var(--gray-light); border: none; cursor: pointer;">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Cerrar al hacer click fuera
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Cerrar con ESC
+    const escHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+
+    document.body.appendChild(modal);
+}
+
 // Utilidades
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
+
+    const colors = {
+        'success': '#10b981',
+        'error': '#ef4444',
+        'warning': '#f59e0b',
+        'info': '#06b6d4'
+    };
+
     notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
         padding: 1rem 2rem;
-        background: ${type === 'success' ? '#10b981' : '#ef4444'};
+        background: ${colors[type] || colors.success};
         color: white;
         border-radius: 8px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         z-index: 3000;
         animation: slideIn 0.3s ease;
+        max-width: 400px;
+        font-weight: 500;
     `;
 
     document.body.appendChild(notification);
 
     setTimeout(() => {
-        notification.remove();
-    }, 3000);
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
 }
 
 // Animaciones y efectos adicionales
