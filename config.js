@@ -1,127 +1,201 @@
-// Configuración de SyncMaster
+// Configuración de SyncMaster - Soporte para LiveSync Pro
 const CONFIG = {
-    // Información de la aplicación
+    // Información de la aplicación de soporte
     app: {
         name: 'SyncMaster',
         version: '1.0.0',
-        description: 'Centro de Soporte Técnico y Atención al Cliente para LiveSync Pro',
+        description: 'Centro de Soporte Técnico para LiveSync Pro - Sistema de Diseño Acústico',
         supportEmail: 'support@livesyncpro.com',
-        supportPhone: '+1-800-LIVESYNC',
-        website: 'https://livesyncpro.com',
-        statusPage: 'https://status.livesyncpro.com'
+        supportPhone: '+1-800-ACOUSTIC',
+        website: 'https://abrinay1997-stack.github.io/SyncMaster',
+        githubRepo: 'https://github.com/abrinay1997-stack/SyncMaster'
     },
 
-    // Configuración de LiveSync Pro (personalizable según el repositorio real)
+    // Configuración de LiveSync Pro (información real del repositorio)
     livesyncpro: {
         name: 'LiveSync Pro',
-        version: '3.5.2',
-        description: 'Solución avanzada de sincronización en tiempo real',
+        version: '1.0.0',
+        description: 'Sistema Profesional de Diseño y Simulación Acústica - System Alignment Engine',
+        fullDescription: 'LiveSync Pro es una aplicación avanzada para el diseño de sistemas de refuerzo sonoro. Permite calcular cobertura SPL, inteligibilidad (STI), tiempo de reverberación (RT60), y optimizar la posición de altavoces y torres de delay. Incluye visualización 3D, exportación a PDF/DXF, y asistente de IA.',
         repository: 'https://github.com/abrinay1997-stack/LiveSync-Pro',
+        aiStudioUrl: 'https://ai.studio/apps/drive/18KB4IU6KzA9Jr39Z4tEdMPe08n6WLqB3',
+
+        // Stack tecnológico real
+        stack: {
+            frontend: 'React 18.3.1 + TypeScript',
+            buildTool: 'Vite',
+            backend: 'Supabase',
+            ai: 'Google Gemini API',
+            graphics3D: 'Three.js 0.160.0',
+            charts: 'Recharts 2.12.7',
+            pdf: 'jsPDF 2.5.1 + autotable',
+            icons: 'Lucide React',
+            testing: 'Vitest + React Testing Library'
+        },
+
+        // Características principales
         features: [
-            'Sincronización en tiempo real',
-            'Encriptación de extremo a extremo',
-            'Gestión de conflictos inteligente',
-            'Historial de versiones',
-            'Soporte multiplataforma',
-            'API REST completa',
-            'Webhooks',
-            'Sincronización selectiva'
+            'Diseño de sistemas de refuerzo sonoro profesional',
+            'Cálculo de cobertura SPL (Sound Pressure Level)',
+            'Análisis de inteligibilidad (STI - Speech Transmission Index)',
+            'Cálculo de tiempo de reverberación (RT60)',
+            'Gestión de torres de delay y fill speakers',
+            'Presets para diferentes tipos de eventos (Corporativo, Concierto, Festival)',
+            'Visualización 3D interactiva con Three.js',
+            'Exportación a PDF con reportes detallados',
+            'Exportación a DXF para AutoCAD',
+            'Sincronización en la nube con Supabase',
+            'Colaboración en tiempo real',
+            'Asistente de IA con Google Gemini',
+            'Project Hub para gestión de múltiples proyectos',
+            'Autenticación multi-nivel (PIN, códigos de equipo, licencias)'
         ],
+
+        // Plataformas soportadas
         platforms: [
-            'Windows 10/11',
-            'macOS 10.15+',
-            'Linux (Ubuntu, Debian, Fedora)',
-            'iOS 14+',
-            'Android 8+',
-            'Web'
-        ]
+            'Web (acceso desde cualquier navegador moderno)',
+            'AI Studio (versión alojada)',
+            'Desarrollo local (Windows, macOS, Linux)'
+        ],
+
+        // Variables de entorno necesarias
+        envVars: {
+            'VITE_SUPABASE_URL': {
+                description: 'URL del proyecto Supabase',
+                required: true,
+                example: 'https://tu-proyecto.supabase.co'
+            },
+            'VITE_SUPABASE_ANON_KEY': {
+                description: 'Clave anónima de Supabase',
+                required: true,
+                example: 'tu_clave_anon_aqui'
+            },
+            'GEMINI_API_KEY': {
+                description: 'Clave de API de Google Gemini para asistente IA',
+                required: false,
+                example: 'tu_clave_gemini_aqui'
+            }
+        },
+
+        // Scripts disponibles
+        scripts: {
+            'npm run dev': 'Inicia servidor de desarrollo (localhost:5173)',
+            'npm run build': 'Compila TypeScript y genera build de producción',
+            'npm run preview': 'Vista previa del build',
+            'npm test': 'Ejecuta suite de pruebas con Vitest',
+            'npm run test:ui': 'Abre interfaz gráfica de pruebas',
+            'npm run test:coverage': 'Genera reporte de cobertura de código',
+            'npm run test:run': 'Ejecuta tests una sola vez (CI/CD)'
+        }
     },
 
     // Enlaces útiles
     links: {
-        documentation: 'https://docs.livesyncpro.com',
-        community: 'https://community.livesyncpro.com',
-        github: 'https://github.com/abrinay1997-stack/LiveSync-Pro',
-        changelog: 'https://livesyncpro.com/changelog',
-        downloads: 'https://livesyncpro.com/downloads',
-        pricing: 'https://livesyncpro.com/pricing'
+        documentation: 'https://abrinay1997-stack.github.io/SyncMaster/#conocimiento',
+        repository: 'https://github.com/abrinay1997-stack/LiveSync-Pro',
+        appRepository: 'https://ai.studio/apps/drive/18KB4IU6KzA9Jr39Z4tEdMPe08n6WLqB3',
+        support: 'https://abrinay1997-stack.github.io/SyncMaster',
+        supabase: 'https://app.supabase.com',
+        geminiApi: 'https://makersuite.google.com/app/apikey',
+        issues: 'https://github.com/abrinay1997-stack/LiveSync-Pro/issues'
     },
 
-    // Planes y precios
-    plans: {
-        basic: {
-            name: 'Básico',
-            price: 9.99,
-            currency: 'USD',
-            interval: 'mes',
-            features: [
-                'Hasta 3 dispositivos',
-                '50GB de almacenamiento',
-                'Sincronización en tiempo real',
-                'Encriptación E2E',
-                'Soporte por email',
-                'Historial de 30 días'
+    // Tipos de eventos soportados
+    eventTypes: {
+        corporate: {
+            name: 'Corporativo',
+            description: 'Conferencias, presentaciones, eventos empresariales',
+            targetRT60: 0.7,
+            targetSTI: 0.75,
+            targetSPL: 85,
+            icon: 'fa-briefcase',
+            characteristics: [
+                'Prioridad en inteligibilidad de voz',
+                'Reverberación controlada (0.6-0.8s)',
+                'SPL moderado (75-85 dB)',
+                'Cobertura uniforme'
             ]
         },
-        pro: {
-            name: 'Pro',
-            price: 19.99,
-            currency: 'USD',
-            interval: 'mes',
-            features: [
-                'Hasta 10 dispositivos',
-                '500GB de almacenamiento',
-                'Sincronización en tiempo real',
-                'Encriptación E2E',
-                'Soporte 24/7',
-                'Historial de 90 días',
-                'Sincronización prioritaria',
-                'Webhooks',
-                'API avanzada'
+        concert: {
+            name: 'Concierto',
+            description: 'Conciertos, presentaciones musicales amplificadas',
+            targetRT60: 1.0,
+            targetSTI: 0.60,
+            targetSPL: 102,
+            icon: 'fa-music',
+            characteristics: [
+                'Mayor nivel de SPL (95-105 dB)',
+                'Respuesta de bajos extendida',
+                'Reverberación controlada (0.8-1.2s)',
+                'Subwoofers requeridos'
             ]
         },
-        enterprise: {
-            name: 'Enterprise',
-            price: 'Personalizado',
-            currency: 'USD',
-            interval: 'mes',
-            features: [
-                'Dispositivos ilimitados',
-                'Almacenamiento ilimitado',
-                'Sincronización en tiempo real',
-                'Encriptación E2E',
-                'Soporte dedicado 24/7',
-                'Historial ilimitado',
-                'SLA garantizado',
-                'Webhooks ilimitados',
-                'API completa',
-                'Implementación on-premise',
-                'SSO/SAML',
-                'Auditoría avanzada'
+        festival: {
+            name: 'Festival',
+            description: 'Festivales, eventos al aire libre, grandes audiencias',
+            targetRT60: 0.8,
+            targetSTI: 0.65,
+            targetSPL: 108,
+            icon: 'fa-users',
+            characteristics: [
+                'Sistemas de largo alcance',
+                'Múltiples torres de delay necesarias',
+                'SPL elevado (100-110 dB)',
+                'Cobertura para grandes áreas'
+            ]
+        },
+        theater: {
+            name: 'Teatro',
+            description: 'Teatros, obras, presentaciones escénicas',
+            targetRT60: 1.2,
+            targetSTI: 0.70,
+            targetSPL: 88,
+            icon: 'fa-theater-masks',
+            characteristics: [
+                'Balance entre voz y música',
+                'Reverberación moderada (1.0-1.4s)',
+                'SPL moderado-alto (80-90 dB)',
+                'Sonido natural'
+            ]
+        },
+        other: {
+            name: 'Otro',
+            description: 'Configuración personalizada',
+            targetRT60: 1.0,
+            targetSTI: 0.65,
+            targetSPL: 90,
+            icon: 'fa-cog',
+            characteristics: [
+                'Parámetros personalizables',
+                'Ajuste manual completo'
             ]
         }
     },
 
-    // Categorías de soporte
+    // Categorías de soporte técnico
     supportCategories: [
-        { value: 'tecnico', label: 'Problema Técnico', icon: 'fa-tools' },
-        { value: 'instalacion', label: 'Instalación', icon: 'fa-download' },
-        { value: 'configuracion', label: 'Configuración', icon: 'fa-cog' },
-        { value: 'sincronizacion', label: 'Sincronización', icon: 'fa-sync' },
-        { value: 'rendimiento', label: 'Rendimiento', icon: 'fa-tachometer-alt' },
-        { value: 'facturacion', label: 'Facturación', icon: 'fa-credit-card' },
+        { value: 'instalacion', label: 'Instalación y Configuración', icon: 'fa-download' },
+        { value: 'supabase', label: 'Problemas con Supabase', icon: 'fa-database' },
+        { value: 'gemini', label: 'Problemas con IA Gemini', icon: 'fa-brain' },
+        { value: 'calculos', label: 'Cálculos Acústicos', icon: 'fa-calculator' },
+        { value: 'proyectos', label: 'Gestión de Proyectos', icon: 'fa-project-diagram' },
+        { value: 'exportacion', label: 'Exportación PDF/DXF', icon: 'fa-file-export' },
+        { value: 'visualizacion', label: 'Visualización 3D', icon: 'fa-cube' },
+        { value: 'sincronizacion', label: 'Sincronización en la Nube', icon: 'fa-sync' },
+        { value: 'rendimiento', label: 'Rendimiento y Optimización', icon: 'fa-tachometer-alt' },
+        { value: 'bugs', label: 'Reportar Bug', icon: 'fa-bug' },
         { value: 'otro', label: 'Otro', icon: 'fa-question' }
     ],
 
     // Niveles de prioridad
     priorityLevels: [
-        { value: 'baja', label: 'Baja', color: '#3b82f6' },
-        { value: 'media', label: 'Media', color: '#f59e0b' },
-        { value: 'alta', label: 'Alta', color: '#f97316' },
-        { value: 'critica', label: 'Crítica', color: '#ef4444' }
+        { value: 'baja', label: 'Baja', color: '#3b82f6', description: 'Consulta general, no urgente' },
+        { value: 'media', label: 'Media', color: '#f59e0b', description: 'Problema que afecta trabajo pero tiene workaround' },
+        { value: 'alta', label: 'Alta', color: '#f97316', description: 'Problema que bloquea trabajo' },
+        { value: 'critica', label: 'Crítica', color: '#ef4444', description: 'Sistema no funcional, proyecto urgente' }
     ],
 
-    // Tiempos de respuesta (en minutos)
+    // Tiempos de respuesta estimados (en minutos)
     responseTime: {
         baja: 240,      // 4 horas
         media: 120,     // 2 horas
@@ -132,88 +206,106 @@ const CONFIG = {
     // Configuración de chat
     chat: {
         enabled: true,
-        welcomeMessage: '¡Hola! Soy el asistente de SyncMaster. ¿En qué puedo ayudarte hoy con LiveSync Pro?',
-        offlineMessage: 'En este momento no hay agentes disponibles. Por favor, deja un mensaje o crea un ticket.',
+        welcomeMessage: '¡Hola! Soy el asistente de SyncMaster para LiveSync Pro. ¿En qué puedo ayudarte con tu diseño acústico?',
+        offlineMessage: 'En este momento no hay agentes disponibles. Por favor, crea un ticket y te responderemos pronto.',
         maxMessageLength: 1000,
-        typingIndicatorDelay: 1000,
-        autoResponseDelay: 1500
+        typingIndicatorDelay: 800,
+        autoResponseDelay: 1200
     },
 
     // Horarios de soporte
     supportHours: {
         timezone: 'UTC',
-        hours: '24/7',
-        weekdays: 'Lunes a Domingo',
-        holidays: 'Disponible en días festivos'
+        hours: '24/7 (Chat automático siempre disponible)',
+        humanSupport: 'Lunes a Viernes 9:00-18:00 UTC',
+        holidays: 'Soporte limitado en días festivos'
     },
 
-    // Estadísticas (pueden ser dinámicas en una implementación real)
+    // Estadísticas del sistema
     stats: {
-        averageResponseTime: 15,        // minutos
-        customerSatisfaction: 4.8,       // de 5
-        ticketsResolvedToday: 127,
-        activeUsers: 1234,
-        uptime: 99.9                     // porcentaje
+        averageResponseTime: 12,         // minutos
+        customerSatisfaction: 4.9,       // de 5
+        projectsCreated: 856,
+        activeUsers: 234,
+        uptime: 99.8                     // porcentaje
+    },
+
+    // Parámetros acústicos comunes
+    acousticParameters: {
+        rt60Ranges: {
+            speech: { min: 0.6, max: 0.8, description: 'Óptimo para palabra hablada' },
+            amplified: { min: 0.8, max: 1.2, description: 'Música amplificada' },
+            classical: { min: 1.5, max: 2.0, description: 'Música clásica' },
+            theater: { min: 1.0, max: 1.4, description: 'Teatro y presentaciones' }
+        },
+        stiValues: {
+            excellent: { min: 0.75, max: 1.0, description: 'Excelente inteligibilidad' },
+            good: { min: 0.60, max: 0.75, description: 'Buena inteligibilidad' },
+            fair: { min: 0.45, max: 0.60, description: 'Inteligibilidad razonable' },
+            poor: { min: 0.30, max: 0.45, description: 'Pobre inteligibilidad' },
+            bad: { min: 0.0, max: 0.30, description: 'Mala inteligibilidad' }
+        },
+        splRanges: {
+            corporate: { target: 85, max: 90 },
+            theater: { target: 88, max: 95 },
+            concert: { target: 102, max: 110 },
+            festival: { target: 108, max: 115 }
+        }
+    },
+
+    // Materiales acústicos comunes (coeficientes de absorción)
+    materials: {
+        concrete: { name: 'Concreto', avgAbsorption: 0.02 },
+        wood: { name: 'Madera', avgAbsorption: 0.09 },
+        carpet: { name: 'Alfombra', avgAbsorption: 0.50 },
+        curtains: { name: 'Cortinas pesadas', avgAbsorption: 0.30 },
+        audience: { name: 'Audiencia sentada', avgAbsorption: 0.80 },
+        glass: { name: 'Vidrio', avgAbsorption: 0.05 },
+        acoustic_panel: { name: 'Panel acústico', avgAbsorption: 0.70 }
     },
 
     // Recursos educativos
     resources: {
-        videoTutorials: [
+        tutorials: [
             {
                 title: 'Introducción a LiveSync Pro',
-                duration: '5:30',
-                url: '#',
-                thumbnail: 'https://via.placeholder.com/300x200?text=Tutorial+1'
+                description: 'Aprende los conceptos básicos del sistema',
+                duration: '10 min',
+                level: 'Principiante',
+                topics: ['Instalación', 'Primer proyecto', 'Interfaz básica']
             },
             {
-                title: 'Configuración Avanzada',
-                duration: '10:15',
-                url: '#',
-                thumbnail: 'https://via.placeholder.com/300x200?text=Tutorial+2'
+                title: 'Diseño Acústico Avanzado',
+                description: 'Técnicas avanzadas de optimización',
+                duration: '25 min',
+                level: 'Avanzado',
+                topics: ['RT60', 'STI', 'Torres de delay', 'Optimización']
             },
             {
-                title: 'Solución de Problemas Comunes',
-                duration: '8:45',
-                url: '#',
-                thumbnail: 'https://via.placeholder.com/300x200?text=Tutorial+3'
+                title: 'Exportación y Documentación',
+                description: 'Genera reportes profesionales',
+                duration: '15 min',
+                level: 'Intermedio',
+                topics: ['PDF', 'DXF', 'Reportes', 'Presentación al cliente']
             }
         ],
-        blogPosts: [
-            {
-                title: '10 Consejos para Optimizar tu Sincronización',
-                date: '2026-01-05',
-                url: '#'
-            },
-            {
-                title: 'Nuevas Funciones en LiveSync Pro 3.5',
-                date: '2026-01-03',
-                url: '#'
-            },
-            {
-                title: 'Mejores Prácticas de Seguridad',
-                date: '2025-12-28',
-                url: '#'
-            }
-        ]
+        glossary: {
+            'SPL': 'Sound Pressure Level - Nivel de presión sonora medido en dB',
+            'STI': 'Speech Transmission Index - Índice de transmisión del habla (0.0-1.0)',
+            'RT60': 'Reverberation Time - Tiempo que tarda el sonido en decaer 60dB',
+            'Delay Tower': 'Sistema de refuerzo adicional con delay para cobertura extendida',
+            'Line Array': 'Sistema de altavoces en línea para largo alcance',
+            'Sabine': 'Fórmula para calcular RT60 en función del volumen y absorción',
+            'DXF': 'Drawing Exchange Format - Formato para planos CAD'
+        }
     },
-
-    // Integraciones disponibles
-    integrations: [
-        { name: 'Dropbox', icon: 'fa-dropbox', status: 'available' },
-        { name: 'Google Drive', icon: 'fa-google-drive', status: 'available' },
-        { name: 'OneDrive', icon: 'fa-microsoft', status: 'available' },
-        { name: 'Slack', icon: 'fa-slack', status: 'available' },
-        { name: 'Trello', icon: 'fa-trello', status: 'coming-soon' },
-        { name: 'Jira', icon: 'fa-jira', status: 'coming-soon' }
-    ],
 
     // Información del sistema
     systemInfo: {
-        apiVersion: 'v1',
-        apiEndpoint: 'https://api.livesyncpro.com',
-        authEndpoint: 'https://auth.livesyncpro.com',
-        statusEndpoint: 'https://status.livesyncpro.com',
-        cdnEndpoint: 'https://cdn.livesyncpro.com'
+        version: '1.0.0',
+        buildDate: '2026-01-10',
+        environment: 'production',
+        supportedBrowsers: ['Chrome 90+', 'Firefox 88+', 'Safari 14+', 'Edge 90+']
     },
 
     // Configuración de notificaciones
@@ -223,13 +315,28 @@ const CONFIG = {
             ticketCreated: true,
             ticketUpdated: true,
             ticketResolved: true,
-            systemUpdate: true,
-            maintenanceScheduled: true
+            newFeature: true,
+            maintenance: true,
+            tipOfTheDay: true
         }
-    }
+    },
+
+    // Tips y mejores prácticas
+    tips: [
+        'Siempre comienza con un preset apropiado para tu tipo de evento',
+        'Verifica las dimensiones de la sala con planos arquitectónicos reales',
+        'Ten en cuenta que la audiencia absorbe sonido (coef. ~0.80)',
+        'Para eventos de voz, apunta a STI > 0.75',
+        'Usa torres de delay para salas mayores a 30m de profundidad',
+        'Exporta tu proyecto a JSON como respaldo antes de cambios grandes',
+        'La visualización 3D te ayuda a detectar problemas de cobertura',
+        'Revisa siempre los logs de sincronización en el footer',
+        'Configura Supabase correctamente para evitar pérdida de datos',
+        'El asistente IA puede sugerir optimizaciones valiosas'
+    ]
 };
 
-// Exportar configuración para uso en otros módulos
+// Exportar configuración
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
