@@ -127,62 +127,77 @@ function initChat() {
         const message = userMessage.toLowerCase();
 
         // Respuestas sobre instalación
-        if (message.includes('instala') || message.includes('instalar')) {
-            return 'Para instalar LiveSync Pro:\n\n1. Descarga el instalador desde nuestro sitio oficial\n2. Ejecuta el archivo descargado\n3. Sigue el asistente de instalación\n4. Inicia sesión con tu cuenta\n5. Selecciona las carpetas a sincronizar\n\n¿Necesitas ayuda con algún paso específico?';
+        if (message.includes('instala') || message.includes('instalar') || message.includes('install')) {
+            return 'Para instalar LiveSync Pro:\n\n1. Clona el repositorio: git clone https://github.com/abrinay1997-stack/LiveSync-Pro.git\n2. Instala dependencias: npm install\n3. Configura variables de entorno en .env.local (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)\n4. Ejecuta: npm run dev\n\nO accede directamente a la versión en AI Studio sin instalación.\n\n¿Necesitas ayuda con algún paso específico?';
         }
 
         // Respuestas sobre configuración
-        if (message.includes('configur') || message.includes('setup')) {
-            return 'La configuración de LiveSync Pro es sencilla:\n\n1. Abre la aplicación\n2. Ve a Configuración > Sincronización\n3. Selecciona las carpetas que deseas sincronizar\n4. Configura las opciones de sincronización (automática/manual)\n5. Ajusta las preferencias de conflictos\n\n¿Qué aspecto específico quieres configurar?';
+        if (message.includes('configur') || message.includes('setup') || message.includes('supabase') || message.includes('.env')) {
+            return 'Configuración de LiveSync Pro:\n\n1. Crea .env.local en la raíz del proyecto\n2. Agrega VITE_SUPABASE_URL (obtén de Supabase Dashboard)\n3. Agrega VITE_SUPABASE_ANON_KEY (clave pública)\n4. Opcional: GEMINI_API_KEY para asistente IA\n5. Reinicia el servidor de desarrollo\n\nRecuerda: Las variables deben tener prefijo VITE_ para ser accesibles.\n\n¿Necesitas ayuda con Supabase o Gemini?';
         }
 
-        // Respuestas sobre problemas de conexión
-        if (message.includes('conexi') || message.includes('conecta') || message.includes('internet')) {
-            return 'Para solucionar problemas de conexión:\n\n1. Verifica tu conexión a internet\n2. Comprueba el estado del firewall\n3. Asegúrate de que los puertos necesarios estén abiertos\n4. Revisa la configuración del proxy si aplica\n5. Intenta reiniciar la aplicación\n\nSi el problema persiste, puedo crear un ticket para que nuestro equipo técnico te ayude. ¿Quieres que lo haga?';
+        // Respuestas sobre proyectos acústicos
+        if (message.includes('proyecto') || message.includes('acust') || message.includes('diseñ') || message.includes('sonido')) {
+            return 'Para crear un proyecto acústico en LiveSync Pro:\n\n1. En el Project Hub, clic en "Nuevo Proyecto"\n2. Ingresa datos: nombre, cliente, tipo de evento\n3. Configura dimensiones de la sala (ancho x largo x altura)\n4. Selecciona sistema de sonido principal\n5. Aplica un preset (Corporativo, Concierto, Festival)\n6. Haz clic en "Calcular Sistema"\n7. Revisa resultados de SPL, STI y RT60\n\n¿Qué tipo de evento estás diseñando?';
+        }
+
+        // Respuestas sobre cálculos acústicos
+        if (message.includes('spl') || message.includes('sti') || message.includes('rt60') || message.includes('reverb') || message.includes('calculo')) {
+            return 'LiveSync Pro calcula automáticamente:\n\n• SPL (Sound Pressure Level): Cobertura de presión sonora en dB\n• STI (Speech Transmission Index): Inteligibilidad 0.0-1.0 (objetivo >0.75 para voz)\n• RT60: Tiempo de reverberación en segundos\n\nObjetivos recomendados:\n- Corporativo: RT60 0.6-0.8s, STI >0.75, SPL 85dB\n- Concierto: RT60 0.8-1.2s, STI >0.60, SPL 102dB\n- Festival: RT60 ~0.8s, STI >0.65, SPL 108dB\n\n¿Necesitas ayuda interpretando resultados?';
+        }
+
+        // Respuestas sobre torres de delay
+        if (message.includes('delay') || message.includes('torre') || message.includes('fill') || message.includes('refuerzo')) {
+            return 'Torres de Delay en LiveSync Pro:\n\n¿Cuándo usarlas?\n- Salas >30m de profundidad\n- Zonas con baja cobertura\n- Obstáculos arquitectónicos\n- Balcones o niveles elevados\n\nCómo agregarlas:\n1. Clic en "+ Agregar Torre de Delay"\n2. Posiciona en el mapa\n3. El sistema calcula delay automático (fórmula: distancia/343 × 1000 ms)\n4. Ajusta nivel SPL (6-10dB > sistema principal)\n5. Recalcula\n\n¿Necesitas ayuda posicionando torres?';
+        }
+
+        // Respuestas sobre exportación
+        if (message.includes('export') || message.includes('pdf') || message.includes('dxf') || message.includes('reporte') || message.includes('cad')) {
+            return 'Exportación de proyectos:\n\n📄 PDF: Reporte completo con mapas de cobertura, specs técnicas, lista de equipos\n📐 DXF: Planos para AutoCAD con posiciones exactas de altavoces\n📋 Portapapeles: Copia specs rápidamente\n💾 JSON: Backup completo del proyecto\n\nPara exportar:\n1. Completa tu diseño\n2. Haz clic en "Generar Reporte PDF" o "Exportar DXF"\n3. El archivo se descarga automáticamente\n\n¿Qué formato necesitas?';
+        }
+
+        // Respuestas sobre visualización 3D
+        if (message.includes('3d') || message.includes('visualiz') || message.includes('three') || message.includes('grafico')) {
+            return 'Visualización 3D en LiveSync Pro:\n\n✓ Renderizado con Three.js\n✓ Mapas de cobertura SPL con código de colores\n✓ Trazado de rayos sonoros\n✓ Posiciones de altavoces\n✓ Arquitectura de la sala\n\nControles:\n- Click + arrastrar: Rotar\n- Scroll: Zoom\n- Click derecho + arrastrar: Pan\n\nHaz clic en "Ver en 3D" en la vista de resultados.\n\n¿Necesitas ayuda navegando la vista 3D?';
+        }
+
+        // Respuestas sobre Gemini IA
+        if (message.includes('gemini') || message.includes('ia') || message.includes('inteligencia') || message.includes('optimiz')) {
+            return 'Asistente IA con Google Gemini:\n\n🤖 Funciones:\n- Sugerir configuraciones óptimas\n- Detectar problemas acústicos\n- Recomendar posiciones de equipos\n- Explicar conceptos técnicos\n\nConfiguración:\n1. Obtén API key en https://makersuite.google.com/app/apikey\n2. Agrega GEMINI_API_KEY en .env.local\n3. Reinicia la app\n4. Usa el ícono de IA en la interfaz\n\nNota: La IA es opcional, todos los cálculos son locales.\n\n¿Necesitas ayuda configurando Gemini?';
         }
 
         // Respuestas sobre sincronización
-        if (message.includes('sincroniza') || message.includes('sync')) {
-            return 'LiveSync Pro ofrece sincronización en tiempo real. Algunos consejos:\n\n- La sincronización automática se activa al detectar cambios\n- Puedes forzar una sincronización manual desde el menú\n- Los conflictos se resuelven según tus preferencias\n- Revisa los logs si hay archivos sin sincronizar\n\n¿Tienes algún problema específico con la sincronización?';
+        if (message.includes('sincroniza') || message.includes('sync') || message.includes('nube') || message.includes('guardar')) {
+            return 'Sincronización en LiveSync Pro:\n\n☁️ Sincronización automática con Supabase\n✓ Guardado automático en la nube\n✓ Colaboración en tiempo real\n✓ Historial de versiones\n✓ Trabajo offline soportado\n\nIndicadores (en footer):\n- Verde: Sincronizado\n- Azul: Sincronizando\n- Amarillo: Sin conexión\n- Rojo: Error\n\nTodos los cálculos son locales, solo se sincroniza la configuración del proyecto.\n\n¿Problemas con la sincronización?';
         }
 
-        // Respuestas sobre actualización
-        if (message.includes('actualiza') || message.includes('update') || message.includes('versión')) {
-            return 'Para actualizar LiveSync Pro:\n\n1. Ve a Ayuda > Buscar actualizaciones\n2. Si hay una actualización disponible, haz clic en "Actualizar"\n3. La aplicación descargará e instalará la actualización\n4. Reinicia cuando se te solicite\n\nLa versión actual es la 3.5.2. ¿Tienes problemas para actualizar?';
-        }
-
-        // Respuestas sobre seguridad
-        if (message.includes('segur') || message.includes('encript') || message.includes('privacidad')) {
-            return 'LiveSync Pro toma la seguridad muy en serio:\n\n- Encriptación AES-256 de extremo a extremo\n- Autenticación de dos factores disponible\n- Certificaciones ISO 27001 y cumplimiento GDPR\n- Auditorías de seguridad regulares\n- Tus datos nunca se almacenan sin encriptar\n\n¿Tienes alguna pregunta específica sobre seguridad?';
-        }
-
-        // Respuestas sobre precios/planes
-        if (message.includes('precio') || message.includes('plan') || message.includes('costo') || message.includes('factura')) {
-            return 'LiveSync Pro ofrece varios planes:\n\n- Plan Básico: $9.99/mes (3 dispositivos, 50GB)\n- Plan Pro: $19.99/mes (10 dispositivos, 500GB)\n- Plan Enterprise: Precio personalizado (ilimitado)\n\nTodos los planes incluyen:\n- Sincronización en tiempo real\n- Encriptación E2E\n- Soporte 24/7\n- Historial de versiones\n\n¿Quieres más detalles sobre algún plan?';
-        }
-
-        // Respuestas sobre dispositivos
-        if (message.includes('dispositivo') || message.includes('móvil') || message.includes('app')) {
-            return 'LiveSync Pro está disponible para:\n\n- Windows 10/11\n- macOS 10.15+\n- Linux (Ubuntu, Debian, Fedora)\n- iOS 14+\n- Android 8+\n- Interfaz web\n\nPuedes sincronizar entre todos tus dispositivos automáticamente. ¿Necesitas ayuda con alguna plataforma específica?';
+        // Respuestas sobre presets
+        if (message.includes('preset') || message.includes('corporativo') || message.includes('concierto') || message.includes('festival') || message.includes('teatro')) {
+            return 'Presets de eventos en LiveSync Pro:\n\n🎤 Corporativo: Inteligibilidad máxima (voz)\n- RT60: 0.7s | STI: 0.75 | SPL: 85dB\n\n🎸 Concierto: Balance música/voz\n- RT60: 1.0s | STI: 0.60 | SPL: 102dB\n\n🎪 Festival: Largo alcance\n- RT60: 0.8s | STI: 0.65 | SPL: 108dB\n\n🎭 Teatro: Sonido natural\n- RT60: 1.2s | STI: 0.70 | SPL: 88dB\n\nAplic un preset en Configuración > Básico.\n\n¿Qué tipo de evento diseñas?';
         }
 
         // Respuestas sobre problemas/errores
         if (message.includes('error') || message.includes('problema') || message.includes('no funciona') || message.includes('falla')) {
-            return 'Lamento que estés experimentando problemas. Para ayudarte mejor:\n\n1. ¿Qué mensaje de error ves exactamente?\n2. ¿Cuándo comenzó el problema?\n3. ¿Qué estabas haciendo cuando ocurrió?\n\nMientras tanto, prueba:\n- Reiniciar la aplicación\n- Verificar los logs en Ayuda > Logs\n- Comprobar tu conexión a internet\n\n¿Quieres que cree un ticket de soporte para ti?';
+            return 'Para diagnosticar problemas:\n\n1. Abre DevTools (F12) > Console\n2. Busca errores en rojo\n3. Verifica:\n   - Variables de entorno (.env.local)\n   - Conexión a Supabase\n   - Credenciales válidas\n\nProblemas comunes:\n❌ Invalid API Key → Verifica VITE_SUPABASE_ANON_KEY\n❌ CORS errors → Dominio no autorizado en Supabase\n❌ Cálculos lentos → Reduce resolución de simulación\n\n¿Qué error específico ves?';
         }
 
-        // Respuestas sobre archivos/carpetas
-        if (message.includes('archivo') || message.includes('carpeta') || message.includes('elimina') || message.includes('recuperar')) {
-            return 'Para gestionar archivos en LiveSync Pro:\n\n- Archivos eliminados van a la papelera (30 días)\n- Puedes restaurar desde Historial de versiones\n- Los conflictos crean copias con timestamps\n- Backups automáticos según configuración\n\n¿Necesitas recuperar algún archivo específico?';
+        // Respuestas sobre materiales acústicos
+        if (message.includes('material') || message.includes('absorc') || message.includes('coeficiente') || message.includes('pared')) {
+            return 'Materiales acústicos en LiveSync Pro:\n\nCoeficientes de absorción promedio:\n• Concreto: 0.02 (muy reflectivo)\n• Madera: 0.09\n• Vidrio: 0.05\n• Alfombra: 0.50\n• Cortinas: 0.30\n• Panel acústico: 0.70\n• Audiencia: 0.80 (importante!)\n\nConfigura en Configuración Avanzada > Propiedades Acústicas.\n\nLa audiencia absorbe mucho sonido, ¡considérala en tu diseño!\n\n¿Necesitas ayuda con coeficientes específicos?';
+        }
+
+        // Respuestas sobre testing
+        if (message.includes('test') || message.includes('prueba') || message.includes('vitest') || message.includes('coverage')) {
+            return 'Testing en LiveSync Pro:\n\nComandos disponibles:\n• npm test → Ejecutar pruebas\n• npm run test:ui → Interfaz gráfica\n• npm run test:coverage → Reporte de cobertura\n• npm run test:run → Una ejecución (CI/CD)\n\nUsa Vitest + React Testing Library.\n\nPara debugging:\n- F12 > Console (logs)\n- F12 > Sources (breakpoints)\n- console.log() en código\n\n¿Necesitas ayuda con pruebas o debugging?';
         }
 
         // Respuestas sobre soporte
         if (message.includes('soporte') || message.includes('ayuda') || message.includes('contacto')) {
-            return 'Puedes contactarnos por:\n\n- Chat en vivo: Disponible ahora mismo\n- Tickets: Crea uno en la sección Tickets\n- Email: support@livesyncpro.com\n- Teléfono: +1-800-LIVESYNC (Pro/Enterprise)\n- Comunidad: community.livesyncpro.com\n\nTiempo de respuesta promedio: <15 minutos. ¿Cómo prefieres continuar?';
+            return 'Canales de soporte para LiveSync Pro:\n\n💬 Chat: Aquí mismo (24/7 automático)\n🎫 Tickets: Sección Tickets de esta plataforma\n📧 Email: support@livesyncpro.com\n🐛 Bugs: GitHub Issues\n📚 Docs: Base de Conocimientos aquí\n\nTiempo de respuesta: <15 minutos (promedio)\n\n¿Prefieres crear un ticket o seguir por chat?';
         }
 
         // Respuesta por defecto
-        return 'Entiendo tu consulta. Para ayudarte mejor, puedo:\n\n1. Buscar en nuestra base de conocimientos\n2. Crear un ticket de soporte\n3. Conectarte con un agente humano\n4. Mostrarte tutoriales relacionados\n\n¿Qué prefieres? También puedes ser más específico sobre tu pregunta o problema.';
+        return 'Entiendo tu consulta sobre LiveSync Pro (Sistema de Diseño Acústico).\n\nPuedo ayudarte con:\n• Instalación y configuración\n• Diseño de proyectos acústicos\n• Cálculos SPL/STI/RT60\n• Torres de delay\n• Exportación PDF/DXF\n• Visualización 3D\n• Sincronización Supabase\n• Asistente IA Gemini\n• Solución de problemas\n\n¿Sobre qué necesitas más información?';
     }
 }
 
