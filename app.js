@@ -62,6 +62,11 @@ function initChat() {
     const chatMessages = document.getElementById('chatMessages');
     const quickReplies = document.querySelectorAll('.quick-reply');
 
+    // Rate limiting: máximo 10 mensajes por minuto
+    let messageTimestamps = [];
+    const MAX_MESSAGES_PER_MINUTE = 10;
+    const RATE_LIMIT_WINDOW = 60000; // 1 minuto en ms
+
     // Enviar mensaje al presionar Enter
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -83,6 +88,17 @@ function initChat() {
     function sendChatMessage() {
         const message = chatInput.value.trim();
         if (message === '') return;
+
+        // Rate limiting check
+        const now = Date.now();
+        messageTimestamps = messageTimestamps.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
+
+        if (messageTimestamps.length >= MAX_MESSAGES_PER_MINUTE) {
+            showNotification('Has enviado demasiados mensajes. Por favor espera un momento.', 'warning');
+            return;
+        }
+
+        messageTimestamps.push(now);
 
         // Agregar mensaje del usuario
         addMessage(message, 'user');
@@ -126,14 +142,9 @@ function initChat() {
     function generateBotResponse(userMessage) {
         const message = userMessage.toLowerCase();
 
-        // Respuestas sobre instalación
-        if (message.includes('instala') || message.includes('instalar') || message.includes('install')) {
-            return 'Para instalar LiveSync Pro:\n\n1. Clona el repositorio: git clone https://github.com/abrinay1997-stack/LiveSync-Pro.git\n2. Instala dependencias: npm install\n3. Configura variables de entorno en .env.local (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)\n4. Ejecuta: npm run dev\n\nO accede directamente a la versión en AI Studio sin instalación.\n\n¿Necesitas ayuda con algún paso específico?';
-        }
-
-        // Respuestas sobre configuración
-        if (message.includes('configur') || message.includes('setup') || message.includes('supabase') || message.includes('.env')) {
-            return 'Configuración de LiveSync Pro:\n\n1. Crea .env.local en la raíz del proyecto\n2. Agrega VITE_SUPABASE_URL (obtén de Supabase Dashboard)\n3. Agrega VITE_SUPABASE_ANON_KEY (clave pública)\n4. Opcional: GEMINI_API_KEY para asistente IA\n5. Reinicia el servidor de desarrollo\n\nRecuerda: Las variables deben tener prefijo VITE_ para ser accesibles.\n\n¿Necesitas ayuda con Supabase o Gemini?';
+        // Respuestas sobre acceso a LiveSync Pro
+        if (message.includes('acceso') || message.includes('acceder') || message.includes('entrar') || message.includes('login')) {
+            return 'Para acceder a LiveSync Pro:\n\n✓ Abre LiveSync Pro en tu navegador\n✓ Inicia sesión con tus credenciales\n✓ Si no tienes cuenta, contacta con tu administrador\n\n🔒 Tus proyectos se guardan automáticamente en la nube y puedes acceder desde cualquier dispositivo.\n\n¿Necesitas ayuda con alguna funcionalidad específica?';
         }
 
         // Respuestas sobre proyectos acústicos
@@ -161,14 +172,14 @@ function initChat() {
             return 'Visualización 3D en LiveSync Pro:\n\n✓ Renderizado con Three.js\n✓ Mapas de cobertura SPL con código de colores\n✓ Trazado de rayos sonoros\n✓ Posiciones de altavoces\n✓ Arquitectura de la sala\n\nControles:\n- Click + arrastrar: Rotar\n- Scroll: Zoom\n- Click derecho + arrastrar: Pan\n\nHaz clic en "Ver en 3D" en la vista de resultados.\n\n¿Necesitas ayuda navegando la vista 3D?';
         }
 
-        // Respuestas sobre Gemini IA
-        if (message.includes('gemini') || message.includes('ia') || message.includes('inteligencia') || message.includes('optimiz')) {
-            return 'Asistente IA con Google Gemini:\n\n🤖 Funciones:\n- Sugerir configuraciones óptimas\n- Detectar problemas acústicos\n- Recomendar posiciones de equipos\n- Explicar conceptos técnicos\n\nConfiguración:\n1. Obtén API key en https://makersuite.google.com/app/apikey\n2. Agrega GEMINI_API_KEY en .env.local\n3. Reinicia la app\n4. Usa el ícono de IA en la interfaz\n\nNota: La IA es opcional, todos los cálculos son locales.\n\n¿Necesitas ayuda configurando Gemini?';
+        // Respuestas sobre asistente IA
+        if (message.includes('ia') || message.includes('inteligencia') || message.includes('optimiz') || message.includes('asistente')) {
+            return 'Asistente IA en LiveSync Pro:\n\n🤖 El asistente de IA puede ayudarte a:\n✓ Sugerir configuraciones óptimas para tu sala\n✓ Detectar problemas acústicos potenciales\n✓ Recomendar posiciones de altavoces\n✓ Explicar conceptos técnicos\n\n📍 Ubica el ícono de IA en la parte superior de la interfaz. Haz clic para activar el asistente.\n\nNota: Todos los cálculos son locales y precisos.\n\n¿Qué aspecto de tu diseño necesitas optimizar?';
         }
 
-        // Respuestas sobre sincronización
-        if (message.includes('sincroniza') || message.includes('sync') || message.includes('nube') || message.includes('guardar')) {
-            return 'Sincronización en LiveSync Pro:\n\n☁️ Sincronización automática con Supabase\n✓ Guardado automático en la nube\n✓ Colaboración en tiempo real\n✓ Historial de versiones\n✓ Trabajo offline soportado\n\nIndicadores (en footer):\n- Verde: Sincronizado\n- Azul: Sincronizando\n- Amarillo: Sin conexión\n- Rojo: Error\n\nTodos los cálculos son locales, solo se sincroniza la configuración del proyecto.\n\n¿Problemas con la sincronización?';
+        // Respuestas sobre guardado y sincronización
+        if (message.includes('guardar') || message.includes('sync') || message.includes('nube') || message.includes('perdida') || message.includes('recuper')) {
+            return 'Guardado de Proyectos en LiveSync Pro:\n\n☁️ Guardado automático en la nube\n✓ Tus proyectos se guardan automáticamente\n✓ Accede desde cualquier dispositivo\n✓ Historial de versiones disponible\n✓ Trabajo offline soportado\n\nIndicador de estado (footer):\n🟢 Verde: Todo guardado\n🔵 Azul: Guardando...\n🟡 Amarillo: Sin conexión (guardado local)\n🔴 Rojo: Error - revisa tu conexión\n\n¿Necesitas recuperar una versión anterior?';
         }
 
         // Respuestas sobre presets
@@ -178,7 +189,7 @@ function initChat() {
 
         // Respuestas sobre problemas/errores
         if (message.includes('error') || message.includes('problema') || message.includes('no funciona') || message.includes('falla')) {
-            return 'Para diagnosticar problemas:\n\n1. Abre DevTools (F12) > Console\n2. Busca errores en rojo\n3. Verifica:\n   - Variables de entorno (.env.local)\n   - Conexión a Supabase\n   - Credenciales válidas\n\nProblemas comunes:\n❌ Invalid API Key → Verifica VITE_SUPABASE_ANON_KEY\n❌ CORS errors → Dominio no autorizado en Supabase\n❌ Cálculos lentos → Reduce resolución de simulación\n\n¿Qué error específico ves?';
+            return 'Solución de Problemas en LiveSync Pro:\n\n🔍 Pasos básicos:\n1. Actualiza la página (F5 o Ctrl+R)\n2. Verifica tu conexión a internet\n3. Cierra y vuelve a abrir la aplicación\n\n⚡ Problemas comunes:\n❌ Cálculos lentos → Reduce la resolución de simulación en configuración\n❌ No se guarda → Verifica el indicador de estado en el footer\n❌ Exportación falla → Revisa que el proyecto esté completo\n\n📧 Si el problema persiste, contacta a soporte: abrinay@livesyncpro.com\n\n¿Qué error específico estás viendo?';
         }
 
         // Respuestas sobre materiales acústicos
@@ -186,18 +197,18 @@ function initChat() {
             return 'Materiales acústicos en LiveSync Pro:\n\nCoeficientes de absorción promedio:\n• Concreto: 0.02 (muy reflectivo)\n• Madera: 0.09\n• Vidrio: 0.05\n• Alfombra: 0.50\n• Cortinas: 0.30\n• Panel acústico: 0.70\n• Audiencia: 0.80 (importante!)\n\nConfigura en Configuración Avanzada > Propiedades Acústicas.\n\nLa audiencia absorbe mucho sonido, ¡considérala en tu diseño!\n\n¿Necesitas ayuda con coeficientes específicos?';
         }
 
-        // Respuestas sobre testing
-        if (message.includes('test') || message.includes('prueba') || message.includes('vitest') || message.includes('coverage')) {
-            return 'Testing en LiveSync Pro:\n\nComandos disponibles:\n• npm test → Ejecutar pruebas\n• npm run test:ui → Interfaz gráfica\n• npm run test:coverage → Reporte de cobertura\n• npm run test:run → Una ejecución (CI/CD)\n\nUsa Vitest + React Testing Library.\n\nPara debugging:\n- F12 > Console (logs)\n- F12 > Sources (breakpoints)\n- console.log() en código\n\n¿Necesitas ayuda con pruebas o debugging?';
+        // Respuestas sobre validación de diseños
+        if (message.includes('valid') || message.includes('verific') || message.includes('correcto') || message.includes('revision')) {
+            return 'Validación de Diseños en LiveSync Pro:\n\n✓ LiveSync Pro valida automáticamente tu diseño:\n\n🎯 Cobertura:\n- Verifica que toda la sala tenga cobertura SPL adecuada\n- Resalta zonas con baja cobertura en rojo\n\n🗣️ Inteligibilidad:\n- Revisa que STI cumpla objetivos (>0.75 para voz)\n- Sugiere mejoras si detecta problemas\n\n⏱️ Reverberación:\n- Comprueba que RT60 esté en rango óptimo\n- Alerta si el tiempo es muy alto o bajo\n\n¿Necesitas ayuda interpretando los resultados de validación?';
         }
 
         // Respuestas sobre soporte
         if (message.includes('soporte') || message.includes('ayuda') || message.includes('contacto')) {
-            return 'Canales de soporte para LiveSync Pro:\n\n💬 Chat: Aquí mismo (24/7 automático)\n🎫 Tickets: Sección Tickets de esta plataforma\n📧 Email: abrinay@livesyncpro.com\n🐛 Bugs: GitHub Issues\n📚 Docs: Base de Conocimientos aquí\n\nTiempo de respuesta: <15 minutos (promedio)\n\n¿Prefieres crear un ticket o seguir por chat?';
+            return 'Canales de soporte para LiveSync Pro:\n\n💬 Chat: Asistente automático 24/7 (aquí mismo)\n🎫 Tickets: Sección Tickets de esta plataforma\n📧 Email directo: abrinay@livesyncpro.com\n📚 Documentación: Base de Conocimientos completa\n❓ FAQ: Preguntas frecuentes\n\nTiempo de respuesta por email: <24 horas\n\n¿Prefieres crear un ticket o seguir por chat?';
         }
 
         // Respuesta por defecto
-        return 'Entiendo tu consulta sobre LiveSync Pro (Sistema de Diseño Acústico).\n\nPuedo ayudarte con:\n• Instalación y configuración\n• Diseño de proyectos acústicos\n• Cálculos SPL/STI/RT60\n• Torres de delay\n• Exportación PDF/DXF\n• Visualización 3D\n• Sincronización Supabase\n• Asistente IA Gemini\n• Solución de problemas\n\n¿Sobre qué necesitas más información?';
+        return 'Entiendo tu consulta sobre LiveSync Pro (Sistema de Diseño Acústico).\n\nPuedo ayudarte con:\n✓ Crear proyectos acústicos\n✓ Cálculos SPL/STI/RT60\n✓ Torres de delay\n✓ Exportación PDF/DXF\n✓ Visualización 3D\n✓ Guardado en la nube\n✓ Asistente de IA\n✓ Materiales acústicos\n✓ Presets de eventos\n✓ Solución de problemas\n\n¿Sobre qué funcionalidad necesitas más información?';
     }
 }
 
@@ -229,14 +240,29 @@ function initTicketSystem() {
     ticketForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
+        // Validación mejorada de email
+        const emailInput = document.getElementById('ticketEmail');
+        const email = emailInput.value.trim();
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailRegex.test(email)) {
+            showNotification('Por favor ingresa un email válido (ej: usuario@dominio.com)', 'error');
+            emailInput.focus();
+            emailInput.style.borderColor = 'var(--danger-color)';
+            setTimeout(() => {
+                emailInput.style.borderColor = '';
+            }, 3000);
+            return;
+        }
+
         const ticket = {
             id: 'TKT-' + Date.now(),
-            name: document.getElementById('ticketName').value,
-            email: document.getElementById('ticketEmail').value,
+            name: document.getElementById('ticketName').value.trim(),
+            email: email,
             category: document.getElementById('ticketCategory').value,
             priority: document.getElementById('ticketPriority').value,
-            subject: document.getElementById('ticketSubject').value,
-            description: document.getElementById('ticketDescription').value,
+            subject: document.getElementById('ticketSubject').value.trim(),
+            description: document.getElementById('ticketDescription').value.trim(),
             status: 'abierto',
             date: new Date().toLocaleString('es-ES')
         };
