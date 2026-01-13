@@ -7,31 +7,14 @@ const CONFIG = {
         description: 'Centro de Soporte Técnico para LiveSync Pro - Sistema de Diseño Acústico',
         supportEmail: 'abrinay@livesyncpro.com',
         supportPhone: '+1-800-ACOUSTIC',
-        website: 'https://abrinay1997-stack.github.io/SyncMaster',
-        githubRepo: 'https://github.com/abrinay1997-stack/SyncMaster'
+        website: 'https://abrinay1997-stack.github.io/SyncMaster'
     },
 
-    // Configuración de LiveSync Pro (información real del repositorio)
+    // Información de LiveSync Pro
     livesyncpro: {
         name: 'LiveSync Pro',
-        version: '1.0.0',
-        description: 'Sistema Profesional de Diseño y Simulación Acústica - System Alignment Engine',
+        description: 'Sistema Profesional de Diseño y Simulación Acústica',
         fullDescription: 'LiveSync Pro es una aplicación avanzada para el diseño de sistemas de refuerzo sonoro. Permite calcular cobertura SPL, inteligibilidad (STI), tiempo de reverberación (RT60), y optimizar la posición de altavoces y torres de delay. Incluye visualización 3D, exportación a PDF/DXF, y asistente de IA.',
-        repository: 'https://github.com/abrinay1997-stack/LiveSync-Pro',
-        aiStudioUrl: 'https://ai.studio/apps/drive/18KB4IU6KzA9Jr39Z4tEdMPe08n6WLqB3',
-
-        // Stack tecnológico real
-        stack: {
-            frontend: 'React 18.3.1 + TypeScript',
-            buildTool: 'Vite',
-            backend: 'Supabase',
-            ai: 'Google Gemini API',
-            graphics3D: 'Three.js 0.160.0',
-            charts: 'Recharts 2.12.7',
-            pdf: 'jsPDF 2.5.1 + autotable',
-            icons: 'Lucide React',
-            testing: 'Vitest + React Testing Library'
-        },
 
         // Características principales
         features: [
@@ -40,64 +23,21 @@ const CONFIG = {
             'Análisis de inteligibilidad (STI - Speech Transmission Index)',
             'Cálculo de tiempo de reverberación (RT60)',
             'Gestión de torres de delay y fill speakers',
-            'Presets para diferentes tipos de eventos (Corporativo, Concierto, Festival)',
-            'Visualización 3D interactiva con Three.js',
-            'Exportación a PDF con reportes detallados',
-            'Exportación a DXF para AutoCAD',
-            'Sincronización en la nube con Supabase',
+            'Presets para diferentes tipos de eventos',
+            'Visualización 3D interactiva',
+            'Exportación a PDF y DXF',
+            'Guardado automático en la nube',
             'Colaboración en tiempo real',
-            'Asistente de IA con Google Gemini',
-            'Project Hub para gestión de múltiples proyectos',
-            'Autenticación multi-nivel (PIN, códigos de equipo, licencias)'
-        ],
-
-        // Plataformas soportadas
-        platforms: [
-            'Web (acceso desde cualquier navegador moderno)',
-            'AI Studio (versión alojada)',
-            'Desarrollo local (Windows, macOS, Linux)'
-        ],
-
-        // Variables de entorno necesarias
-        envVars: {
-            'VITE_SUPABASE_URL': {
-                description: 'URL del proyecto Supabase',
-                required: true,
-                example: 'https://tu-proyecto.supabase.co'
-            },
-            'VITE_SUPABASE_ANON_KEY': {
-                description: 'Clave anónima de Supabase',
-                required: true,
-                example: 'tu_clave_anon_aqui'
-            },
-            'GEMINI_API_KEY': {
-                description: 'Clave de API de Google Gemini para asistente IA',
-                required: false,
-                example: 'tu_clave_gemini_aqui'
-            }
-        },
-
-        // Scripts disponibles
-        scripts: {
-            'npm run dev': 'Inicia servidor de desarrollo (localhost:5173)',
-            'npm run build': 'Compila TypeScript y genera build de producción',
-            'npm run preview': 'Vista previa del build',
-            'npm test': 'Ejecuta suite de pruebas con Vitest',
-            'npm run test:ui': 'Abre interfaz gráfica de pruebas',
-            'npm run test:coverage': 'Genera reporte de cobertura de código',
-            'npm run test:run': 'Ejecuta tests una sola vez (CI/CD)'
-        }
+            'Asistente de IA integrado',
+            'Gestión de múltiples proyectos'
+        ]
     },
 
-    // Enlaces útiles
+    // Enlaces de soporte
     links: {
         documentation: 'https://abrinay1997-stack.github.io/SyncMaster/#conocimiento',
-        repository: 'https://github.com/abrinay1997-stack/LiveSync-Pro',
-        appRepository: 'https://ai.studio/apps/drive/18KB4IU6KzA9Jr39Z4tEdMPe08n6WLqB3',
         support: 'https://abrinay1997-stack.github.io/SyncMaster',
-        supabase: 'https://app.supabase.com',
-        geminiApi: 'https://makersuite.google.com/app/apikey',
-        issues: 'https://github.com/abrinay1997-stack/LiveSync-Pro/issues'
+        faq: 'https://abrinay1997-stack.github.io/SyncMaster/#faq'
     },
 
     // Tipos de eventos soportados
@@ -174,60 +114,52 @@ const CONFIG = {
 
     // Categorías de soporte técnico
     supportCategories: [
-        { value: 'instalacion', label: 'Instalación y Configuración', icon: 'fa-download' },
-        { value: 'supabase', label: 'Problemas con Supabase', icon: 'fa-database' },
-        { value: 'gemini', label: 'Problemas con IA Gemini', icon: 'fa-brain' },
+        { value: 'proyecto', label: 'Ayuda con Proyecto', icon: 'fa-project-diagram' },
         { value: 'calculos', label: 'Cálculos Acústicos', icon: 'fa-calculator' },
-        { value: 'proyectos', label: 'Gestión de Proyectos', icon: 'fa-project-diagram' },
         { value: 'exportacion', label: 'Exportación PDF/DXF', icon: 'fa-file-export' },
         { value: 'visualizacion', label: 'Visualización 3D', icon: 'fa-cube' },
-        { value: 'sincronizacion', label: 'Sincronización en la Nube', icon: 'fa-sync' },
-        { value: 'rendimiento', label: 'Rendimiento y Optimización', icon: 'fa-tachometer-alt' },
-        { value: 'bugs', label: 'Reportar Bug', icon: 'fa-bug' },
+        { value: 'guardado', label: 'Guardado y Sincronización', icon: 'fa-sync' },
+        { value: 'ia', label: 'Asistente de IA', icon: 'fa-brain' },
+        { value: 'rendimiento', label: 'Rendimiento', icon: 'fa-tachometer-alt' },
+        { value: 'tecnico', label: 'Problema Técnico', icon: 'fa-wrench' },
         { value: 'otro', label: 'Otro', icon: 'fa-question' }
     ],
 
     // Niveles de prioridad
     priorityLevels: [
         { value: 'baja', label: 'Baja', color: '#3b82f6', description: 'Consulta general, no urgente' },
-        { value: 'media', label: 'Media', color: '#f59e0b', description: 'Problema que afecta trabajo pero tiene workaround' },
+        { value: 'media', label: 'Media', color: '#f59e0b', description: 'Problema que afecta trabajo pero tiene solución temporal' },
         { value: 'alta', label: 'Alta', color: '#f97316', description: 'Problema que bloquea trabajo' },
         { value: 'critica', label: 'Crítica', color: '#ef4444', description: 'Sistema no funcional, proyecto urgente' }
     ],
 
-    // Tiempos de respuesta estimados (en minutos)
+    // Tiempos de respuesta estimados
     responseTime: {
-        baja: 240,      // 4 horas
-        media: 120,     // 2 horas
-        alta: 60,       // 1 hora
-        critica: 15     // 15 minutos
+        baja: '4-8 horas',
+        media: '2-4 horas',
+        alta: '1-2 horas',
+        critica: '15-30 minutos'
     },
 
     // Configuración de chat
     chat: {
         enabled: true,
-        welcomeMessage: '¡Hola! Soy el asistente de SyncMaster para LiveSync Pro. ¿En qué puedo ayudarte con tu diseño acústico?',
-        offlineMessage: 'En este momento no hay agentes disponibles. Por favor, crea un ticket y te responderemos pronto.',
-        maxMessageLength: 1000,
-        typingIndicatorDelay: 800,
-        autoResponseDelay: 1200
+        welcomeMessage: '¡Hola! Soy el asistente automático de SyncMaster. ¿En qué puedo ayudarte con LiveSync Pro?',
+        maxMessageLength: 1000
     },
 
     // Horarios de soporte
     supportHours: {
-        timezone: 'UTC',
-        hours: '24/7 (Chat automático siempre disponible)',
-        humanSupport: 'Lunes a Viernes 9:00-18:00 UTC',
-        holidays: 'Soporte limitado en días festivos'
+        chat: 'Chat automático disponible 24/7',
+        email: 'Respuesta por email en menos de 24 horas',
+        humanSupport: 'Soporte personalizado: Lunes a Viernes 9:00-18:00 UTC'
     },
 
     // Estadísticas del sistema
     stats: {
-        averageResponseTime: 12,         // minutos
-        customerSatisfaction: 4.9,       // de 5
-        projectsCreated: 856,
-        activeUsers: 234,
-        uptime: 99.8                     // porcentaje
+        averageResponseTime: '< 15 minutos',
+        customerSatisfaction: '4.9/5',
+        activeUsers: '1000+'
     },
 
     // Parámetros acústicos comunes
@@ -264,75 +196,32 @@ const CONFIG = {
         acoustic_panel: { name: 'Panel acústico', avgAbsorption: 0.70 }
     },
 
-    // Recursos educativos
-    resources: {
-        tutorials: [
-            {
-                title: 'Introducción a LiveSync Pro',
-                description: 'Aprende los conceptos básicos del sistema',
-                duration: '10 min',
-                level: 'Principiante',
-                topics: ['Instalación', 'Primer proyecto', 'Interfaz básica']
-            },
-            {
-                title: 'Diseño Acústico Avanzado',
-                description: 'Técnicas avanzadas de optimización',
-                duration: '25 min',
-                level: 'Avanzado',
-                topics: ['RT60', 'STI', 'Torres de delay', 'Optimización']
-            },
-            {
-                title: 'Exportación y Documentación',
-                description: 'Genera reportes profesionales',
-                duration: '15 min',
-                level: 'Intermedio',
-                topics: ['PDF', 'DXF', 'Reportes', 'Presentación al cliente']
-            }
-        ],
-        glossary: {
-            'SPL': 'Sound Pressure Level - Nivel de presión sonora medido en dB',
-            'STI': 'Speech Transmission Index - Índice de transmisión del habla (0.0-1.0)',
-            'RT60': 'Reverberation Time - Tiempo que tarda el sonido en decaer 60dB',
-            'Delay Tower': 'Sistema de refuerzo adicional con delay para cobertura extendida',
-            'Line Array': 'Sistema de altavoces en línea para largo alcance',
-            'Sabine': 'Fórmula para calcular RT60 en función del volumen y absorción',
-            'DXF': 'Drawing Exchange Format - Formato para planos CAD'
-        }
-    },
-
-    // Información del sistema
-    systemInfo: {
-        version: '1.0.0',
-        buildDate: '2026-01-10',
-        environment: 'production',
-        supportedBrowsers: ['Chrome 90+', 'Firefox 88+', 'Safari 14+', 'Edge 90+']
-    },
-
-    // Configuración de notificaciones
-    notifications: {
-        enabled: true,
-        types: {
-            ticketCreated: true,
-            ticketUpdated: true,
-            ticketResolved: true,
-            newFeature: true,
-            maintenance: true,
-            tipOfTheDay: true
-        }
+    // Glosario de términos acústicos
+    glossary: {
+        'SPL': 'Sound Pressure Level - Nivel de presión sonora medido en dB',
+        'STI': 'Speech Transmission Index - Índice de transmisión del habla (0.0-1.0)',
+        'RT60': 'Reverberation Time - Tiempo que tarda el sonido en decaer 60dB',
+        'Delay Tower': 'Sistema de refuerzo adicional con delay para cobertura extendida',
+        'Line Array': 'Sistema de altavoces en línea para largo alcance',
+        'Sabine': 'Fórmula para calcular RT60 en función del volumen y absorción',
+        'DXF': 'Drawing Exchange Format - Formato para planos CAD',
+        'Fill Speaker': 'Altavoz de relleno para cubrir zonas específicas',
+        'Coverage Map': 'Mapa de cobertura que muestra distribución de SPL',
+        'Absorption Coefficient': 'Coeficiente que indica cuánto sonido absorbe un material'
     },
 
     // Tips y mejores prácticas
     tips: [
         'Siempre comienza con un preset apropiado para tu tipo de evento',
-        'Verifica las dimensiones de la sala con planos arquitectónicos reales',
-        'Ten en cuenta que la audiencia absorbe sonido (coef. ~0.80)',
+        'Verifica las dimensiones de la sala antes de diseñar',
+        'Ten en cuenta que la audiencia absorbe mucho sonido (coef. ~0.80)',
         'Para eventos de voz, apunta a STI > 0.75',
         'Usa torres de delay para salas mayores a 30m de profundidad',
-        'Exporta tu proyecto a JSON como respaldo antes de cambios grandes',
+        'Exporta tu proyecto a PDF para presentar a clientes',
         'La visualización 3D te ayuda a detectar problemas de cobertura',
-        'Revisa siempre los logs de sincronización en el footer',
-        'Configura Supabase correctamente para evitar pérdida de datos',
-        'El asistente IA puede sugerir optimizaciones valiosas'
+        'Revisa el indicador de guardado en el footer',
+        'El asistente IA puede sugerir optimizaciones valiosas',
+        'Guarda versiones de respaldo antes de hacer cambios grandes'
     ]
 };
 
