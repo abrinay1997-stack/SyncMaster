@@ -140,75 +140,10 @@ function initChat() {
     }
 
     function generateBotResponse(userMessage) {
-        const message = userMessage.toLowerCase();
+        // TODO: Reescribir con información REAL sobre LiveSync Pro (PA Systems)
+        // Contenido temporal mientras se actualiza
 
-        // Respuestas sobre acceso a LiveSync Pro
-        if (message.includes('acceso') || message.includes('acceder') || message.includes('entrar') || message.includes('login')) {
-            return 'Para acceder a LiveSync Pro:\n\n✓ Abre LiveSync Pro en tu navegador\n✓ Inicia sesión con tus credenciales\n✓ Si no tienes cuenta, contacta con tu administrador\n\n🔒 Tus proyectos se guardan automáticamente en la nube y puedes acceder desde cualquier dispositivo.\n\n¿Necesitas ayuda con alguna funcionalidad específica?';
-        }
-
-        // Respuestas sobre proyectos acústicos
-        if (message.includes('proyecto') || message.includes('acust') || message.includes('diseñ') || message.includes('sonido')) {
-            return 'Para crear un proyecto acústico en LiveSync Pro:\n\n1. En el Project Hub, clic en "Nuevo Proyecto"\n2. Ingresa datos: nombre, cliente, tipo de evento\n3. Configura dimensiones de la sala (ancho x largo x altura)\n4. Selecciona sistema de sonido principal\n5. Aplica un preset (Corporativo, Concierto, Festival)\n6. Haz clic en "Calcular Sistema"\n7. Revisa resultados de SPL, STI y RT60\n\n¿Qué tipo de evento estás diseñando?';
-        }
-
-        // Respuestas sobre cálculos acústicos
-        if (message.includes('spl') || message.includes('sti') || message.includes('rt60') || message.includes('reverb') || message.includes('calculo')) {
-            return 'LiveSync Pro calcula automáticamente:\n\n• SPL (Sound Pressure Level): Cobertura de presión sonora en dB\n• STI (Speech Transmission Index): Inteligibilidad 0.0-1.0 (objetivo >0.75 para voz)\n• RT60: Tiempo de reverberación en segundos\n\nObjetivos recomendados:\n- Corporativo: RT60 0.6-0.8s, STI >0.75, SPL 85dB\n- Concierto: RT60 0.8-1.2s, STI >0.60, SPL 102dB\n- Festival: RT60 ~0.8s, STI >0.65, SPL 108dB\n\n¿Necesitas ayuda interpretando resultados?';
-        }
-
-        // Respuestas sobre torres de delay
-        if (message.includes('delay') || message.includes('torre') || message.includes('fill') || message.includes('refuerzo')) {
-            return 'Torres de Delay en LiveSync Pro:\n\n¿Cuándo usarlas?\n- Salas >30m de profundidad\n- Zonas con baja cobertura\n- Obstáculos arquitectónicos\n- Balcones o niveles elevados\n\nCómo agregarlas:\n1. Clic en "+ Agregar Torre de Delay"\n2. Posiciona en el mapa\n3. El sistema calcula delay automático (fórmula: distancia/343 × 1000 ms)\n4. Ajusta nivel SPL (6-10dB > sistema principal)\n5. Recalcula\n\n¿Necesitas ayuda posicionando torres?';
-        }
-
-        // Respuestas sobre exportación
-        if (message.includes('export') || message.includes('pdf') || message.includes('dxf') || message.includes('reporte') || message.includes('cad')) {
-            return 'Exportación de proyectos:\n\n📄 PDF: Reporte completo con mapas de cobertura, specs técnicas, lista de equipos\n📐 DXF: Planos para AutoCAD con posiciones exactas de altavoces\n📋 Portapapeles: Copia specs rápidamente\n💾 JSON: Backup completo del proyecto\n\nPara exportar:\n1. Completa tu diseño\n2. Haz clic en "Generar Reporte PDF" o "Exportar DXF"\n3. El archivo se descarga automáticamente\n\n¿Qué formato necesitas?';
-        }
-
-        // Respuestas sobre visualización 3D
-        if (message.includes('3d') || message.includes('visualiz') || message.includes('three') || message.includes('grafico')) {
-            return 'Visualización 3D en LiveSync Pro:\n\n✓ Renderizado con Three.js\n✓ Mapas de cobertura SPL con código de colores\n✓ Trazado de rayos sonoros\n✓ Posiciones de altavoces\n✓ Arquitectura de la sala\n\nControles:\n- Click + arrastrar: Rotar\n- Scroll: Zoom\n- Click derecho + arrastrar: Pan\n\nHaz clic en "Ver en 3D" en la vista de resultados.\n\n¿Necesitas ayuda navegando la vista 3D?';
-        }
-
-        // Respuestas sobre asistente IA
-        if (message.includes('ia') || message.includes('inteligencia') || message.includes('optimiz') || message.includes('asistente')) {
-            return 'Asistente IA en LiveSync Pro:\n\n🤖 El asistente de IA puede ayudarte a:\n✓ Sugerir configuraciones óptimas para tu sala\n✓ Detectar problemas acústicos potenciales\n✓ Recomendar posiciones de altavoces\n✓ Explicar conceptos técnicos\n\n📍 Ubica el ícono de IA en la parte superior de la interfaz. Haz clic para activar el asistente.\n\nNota: Todos los cálculos son locales y precisos.\n\n¿Qué aspecto de tu diseño necesitas optimizar?';
-        }
-
-        // Respuestas sobre guardado y sincronización
-        if (message.includes('guardar') || message.includes('sync') || message.includes('nube') || message.includes('perdida') || message.includes('recuper')) {
-            return 'Guardado de Proyectos en LiveSync Pro:\n\n☁️ Guardado automático en la nube\n✓ Tus proyectos se guardan automáticamente\n✓ Accede desde cualquier dispositivo\n✓ Historial de versiones disponible\n✓ Trabajo offline soportado\n\nIndicador de estado (footer):\n🟢 Verde: Todo guardado\n🔵 Azul: Guardando...\n🟡 Amarillo: Sin conexión (guardado local)\n🔴 Rojo: Error - revisa tu conexión\n\n¿Necesitas recuperar una versión anterior?';
-        }
-
-        // Respuestas sobre presets
-        if (message.includes('preset') || message.includes('corporativo') || message.includes('concierto') || message.includes('festival') || message.includes('teatro')) {
-            return 'Presets de eventos en LiveSync Pro:\n\n🎤 Corporativo: Inteligibilidad máxima (voz)\n- RT60: 0.7s | STI: 0.75 | SPL: 85dB\n\n🎸 Concierto: Balance música/voz\n- RT60: 1.0s | STI: 0.60 | SPL: 102dB\n\n🎪 Festival: Largo alcance\n- RT60: 0.8s | STI: 0.65 | SPL: 108dB\n\n🎭 Teatro: Sonido natural\n- RT60: 1.2s | STI: 0.70 | SPL: 88dB\n\nAplic un preset en Configuración > Básico.\n\n¿Qué tipo de evento diseñas?';
-        }
-
-        // Respuestas sobre problemas/errores
-        if (message.includes('error') || message.includes('problema') || message.includes('no funciona') || message.includes('falla')) {
-            return 'Solución de Problemas en LiveSync Pro:\n\n🔍 Pasos básicos:\n1. Actualiza la página (F5 o Ctrl+R)\n2. Verifica tu conexión a internet\n3. Cierra y vuelve a abrir la aplicación\n\n⚡ Problemas comunes:\n❌ Cálculos lentos → Reduce la resolución de simulación en configuración\n❌ No se guarda → Verifica el indicador de estado en el footer\n❌ Exportación falla → Revisa que el proyecto esté completo\n\n📧 Si el problema persiste, contacta a soporte: abrinay@livesyncpro.com\n\n¿Qué error específico estás viendo?';
-        }
-
-        // Respuestas sobre materiales acústicos
-        if (message.includes('material') || message.includes('absorc') || message.includes('coeficiente') || message.includes('pared')) {
-            return 'Materiales acústicos en LiveSync Pro:\n\nCoeficientes de absorción promedio:\n• Concreto: 0.02 (muy reflectivo)\n• Madera: 0.09\n• Vidrio: 0.05\n• Alfombra: 0.50\n• Cortinas: 0.30\n• Panel acústico: 0.70\n• Audiencia: 0.80 (importante!)\n\nConfigura en Configuración Avanzada > Propiedades Acústicas.\n\nLa audiencia absorbe mucho sonido, ¡considérala en tu diseño!\n\n¿Necesitas ayuda con coeficientes específicos?';
-        }
-
-        // Respuestas sobre validación de diseños
-        if (message.includes('valid') || message.includes('verific') || message.includes('correcto') || message.includes('revision')) {
-            return 'Validación de Diseños en LiveSync Pro:\n\n✓ LiveSync Pro valida automáticamente tu diseño:\n\n🎯 Cobertura:\n- Verifica que toda la sala tenga cobertura SPL adecuada\n- Resalta zonas con baja cobertura en rojo\n\n🗣️ Inteligibilidad:\n- Revisa que STI cumpla objetivos (>0.75 para voz)\n- Sugiere mejoras si detecta problemas\n\n⏱️ Reverberación:\n- Comprueba que RT60 esté en rango óptimo\n- Alerta si el tiempo es muy alto o bajo\n\n¿Necesitas ayuda interpretando los resultados de validación?';
-        }
-
-        // Respuestas sobre soporte
-        if (message.includes('soporte') || message.includes('ayuda') || message.includes('contacto')) {
-            return 'Canales de soporte para LiveSync Pro:\n\n💬 Chat: Asistente automático 24/7 (aquí mismo)\n🎫 Tickets: Sección Tickets de esta plataforma\n📧 Email directo: abrinay@livesyncpro.com\n📚 Documentación: Base de Conocimientos completa\n❓ FAQ: Preguntas frecuentes\n\nTiempo de respuesta por email: <24 horas\n\n¿Prefieres crear un ticket o seguir por chat?';
-        }
-
-        // Respuesta por defecto
-        return 'Entiendo tu consulta sobre LiveSync Pro (Sistema de Diseño Acústico).\n\nPuedo ayudarte con:\n✓ Crear proyectos acústicos\n✓ Cálculos SPL/STI/RT60\n✓ Torres de delay\n✓ Exportación PDF/DXF\n✓ Visualización 3D\n✓ Guardado en la nube\n✓ Asistente de IA\n✓ Materiales acústicos\n✓ Presets de eventos\n✓ Solución de problemas\n\n¿Sobre qué funcionalidad necesitas más información?';
+        return '🔄 Información en actualización\n\nEstamos actualizando la base de conocimientos para brindarte información precisa sobre LiveSync Pro.\n\nPor favor:\n📧 Contacta: abrinay@livesyncpro.com\n🎫 Crea un ticket en la sección Tickets\n\nDisculpa las molestias temporales.';
     }
 }
 
