@@ -1,407 +1,218 @@
 # SyncMaster 🎧
 
-**Centro de Soporte Técnico y Atención al Cliente para LiveSync Pro**
+**Centro de Soporte Técnico Oficial para LiveSync Pro**
 
-SyncMaster es una aplicación web moderna y completa para proporcionar soporte técnico y atención al cliente para LiveSync Pro. Desarrollada con tecnologías web estándar y optimizada para GitHub Pages.
+SyncMaster es tu plataforma de soporte dedicada para obtener ayuda, resolver problemas y aprender a usar LiveSync Pro de manera efectiva.
 
-## 🌟 Características
+## 🌟 ¿Qué es SyncMaster?
 
-### Sistema de Chat en Vivo
-- Chat inteligente con respuestas automáticas
-- Asistente virtual con conocimiento de LiveSync Pro
-- Respuestas rápidas predefinidas
-- Interfaz intuitiva y moderna
+SyncMaster te proporciona acceso a:
 
-### Sistema de Tickets
-- Creación y gestión de tickets de soporte
-- Categorización automática
-- Niveles de prioridad
-- Seguimiento del estado
-- Almacenamiento local de tickets
+- **Chat de Asistencia Automática 24/7**: Respuestas instantáneas a tus preguntas
+- **Sistema de Tickets**: Crea solicitudes de soporte para problemas complejos
+- **Base de Conocimientos**: Guías completas sobre cómo usar LiveSync Pro
+- **Preguntas Frecuentes**: Respuestas rápidas a las dudas más comunes
 
-### Base de Conocimientos
-- Documentación completa y organizada
-- Guías de instalación y configuración
-- Tutoriales paso a paso
-- Solución de problemas
-- Búsqueda integrada
+## 🚀 Cómo Usar SyncMaster
 
-### Preguntas Frecuentes (FAQ)
-- Respuestas a las preguntas más comunes
-- Diseño de acordeón
-- Fácil navegación
+### 1. Chat de Asistencia
 
-### Diseño Responsive
-- Optimizado para móviles, tablets y desktop
-- Interfaz moderna y profesional
-- Animaciones suaves
-- Accesibilidad mejorada
+El chat automático te ayuda con:
+- Primeros pasos con LiveSync Pro
+- Crear proyectos acústicos
+- Entender parámetros (SPL, STI, RT60)
+- Usar presets de eventos
+- Exportar reportes y planos
+- Solucionar problemas comunes
 
-## 🚀 Tecnologías Utilizadas
+**Cómo usar el chat:**
+1. Haz clic en la sección "Chat"
+2. Escribe tu pregunta en lenguaje natural
+3. Recibe respuestas basadas en la documentación oficial
+4. Usa los botones de respuesta rápida para temas comunes
 
-- **HTML5**: Estructura semántica moderna
-- **CSS3**: Diseño responsive con Grid y Flexbox
-- **JavaScript ES6+**: Lógica de aplicación
-- **Font Awesome**: Iconografía
-- **LocalStorage**: Persistencia de datos del lado del cliente
+**Importante:** El chat es automático, no conecta con agentes humanos. Para soporte personalizado, usa el email: abrinay@livesyncpro.com
 
-## 📦 Estructura del Proyecto
+### 2. Sistema de Tickets
 
-```
-SyncMaster/
-├── index.html              # Página principal
-├── styles.css              # Estilos globales
-├── app.js                  # Lógica de la aplicación
-├── config.js               # Configuración
-├── knowledge-base.js       # Base de conocimientos
-└── README.md              # Este archivo
-```
+**Cuándo crear un ticket:**
+- Problemas técnicos que no puedes resolver
+- Solicitudes de nuevas funcionalidades
+- Reportar errores o bugs
+- Consultas sobre licencias o facturación
 
-## 🛠️ Instalación y Configuración
-
-### Opción 1: GitHub Pages (Recomendado)
-
-1. **Fork o clone este repositorio**
-   ```bash
-   git clone https://github.com/abrinay1997-stack/SyncMaster.git
-   cd SyncMaster
-   ```
-
-2. **Configurar GitHub Pages**
-   - Ve a Settings > Pages en tu repositorio
-   - Selecciona la rama `main` o `master`
-   - Selecciona la carpeta raíz `/`
-   - Guarda los cambios
-   - Tu aplicación estará disponible en: `https://[tu-usuario].github.io/SyncMaster/`
-
-3. **Personalización**
-   - Edita `config.js` para personalizar la configuración
-   - Modifica `knowledge-base.js` para agregar o editar artículos
-   - Actualiza los enlaces y referencias a LiveSync Pro
-
-### Opción 2: Servidor Local
-
-1. **Clonar el repositorio**
-   ```bash
-   git clone https://github.com/abrinay1997-stack/SyncMaster.git
-   cd SyncMaster
-   ```
-
-2. **Iniciar un servidor local**
-
-   Usando Python:
-   ```bash
-   # Python 3
-   python -m http.server 8000
-
-   # Python 2
-   python -m SimpleHTTPServer 8000
-   ```
-
-   Usando Node.js:
-   ```bash
-   npx http-server
-   ```
-
-   Usando PHP:
-   ```bash
-   php -S localhost:8000
-   ```
-
-3. **Acceder a la aplicación**
-   - Abre tu navegador en `http://localhost:8000`
-
-### Opción 3: Otros Servicios de Hosting
-
-SyncMaster es una aplicación estática que puede desplegarse en:
-- **Netlify**: Arrastra la carpeta del proyecto
-- **Vercel**: Conecta tu repositorio de GitHub
-- **Cloudflare Pages**: Conecta tu repositorio
-- **AWS S3 + CloudFront**: Para hosting de alto rendimiento
-- **Firebase Hosting**: Para integración con servicios de Google
-
-## ⚙️ Configuración
-
-### Personalizar para tu Producto
-
-Edita el archivo `config.js`:
-
-```javascript
-const CONFIG = {
-    app: {
-        name: 'Tu Aplicación de Soporte',
-        supportEmail: 'tu-email@ejemplo.com',
-        // ... más configuraciones
-    },
-    livesyncpro: {
-        name: 'Tu Producto',
-        repository: 'https://github.com/tu-usuario/tu-repo',
-        // ... más configuraciones
-    }
-};
-```
-
-### Agregar Conocimiento del Repositorio LiveSync Pro
-
-Una vez que tengas acceso al repositorio de LiveSync Pro:
-
-1. **Analizar el Repositorio**
-   - Revisa la documentación existente
-   - Identifica las funcionalidades principales
-   - Documenta problemas comunes
-
-2. **Actualizar la Base de Conocimientos**
-   - Edita `knowledge-base.js`
-   - Agrega nuevos artículos
-   - Actualiza información técnica
-
-3. **Mejorar las Respuestas del Chat**
-   - Edita la función `generateBotResponse()` en `app.js`
-   - Agrega palabras clave específicas de tu producto
-   - Personaliza las respuestas
-
-### Integrar con APIs Reales
-
-Para conectar con servicios backend reales:
-
-```javascript
-// En app.js, reemplaza el almacenamiento local con llamadas API
-async function createTicket(ticketData) {
-    const response = await fetch('https://tu-api.com/tickets', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer YOUR_API_KEY'
-        },
-        body: JSON.stringify(ticketData)
-    });
-    return response.json();
-}
-```
-
-## 📚 Uso
-
-### Navegación
-
-La aplicación tiene 5 secciones principales:
-
-1. **Inicio**: Página de bienvenida con acciones rápidas
-2. **Chat en Vivo**: Comunicación en tiempo real
-3. **Tickets**: Sistema de gestión de tickets
-4. **Base de Conocimientos**: Documentación y guías
-5. **FAQ**: Preguntas frecuentes
-
-### Sistema de Chat
-
-El chat incluye:
-- Respuestas automáticas inteligentes
-- Botones de respuesta rápida
-- Historial de conversación
-- Indicadores de estado
-
-Palabras clave reconocidas:
-- Instalación, configuración, sincronización
-- Problemas de conexión, errores
-- Seguridad, encriptación
-- Precios, planes, facturación
-- Y más...
-
-### Crear un Ticket
-
+**Cómo crear un ticket:**
 1. Ve a la sección "Tickets"
-2. Completa el formulario con:
-   - Nombre y email
+2. Completa el formulario:
+   - Tu nombre y email de contacto
    - Categoría del problema
-   - Prioridad
-   - Descripción detallada
+   - Prioridad (Baja, Media, Alta, Urgente)
+   - Descripción detallada del problema
 3. Haz clic en "Enviar Ticket"
 4. Recibirás un ID de ticket único
+5. Copia el contenido del ticket o envíalo por email
 
-### Buscar en la Base de Conocimientos
+**Nota:** Los tickets se guardan localmente en tu navegador. Para enviarlos al equipo de soporte, usa los botones "Enviar por Email" o "Copiar Contenido" que aparecen después de crear el ticket.
 
-1. Ve a "Base de Conocimientos"
-2. Usa la barra de búsqueda o navega por categorías:
-   - Primeros Pasos
-   - Configuración
-   - Solución de Problemas
-   - Seguridad
-   - API y Desarrollo
-   - Aplicaciones Móviles
+### 3. Base de Conocimientos
 
-## 🎨 Personalización de Estilos
+La base de conocimientos contiene guías detalladas sobre:
 
-### Cambiar Colores
+**Primeros Pasos:**
+- Comenzar con LiveSync Pro
+- Crear tu primer proyecto acústico
+- Entender la interfaz
 
-Edita las variables CSS en `styles.css`:
+**Diseño Acústico:**
+- Parámetros acústicos (SPL, STI, RT60)
+- Torres de delay y fill speakers
+- Presets de eventos (Corporativo, Concierto, Festival, Teatro)
 
-```css
-:root {
-    --primary-color: #2563eb;      /* Color principal */
-    --primary-dark: #1e40af;       /* Color primario oscuro */
-    --secondary-color: #10b981;    /* Color secundario */
-    --danger-color: #ef4444;       /* Color de error */
-    /* ... más variables */
-}
-```
+**Funcionalidades:**
+- Exportación de proyectos (PDF, DXF, JSON)
+- Visualización 3D interactiva
+- Guardado en la nube y sincronización
+- Colaboración en equipo
 
-### Fuentes
+**Asistente de IA:**
+- Cómo usar el asistente inteligente
+- Optimizar diseños acústicos
+- Obtener recomendaciones personalizadas
 
-Para cambiar la fuente, actualiza en `styles.css`:
+**Solución de Problemas:**
+- Problemas de cálculo
+- Problemas de guardado
+- Problemas de exportación
+- Problemas de rendimiento
 
-```css
-body {
-    font-family: 'Tu Fuente', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-```
+**Mejores Prácticas:**
+- Consejos para diseños exitosos
+- Validación y verificación
+- Documentación profesional
+- Errores comunes a evitar
 
-## 🔧 Funcionalidades Avanzadas
+**Cómo buscar en la base de conocimientos:**
+1. Ve a la sección "Base de Conocimientos"
+2. Usa la barra de búsqueda para encontrar temas específicos
+3. Navega por categorías
+4. Haz clic en un artículo para leer el contenido completo
 
-### Agregar Nuevos Artículos
+### 4. Preguntas Frecuentes (FAQ)
 
-En `knowledge-base.js`:
+Encuentra respuestas rápidas a preguntas como:
+- ¿Qué es LiveSync Pro?
+- ¿Cómo empiezo a usar la plataforma?
+- ¿Puedo trabajar sin conexión a internet?
+- ¿Cómo colaboro con mi equipo?
+- ¿Qué formatos de exportación están disponibles?
+- ¿Cómo funciona la sincronización en la nube?
+- Y muchas más...
 
-```javascript
-const KNOWLEDGE_BASE = {
-    'nuevo-articulo': {
-        title: 'Título del Artículo',
-        content: `
-            <h3>Sección</h3>
-            <p>Contenido...</p>
-        `
-    },
-    // ... más artículos
-};
-```
+## 📱 Acceso a SyncMaster
 
-### Agregar Categorías de Tickets
+SyncMaster está disponible en:
+- **Web**: Accede desde cualquier navegador moderno
+- **Compatible con**: Chrome, Firefox, Safari, Edge
+- **Dispositivos**: Desktop, tablet y móvil
 
-En `config.js`:
+**Requisitos:**
+- Navegador web actualizado
+- Conexión a internet (para acceder a la plataforma de soporte)
 
-```javascript
-supportCategories: [
-    { value: 'nueva-categoria', label: 'Nueva Categoría', icon: 'fa-icon' },
-    // ... más categorías
-]
-```
+## 💡 Consejos de Uso
 
-### Personalizar el Chatbot
+### Encuentra Ayuda Rápidamente
 
-Edita la función `generateBotResponse()` en `app.js`:
+1. **Para preguntas generales**: Usa el chat automático
+2. **Para problemas técnicos**: Crea un ticket de soporte
+3. **Para aprender funcionalidades**: Consulta la base de conocimientos
+4. **Para dudas rápidas**: Revisa el FAQ
 
-```javascript
-function generateBotResponse(userMessage) {
-    const message = userMessage.toLowerCase();
+### Describe Problemas Efectivamente
 
-    // Agrega nuevas condiciones
-    if (message.includes('tu-palabra-clave')) {
-        return 'Tu respuesta personalizada...';
-    }
+Cuando crees un ticket o uses el chat, incluye:
+- Qué estabas intentando hacer
+- Qué esperabas que sucediera
+- Qué ocurrió en realidad
+- Pasos para reproducir el problema
+- Navegador y sistema operativo que usas
 
-    // ... más condiciones
-}
-```
+### Mantén tus Tickets Organizados
 
-## 📊 Analytics (Opcional)
+- Los tickets se guardan localmente en tu navegador
+- Usa el botón "Enviar por Email" para contactar al soporte
+- Copia el contenido para guardarlo en tu sistema
+- Revisa "Mis Tickets" para ver tu historial
 
-Para agregar Google Analytics:
+## 📞 Contacto con Soporte Humano
 
-```html
-<!-- En index.html, antes de </head> -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-```
+Para asistencia personalizada:
 
-## 🔒 Seguridad
+- **Email**: abrinay@livesyncpro.com
+- **Chat Automático**: Disponible 24/7 en SyncMaster
+- **Tickets**: Sistema de seguimiento en la plataforma
 
-### Buenas Prácticas
+**Horarios de respuesta:**
+- Tickets Urgentes: 2-4 horas hábiles
+- Tickets Alta Prioridad: 24 horas hábiles
+- Tickets Media/Baja Prioridad: 48-72 horas hábiles
 
-- No almacenes información sensible en el código del cliente
-- Usa HTTPS en producción
-- Valida todas las entradas del usuario
-- Implementa rate limiting en el backend
-- No expongas API keys en el código frontend
+## 🎯 Recursos Adicionales
 
-### Integración con Backend Seguro
+### Sobre LiveSync Pro
 
-Para producción, considera:
-- Autenticación JWT
-- Encriptación de datos sensibles
-- CORS configurado correctamente
-- Validación server-side
+LiveSync Pro es un sistema profesional de diseño y simulación acústica que te permite:
+- Diseñar sistemas de refuerzo sonoro
+- Calcular cobertura SPL
+- Analizar inteligibilidad (STI)
+- Optimizar reverberación (RT60)
+- Posicionar torres de delay
+- Visualizar en 3D
+- Exportar reportes profesionales
 
-## 🐛 Solución de Problemas
+### Aprende Más
 
-### La aplicación no carga en GitHub Pages
+Para dominar LiveSync Pro:
+1. Comienza con la sección "Primeros Pasos" en la base de conocimientos
+2. Sigue las guías paso a paso
+3. Practica con proyectos de ejemplo
+4. Usa el asistente de IA para obtener recomendaciones
+5. Consulta las mejores prácticas profesionales
 
-1. Verifica que GitHub Pages esté habilitado
-2. Asegúrate de que la rama correcta esté seleccionada
-3. Limpia la caché del navegador
-4. Revisa la consola del navegador por errores
+## 🔐 Privacidad y Seguridad
 
-### Los estilos no se aplican
+- Tus tickets se guardan localmente en tu navegador
+- No compartimos información con terceros
+- El chat automático no almacena conversaciones
+- Para consultas sensibles, usa el email de soporte directo
 
-1. Verifica que `styles.css` esté en la raíz del proyecto
-2. Comprueba la ruta en `index.html`
-3. Limpia la caché del navegador
+## ❓ Preguntas Sobre SyncMaster
 
-### El chat no responde
+**¿SyncMaster es parte de LiveSync Pro?**
+No, SyncMaster es una plataforma de soporte separada dedicada a ayudarte con LiveSync Pro.
 
-1. Abre la consola del navegador (F12)
-2. Busca errores de JavaScript
-3. Verifica que `app.js` esté cargado correctamente
+**¿Necesito cuenta para usar SyncMaster?**
+No, puedes acceder libremente al chat, tickets, base de conocimientos y FAQ.
 
-## 🤝 Contribuciones
+**¿El chat conecta con un agente humano?**
+No, el chat es automático basado en la documentación. Para soporte humano, usa el email o sistema de tickets.
 
-Las contribuciones son bienvenidas. Para contribuir:
+**¿Los tickets se envían automáticamente?**
+No, se guardan localmente. Usa los botones "Enviar por Email" o "Copiar Contenido" para contactar al equipo.
 
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📝 Roadmap
-
-### Próximas Funcionalidades
-
-- [ ] Sistema de autenticación de usuarios
-- [ ] Panel de administración
-- [ ] Integración con APIs de ticketing (Zendesk, Freshdesk)
-- [ ] Chat en tiempo real con WebSockets
-- [ ] Notificaciones push
-- [ ] Modo oscuro
-- [ ] Soporte multiidioma
-- [ ] Analytics integrado
-- [ ] Exportación de conversaciones
-- [ ] Sistema de calificación de soporte
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 👥 Soporte
-
-Si necesitas ayuda con SyncMaster:
-
-- 📧 Email: abrinay@livesyncpro.com
-- 💬 Chat: Disponible en la aplicación
-- 🐛 Issues: [GitHub Issues](https://github.com/abrinay1997-stack/SyncMaster/issues)
-- 📖 Documentación: [Docs](https://docs.livesyncpro.com)
-
-## 🙏 Agradecimientos
-
-- [Font Awesome](https://fontawesome.com) por los iconos
-- [Google Fonts](https://fonts.google.com) por las fuentes
-- Comunidad open source por las inspiraciones y recursos
+**¿Puedo acceder desde mi móvil?**
+Sí, SyncMaster está optimizado para funcionar en móviles, tablets y desktop.
 
 ---
 
-Desarrollado con ❤️ para proporcionar el mejor soporte a los usuarios de LiveSync Pro
+**¿Necesitas ayuda ahora?**
+- 💬 Abre el Chat para respuestas instantáneas
+- 🎫 Crea un Ticket para problemas complejos
+- 📚 Explora la Base de Conocimientos para guías detalladas
+- ❓ Revisa el FAQ para preguntas frecuentes
 
-**Versión**: 1.0.0
+---
+
+Desarrollado para proporcionar el mejor soporte a usuarios de LiveSync Pro
+
 **Última actualización**: Enero 2026
