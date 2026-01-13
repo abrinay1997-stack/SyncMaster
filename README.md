@@ -1,112 +1,36 @@
 # SyncMaster 🎧
 
-**Centro de Soporte Técnico Oficial para LiveSync Pro**
+**Chatbot de Soporte Técnico Oficial para LiveSync Pro**
 
-SyncMaster es tu plataforma de soporte dedicada para obtener ayuda, resolver problemas y aprender a usar LiveSync Pro de manera efectiva.
+SyncMaster es tu asistente automático de soporte 24/7 para obtener ayuda con LiveSync Pro.
 
 ## 🌟 ¿Qué es SyncMaster?
 
-SyncMaster te proporciona acceso a:
+SyncMaster te proporciona:
 
-- **Chat de Asistencia Automática 24/7**: Respuestas instantáneas a tus preguntas
-- **Sistema de Tickets**: Crea solicitudes de soporte para problemas complejos
-- **Base de Conocimientos**: Guías completas sobre cómo usar LiveSync Pro
-- **Preguntas Frecuentes**: Respuestas rápidas a las dudas más comunes
+- **Chatbot de Asistencia Automática 24/7**: Respuestas instantáneas a tus preguntas sobre LiveSync Pro
 
 ## 🚀 Cómo Usar SyncMaster
 
-### 1. Chat de Asistencia
+### Chat de Asistencia
 
-El chat automático te ayuda con:
+El chatbot automático te ayuda con:
 - Primeros pasos con LiveSync Pro
-- Crear proyectos acústicos
-- Entender parámetros (SPL, STI, RT60)
-- Usar presets de eventos
-- Exportar reportes y planos
+- Crear proyectos de diseño de PA Systems
+- Configurar line arrays y delay towers
+- Entender FOH (Front of House) y configuración de monitores
+- Configurar sistemas de rigging y cálculos de seguridad
+- Análisis de potencia eléctrica (3 fases, voltage drop)
+- Redes Dante/AVB y configuración de red
+- Exportar diseños a PDF y DXF
 - Solucionar problemas comunes
 
 **Cómo usar el chat:**
-1. Haz clic en la sección "Chat"
-2. Escribe tu pregunta en lenguaje natural
-3. Recibe respuestas basadas en la documentación oficial
-4. Usa los botones de respuesta rápida para temas comunes
+1. Escribe tu pregunta en lenguaje natural
+2. Recibe respuestas basadas en la documentación oficial de LiveSync Pro
+3. Usa los botones de respuesta rápida para temas comunes
 
-**Importante:** El chat es automático, no conecta con agentes humanos. Para soporte personalizado, usa el email: abrinay@livesyncpro.com
-
-### 2. Sistema de Tickets
-
-**Cuándo crear un ticket:**
-- Problemas técnicos que no puedes resolver
-- Solicitudes de nuevas funcionalidades
-- Reportar errores o bugs
-- Consultas sobre licencias o facturación
-
-**Cómo crear un ticket:**
-1. Ve a la sección "Tickets"
-2. Completa el formulario:
-   - Tu nombre y email de contacto
-   - Categoría del problema
-   - Prioridad (Baja, Media, Alta, Urgente)
-   - Descripción detallada del problema
-3. Haz clic en "Enviar Ticket"
-4. Recibirás un ID de ticket único
-5. Copia el contenido del ticket o envíalo por email
-
-**Nota:** Los tickets se guardan localmente en tu navegador. Para enviarlos al equipo de soporte, usa los botones "Enviar por Email" o "Copiar Contenido" que aparecen después de crear el ticket.
-
-### 3. Base de Conocimientos
-
-La base de conocimientos contiene guías detalladas sobre:
-
-**Primeros Pasos:**
-- Comenzar con LiveSync Pro
-- Crear tu primer proyecto acústico
-- Entender la interfaz
-
-**Diseño Acústico:**
-- Parámetros acústicos (SPL, STI, RT60)
-- Torres de delay y fill speakers
-- Presets de eventos (Corporativo, Concierto, Festival, Teatro)
-
-**Funcionalidades:**
-- Exportación de proyectos (PDF, DXF, JSON)
-- Visualización 3D interactiva
-- Guardado en la nube y sincronización
-- Colaboración en equipo
-
-**Asistente de IA:**
-- Cómo usar el asistente inteligente
-- Optimizar diseños acústicos
-- Obtener recomendaciones personalizadas
-
-**Solución de Problemas:**
-- Problemas de cálculo
-- Problemas de guardado
-- Problemas de exportación
-- Problemas de rendimiento
-
-**Mejores Prácticas:**
-- Consejos para diseños exitosos
-- Validación y verificación
-- Documentación profesional
-- Errores comunes a evitar
-
-**Cómo buscar en la base de conocimientos:**
-1. Ve a la sección "Base de Conocimientos"
-2. Usa la barra de búsqueda para encontrar temas específicos
-3. Navega por categorías
-4. Haz clic en un artículo para leer el contenido completo
-
-### 4. Preguntas Frecuentes (FAQ)
-
-Encuentra respuestas rápidas a preguntas como:
-- ¿Qué es LiveSync Pro?
-- ¿Cómo empiezo a usar la plataforma?
-- ¿Puedo trabajar sin conexión a internet?
-- ¿Cómo colaboro con mi equipo?
-- ¿Qué formatos de exportación están disponibles?
-- ¿Cómo funciona la sincronización en la nube?
-- Y muchas más...
+**Importante:** El chatbot es automático y está en actualización. Para soporte personalizado, contacta: abrinay@livesyncpro.com
 
 ## 📱 Acceso a SyncMaster
 
@@ -117,73 +41,56 @@ SyncMaster está disponible en:
 
 **Requisitos:**
 - Navegador web actualizado
-- Conexión a internet (para acceder a la plataforma de soporte)
+- Conexión a internet
 
 ## 💡 Consejos de Uso
 
-### Encuentra Ayuda Rápidamente
-
-1. **Para preguntas generales**: Usa el chat automático
-2. **Para problemas técnicos**: Crea un ticket de soporte
-3. **Para aprender funcionalidades**: Consulta la base de conocimientos
-4. **Para dudas rápidas**: Revisa el FAQ
-
 ### Describe Problemas Efectivamente
 
-Cuando crees un ticket o uses el chat, incluye:
-- Qué estabas intentando hacer
+Cuando uses el chatbot, incluye:
+- Qué estabas intentando hacer en LiveSync Pro
 - Qué esperabas que sucediera
 - Qué ocurrió en realidad
-- Pasos para reproducir el problema
-- Navegador y sistema operativo que usas
-
-### Mantén tus Tickets Organizados
-
-- Los tickets se guardan localmente en tu navegador
-- Usa el botón "Enviar por Email" para contactar al soporte
-- Copia el contenido para guardarlo en tu sistema
-- Revisa "Mis Tickets" para ver tu historial
+- Tipo de proyecto (line array, delay towers, FOH, etc.)
 
 ## 📞 Contacto con Soporte Humano
 
 Para asistencia personalizada:
 
 - **Email**: abrinay@livesyncpro.com
-- **Chat Automático**: Disponible 24/7 en SyncMaster
-- **Tickets**: Sistema de seguimiento en la plataforma
+- **Chat Automático**: Disponible 24/7 en SyncMaster (en actualización)
 
-**Horarios de respuesta:**
-- Tickets Urgentes: 2-4 horas hábiles
-- Tickets Alta Prioridad: 24 horas hábiles
-- Tickets Media/Baja Prioridad: 48-72 horas hábiles
+## 🎯 Sobre LiveSync Pro
 
-## 🎯 Recursos Adicionales
+LiveSync Pro es un sistema profesional de diseño de PA Systems para refuerzo sonoro en vivo que te permite:
+- Diseñar sistemas de line arrays (L-Acoustics, Meyer Sound, d&b audiotechnik, JBL, Adamson, RCF, etc.)
+- Calcular posicionamiento y delays de torres de delay
+- Configurar FOH (Front of House) y sistemas de consolas
+- Diseñar sistemas de monitores (wedges, sidefills, IEMs)
+- Analizar rigging y cargas estructurales
+- Calcular potencia eléctrica y distribución trifásica
+- Configurar redes Dante/AVB y ancho de banda
+- Predecir drift térmico y ajustes de delay
+- Calcular gain shading y alineación de niveles
+- Exportar diseños a CAD (DXF) y reportes PDF
 
-### Sobre LiveSync Pro
+**Características principales:**
+- Soporta más de 100 modelos de speakers profesionales
+- Cálculo de atmospheric EQ (ISO 9613)
+- Análisis de rigging con vectores y bridles
+- Voltage drop y damping factor para cables
+- Generación de listas de patcheo (IO lists)
+- Exportación DXF para integración con CAD
+- Funciona offline (PWA)
+- Sincronización en la nube
+- Colaboración en equipo
 
-LiveSync Pro es un sistema profesional de diseño y simulación acústica que te permite:
-- Diseñar sistemas de refuerzo sonoro
-- Calcular cobertura SPL
-- Analizar inteligibilidad (STI)
-- Optimizar reverberación (RT60)
-- Posicionar torres de delay
-- Visualizar en 3D
-- Exportar reportes profesionales
-
-### Aprende Más
-
-Para dominar LiveSync Pro:
-1. Comienza con la sección "Primeros Pasos" en la base de conocimientos
-2. Sigue las guías paso a paso
-3. Practica con proyectos de ejemplo
-4. Usa el asistente de IA para obtener recomendaciones
-5. Consulta las mejores prácticas profesionales
+**Precio:** $97 USD anuales
 
 ## 🔐 Privacidad y Seguridad
 
-- Tus tickets se guardan localmente en tu navegador
+- El chat automático no almacena conversaciones permanentemente
 - No compartimos información con terceros
-- El chat automático no almacena conversaciones
 - Para consultas sensibles, usa el email de soporte directo
 
 ## ❓ Preguntas Sobre SyncMaster
@@ -192,13 +99,10 @@ Para dominar LiveSync Pro:
 No, SyncMaster es una plataforma de soporte separada dedicada a ayudarte con LiveSync Pro.
 
 **¿Necesito cuenta para usar SyncMaster?**
-No, puedes acceder libremente al chat, tickets, base de conocimientos y FAQ.
+No, puedes acceder libremente al chatbot.
 
 **¿El chat conecta con un agente humano?**
-No, el chat es automático basado en la documentación. Para soporte humano, usa el email o sistema de tickets.
-
-**¿Los tickets se envían automáticamente?**
-No, se guardan localmente. Usa los botones "Enviar por Email" o "Copiar Contenido" para contactar al equipo.
+No, el chat es automático. Para soporte humano, usa el email: abrinay@livesyncpro.com
 
 **¿Puedo acceder desde mi móvil?**
 Sí, SyncMaster está optimizado para funcionar en móviles, tablets y desktop.
@@ -207,12 +111,10 @@ Sí, SyncMaster está optimizado para funcionar en móviles, tablets y desktop.
 
 **¿Necesitas ayuda ahora?**
 - 💬 Abre el Chat para respuestas instantáneas
-- 🎫 Crea un Ticket para problemas complejos
-- 📚 Explora la Base de Conocimientos para guías detalladas
-- ❓ Revisa el FAQ para preguntas frecuentes
+- 📧 Contacta: abrinay@livesyncpro.com
 
 ---
 
-Desarrollado para proporcionar el mejor soporte a usuarios de LiveSync Pro
+Desarrollado para proporcionar soporte automatizado a usuarios de LiveSync Pro
 
 **Última actualización**: Enero 2026
