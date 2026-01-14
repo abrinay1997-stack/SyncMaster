@@ -61,8 +61,12 @@ let chatState = {
     messageCount: 0,
     lastMessages: [], // Memoria de últimos 3 mensajes
     lastTopic: null,  // Último tema detectado
+    lastModel: null,  // NUEVO: Último modelo consultado (para contexto)
     showCTA: false    // Alternar CTAs (cada 3 mensajes)
 };
+
+// NUEVO: Sistema de feedback con localStorage
+let feedbackData = JSON.parse(localStorage.getItem('syncmaster-feedback') || '{"helpful": [], "notHelpful": [], "responses": {}}');
 
 function initChat() {
     const chatInput = document.getElementById('chatInput');
@@ -162,11 +166,13 @@ function initChat() {
     }
 
     // ========================================
-    // AGREGAR MENSAJE CON MARKDOWN (MEJORADO)
+    // AGREGAR MENSAJE CON MARKDOWN Y FEEDBACK (MEJORADO)
     // ========================================
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
+        const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        messageDiv.setAttribute('data-message-id', messageId);
 
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
@@ -175,9 +181,25 @@ function initChat() {
         const content = document.createElement('div');
         content.className = 'message-content';
 
-        // Renderizar markdown y HTML (NUEVO)
+        // Renderizar markdown y HTML
         const messageHTML = parseMarkdownToHTML(text);
         content.innerHTML = messageHTML;
+
+        // NUEVO: Agregar botones de feedback para mensajes del bot
+        if (sender === 'bot') {
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = 'feedback-buttons';
+            feedbackDiv.style.cssText = 'margin-top: 0.5rem; display: flex; gap: 0.5rem; opacity: 0.6;';
+            feedbackDiv.innerHTML = `
+                <button class="feedback-btn feedback-helpful" data-feedback="helpful" title="Esta respuesta me ayudó" style="background: none; border: 1px solid rgba(34, 211, 238, 0.3); color: var(--cyan-400); padding: 0.25rem 0.5rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">
+                    👍 Útil
+                </button>
+                <button class="feedback-btn feedback-not-helpful" data-feedback="notHelpful" title="No me ayudó" style="background: none; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 0.25rem 0.5rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">
+                    👎 No útil
+                </button>
+            `;
+            content.appendChild(feedbackDiv);
+        }
 
         // Agregar timestamp
         const time = document.createElement('span');
@@ -191,7 +213,7 @@ function initChat() {
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Agregar event listeners a botones de acción rápida
+        // Event listeners para botones de acción rápida
         const quickButtons = content.querySelectorAll('.quick-action-btn');
         quickButtons.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -200,6 +222,69 @@ function initChat() {
                 sendChatMessage();
             });
         });
+
+        // NUEVO: Event listeners para feedback
+        if (sender === 'bot') {
+            const feedbackButtons = content.querySelectorAll('.feedback-btn');
+            feedbackButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const feedbackType = this.getAttribute('data-feedback');
+                    handleFeedback(messageId, text, feedbackType, this);
+                });
+            });
+        }
+    }
+
+    // ========================================
+    // MANEJAR FEEDBACK (NUEVO)
+    // ========================================
+    function handleFeedback(messageId, responseText, feedbackType, buttonElement) {
+        // Guardar feedback
+        if (feedbackType === 'helpful') {
+            feedbackData.helpful.push({
+                messageId,
+                response: responseText,
+                timestamp: Date.now()
+            });
+        } else {
+            feedbackData.notHelpful.push({
+                messageId,
+                response: responseText,
+                timestamp: Date.now()
+            });
+        }
+
+        // Guardar en localStorage
+        localStorage.setItem('syncmaster-feedback', JSON.stringify(feedbackData));
+
+        // Feedback visual
+        const allButtons = buttonElement.parentElement.querySelectorAll('.feedback-btn');
+        allButtons.forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.3';
+            btn.style.cursor = 'not-allowed';
+        });
+
+        buttonElement.style.opacity = '1';
+        buttonElement.style.transform = 'scale(1.1)';
+
+        if (feedbackType === 'helpful') {
+            buttonElement.style.borderColor = 'var(--cyan-400)';
+            buttonElement.style.backgroundColor = 'rgba(34, 211, 238, 0.1)';
+        } else {
+            buttonElement.style.borderColor = '#ef4444';
+            buttonElement.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+        }
+
+        // Mostrar agradecimiento
+        setTimeout(() => {
+            showNotification(
+                feedbackType === 'helpful'
+                    ? '¡Gracias! Tu feedback nos ayuda a mejorar.'
+                    : 'Gracias. Trabajaremos en mejorar esta respuesta.',
+                'success'
+            );
+        }, 200);
     }
 
     // ========================================
@@ -227,10 +312,193 @@ function initChat() {
     }
 
     // ========================================
+    // NLP BÁSICO - EXTRACCIÓN DE ENTIDADES
+    // ========================================
+    function extractEntities(message) {
+        const msg = message.toLowerCase();
+        const entities = {
+            distance: null,
+            temperature: null,
+            people: null,
+            channels: null,
+            sampleRate: null,
+            eventType: null,
+            characteristics: []
+        };
+
+        // Extraer distancia (metros)
+        const distMatch = msg.match(/(\d+)\s*m(?:etros?)?(?!\s*hz)/i);
+        if (distMatch) entities.distance = parseInt(distMatch[1]);
+
+        // Extraer temperatura
+        const tempMatch = msg.match(/(\d+)\s*[°º]?c/i);
+        if (tempMatch) entities.temperature = parseInt(tempMatch[1]);
+
+        // Extraer cantidad de personas
+        const peopleMatch = msg.match(/(\d+)\s*(personas?|gente|audiencia|público)/i);
+        if (peopleMatch) entities.people = parseInt(peopleMatch[1]);
+
+        // Extraer canales
+        const channelsMatch = msg.match(/(\d+)\s*(canales?|ch)/i);
+        if (channelsMatch) entities.channels = parseInt(channelsMatch[1]);
+
+        // Extraer sample rate
+        if (/96\s*k|96000/i.test(msg)) entities.sampleRate = 96;
+        else if (/48\s*k|48000/i.test(msg)) entities.sampleRate = 48;
+
+        // Detectar tipo de evento
+        if (/(festival|outdoor|masivo)/i.test(msg)) entities.eventType = 'festival';
+        else if (/(teatro|indoor|sala)/i.test(msg)) entities.eventType = 'teatro';
+        else if (/(corporativo|conferencia|empresa)/i.test(msg)) entities.eventType = 'corporativo';
+
+        // Detectar características buscadas
+        if (/(potente|fuerte|alto spl|mucho volumen)/i.test(msg)) entities.characteristics.push('high-spl');
+        if (/(ligero|liviano|poco peso)/i.test(msg)) entities.characteristics.push('light');
+        if (/(cardio|direccional|rechazo)/i.test(msg)) entities.characteristics.push('cardioid');
+        if (/(largo alcance|distancia|lejos)/i.test(msg)) entities.characteristics.push('long-throw');
+        if (/(compacto|pequeño|mediano)/i.test(msg)) entities.characteristics.push('compact');
+
+        return entities;
+    }
+
+    // ========================================
+    // BÚSQUEDA INTELIGENTE POR CARACTERÍSTICAS
+    // ========================================
+    function searchByCharacteristics(characteristics, eventType, distance) {
+        const results = [];
+
+        // Buscar en base de datos
+        for (const [key, model] of Object.entries(SPEAKER_DATABASE)) {
+            let score = 0;
+
+            // Scoring por características
+            if (characteristics.includes('high-spl') && model.spl >= 145) score += 3;
+            if (characteristics.includes('light') && model.weight <= 60) score += 2;
+            if (characteristics.includes('long-throw') && model.category === 'Line Array Large') score += 3;
+            if (characteristics.includes('compact') && model.category === 'Line Array Medium') score += 2;
+
+            // Scoring por tipo de evento
+            if (eventType === 'festival' && model.category === 'Line Array Large') score += 3;
+            if (eventType === 'teatro' && model.category === 'Line Array Medium') score += 3;
+
+            // Scoring por distancia
+            if (distance) {
+                if (distance > 80 && model.category === 'Line Array Large') score += 3;
+                if (distance >= 30 && distance <= 80 && model.category === 'Line Array Medium') score += 2;
+            }
+
+            if (score > 0) {
+                results.push({ model, score });
+            }
+        }
+
+        // Ordenar por score descendente
+        results.sort((a, b) => b.score - a.score);
+
+        return results.slice(0, 3); // Top 3
+    }
+
+    // ========================================
+    // CONTEXTO - DETECTAR PREGUNTAS DE SEGUIMIENTO
+    // ========================================
+    function detectContextualQuestion(message, chatState) {
+        const msg = message.toLowerCase();
+
+        // Detectar referencias pronominales
+        const followUpPatterns = [
+            /^(y |¿?y )/,  // "y el panther?", "y para 50m?"
+            /^(cuántos?|cuantos?|cu[aá]ntos?) /,  // "cuántos necesito?"
+            /^(qué|que|cual|cuál) (es )?mejor/,  // "cuál es mejor?"
+            /^(sirve|funciona|va bien)/,  // "sirve para outdoor?"
+            /^(recomiendas?|sugieres?)/,  // "recomiendas otro?"
+            /^(y )?para (\d+)/  // "para 50m?" "y para 100 personas?"
+        ];
+
+        const isFollowUp = followUpPatterns.some(pattern => pattern.test(msg));
+
+        if (!isFollowUp) return null;
+
+        // Contexto de modelo anterior
+        if (chatState.lastTopic === 'model-specs' && chatState.lastModel) {
+            return {
+                type: 'model-followup',
+                lastModel: chatState.lastModel
+            };
+        }
+
+        // Contexto de configuración
+        if (chatState.lastTopic === 'festival' || chatState.lastTopic === 'teatro') {
+            return {
+                type: 'config-followup',
+                eventType: chatState.lastTopic
+            };
+        }
+
+        return null;
+    }
+
+    // ========================================
+    // SUGERENCIAS INTELIGENTES
+    // ========================================
+    function generateSmartSuggestions(message) {
+        const msg = message.toLowerCase();
+        const suggestions = [];
+
+        // Analizar palabras clave
+        const keywords = msg.match(/\b\w{4,}\b/g) || []; // Palabras de 4+ letras
+
+        // Detectar temas relacionados
+        if (keywords.some(k => ['festival', 'outdoor', 'grande', 'masivo'].includes(k))) {
+            suggestions.push('Setup festival');
+            suggestions.push('K2 specs');
+            suggestions.push('Delay towers');
+        }
+
+        if (keywords.some(k => ['teatro', 'indoor', 'sala'].includes(k))) {
+            suggestions.push('Setup teatro');
+            suggestions.push('Kara II specs');
+        }
+
+        if (keywords.some(k => ['delay', 'torre', 'tiempo', 'distancia'].includes(k))) {
+            suggestions.push('delay 50m 20°C');
+            suggestions.push('Delay towers');
+        }
+
+        if (keywords.some(k => ['dante', 'red', 'network', 'canales'].includes(k))) {
+            suggestions.push('48 canales dante');
+            suggestions.push('Redes Dante');
+        }
+
+        if (keywords.some(k => ['precio', 'costo', 'cuanto', 'pago'].includes(k))) {
+            suggestions.push('¿Cuánto cuesta?');
+        }
+
+        if (keywords.some(k => ['potente', 'fuerte', 'spl', 'volumen'].includes(k))) {
+            suggestions.push('K2 vs Panther');
+            suggestions.push('Line arrays');
+        }
+
+        // Si no hay sugerencias específicas, dar genéricas
+        if (suggestions.length === 0) {
+            suggestions.push('¿Qué es LiveSync Pro?');
+            suggestions.push('Specs del K2');
+            suggestions.push('Setup festival');
+        }
+
+        return [...new Set(suggestions)].slice(0, 4); // Únicas, máx 4
+    }
+
+    // ========================================
     // GENERAR RESPUESTA DEL BOT (REFACTORIZADO)
     // ========================================
     function generateBotResponse(userMessage) {
         const msg = userMessage.toLowerCase().trim();
+
+        // NUEVO: Extraer entidades con NLP básico
+        const entities = extractEntities(userMessage);
+
+        // NUEVO: Detectar preguntas de seguimiento
+        const contextInfo = detectContextualQuestion(userMessage, chatState);
 
         // Detección de idioma
         const isEnglish = /(what|how|where|when|why|can|does|is|specs?|price|cost|work)/i.test(userMessage) &&
@@ -240,6 +508,100 @@ function initChat() {
         const cta = chatState.showCTA ? '\n\n🚀 <strong>Accede:</strong> https://livesyncpro.com' : '';
 
         // ===================================
+        // PREGUNTAS DE SEGUIMIENTO CONTEXTUALES (NUEVO)
+        // ===================================
+        if (contextInfo) {
+            if (contextInfo.type === 'model-followup') {
+                const lastModel = contextInfo.lastModel;
+
+                // "cuántos necesito?" después de specs
+                if (/(cu[aá]ntos?|cuantos?|cantidad).*necesito/i.test(msg)) {
+                    if (entities.distance || entities.people) {
+                        const dist = entities.distance || (entities.people > 1000 ? 80 : 40);
+                        const qty = Math.ceil(dist / 8) + 4; // Aproximación simple
+                        return `📊 <strong>Para ${dist}m aproximadamente:</strong>\n\n• ${qty}-${qty+4} ${lastModel.name} por lado (Main PA)\n• Configuración típica para esa distancia\n\n💡 LiveSync Pro calcula la cantidad exacta según cobertura y SPL objetivo.${cta}\n\n<button class="quick-action-btn" data-action="Setup festival">🎪 Ver setup completo</button>`;
+                    }
+                    return `❓ ¿Para qué distancia? Ej: "cuántos ${lastModel.name} para 50m"`;
+                }
+
+                // "sirve para outdoor?" después de specs
+                if (/(sirve|funciona|va bien|recomendado).*para/i.test(msg)) {
+                    const uso = entities.eventType === 'festival' ? 'festivales grandes' :
+                                entities.eventType === 'teatro' ? 'teatros indoor' : 'ese tipo de evento';
+
+                    if (lastModel.category === 'Line Array Large' && entities.eventType === 'festival') {
+                        return `✅ <strong>Sí, ${lastModel.name} es ideal para ${uso}</strong>\n\n• SPL: ${lastModel.spl}dB (suficiente para grandes distancias)\n• Categoría: ${lastModel.category}\n• Alcance: >80m\n\n💡 Perfecto para outdoor masivo.${cta}`;
+                    } else if (lastModel.category === 'Line Array Medium' && entities.eventType === 'teatro') {
+                        return `✅ <strong>Sí, ${lastModel.name} funciona bien para ${uso}</strong>\n\n• Dispersión: ${lastModel.dispersion}° (ideal indoor)\n• SPL: ${lastModel.spl}dB\n• Alcance: 30-50m\n\n💡 Excelente para salas y teatros.${cta}`;
+                    }
+                }
+
+                // "y para 50m?" después de specs
+                if (/(y )?para (\d+)m/i.test(msg) && entities.distance) {
+                    if (entities.distance > 80 && lastModel.category !== 'Line Array Large') {
+                        return `⚠️ <strong>${lastModel.name} puede quedarse corto para ${entities.distance}m</strong>\n\n<strong>Mejor opción:</strong>\n• K1, Panther, GSL8 (>80m)\n• Line Arrays Large con alto SPL\n\n<button class="quick-action-btn" data-action="K2 vs Panther">⚖️ Comparar modelos</button>`;
+                    } else {
+                        return `✅ <strong>${lastModel.name} funciona para ${entities.distance}m</strong>\n\n• SPL @ ${entities.distance}m: ~${lastModel.spl - Math.ceil(entities.distance/10)}dB\n• Configuración recomendada: ${Math.ceil(entities.distance/8)}-${Math.ceil(entities.distance/6)} cajas por lado\n\n💡 LiveSync calcula SPL exacto.${cta}`;
+                    }
+                }
+            }
+        }
+
+        // ===================================
+        // PROCESAMIENTO NLP - PREGUNTAS COMPLEJAS (NUEVO)
+        // ===================================
+
+        // "mejor line array para teatro 25m 300 personas"
+        if (/(mejor|recomien|sugier|qué.*necesito|que.*necesito).*line array/i.test(msg) ||
+            /(line array|sistema|pa).*(mejor|recomien|para)/i.test(msg)) {
+
+            const results = searchByCharacteristics(entities.characteristics, entities.eventType, entities.distance);
+
+            if (results.length > 0) {
+                chatState.lastTopic = 'smart-search';
+                let response = `🎯 <strong>Recomendaciones para tu caso:</strong>\n\n`;
+
+                results.slice(0, 3).forEach((r, idx) => {
+                    const emoji = idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉';
+                    response += `${emoji} <strong>${r.model.brand} ${r.model.name}</strong>\n`;
+                    response += `   • SPL: ${r.model.spl}dB | Peso: ${r.model.weight}kg | ${r.model.category}\n\n`;
+                });
+
+                if (entities.distance) response += `📏 Distancia: ${entities.distance}m\n`;
+                if (entities.people) response += `👥 Audiencia: ${entities.people} personas\n`;
+                if (entities.eventType) response += `🎪 Tipo: ${entities.eventType}\n`;
+
+                response += `\n💡 LiveSync calcula la configuración exacta automáticamente.${cta}`;
+
+                return response;
+            }
+        }
+
+        // "calcula delay para 50 metros" (formato natural)
+        if (/(calcul|necesito|dame).*delay/i.test(msg) && entities.distance) {
+            const temp = entities.temperature || 20;
+            const calc = calculateDelayByTemp(entities.distance, temp);
+            chatState.lastTopic = 'delay-calc';
+            return `🗼 <strong>Calculadora de Delay</strong>\n\n• Distancia: ${calc.distance}m @ ${calc.temperature}°C\n• Velocidad sonido: ${calc.speedOfSound} m/s\n• <strong>Delay: ${calc.delayMs} ms</strong>${cta}`;
+        }
+
+        // "cuántos canales dante para 64 canales" (formato natural)
+        if (/(calcul|necesito|cu[aá]nto).*dante/i.test(msg) && entities.channels) {
+            const calc = calculateDanteBandwidth(entities.channels, entities.sampleRate || 48);
+            chatState.lastTopic = 'dante-calc';
+            return `🌐 <strong>Dante Bandwidth</strong>\n\n• Canales: ${calc.channels}\n• Sample rate: ${calc.sampleRate}kHz/24bit\n• <strong>Total: ${calc.totalMbps} Mbps</strong>\n• ${calc.recommendation}${cta}`;
+        }
+
+        // "configuración para 5000 personas festival"
+        if (/(config|setup|sistema|necesito).*festival|festival.*(config|setup)/i.test(msg) && entities.people) {
+            const isLarge = entities.people > 3000;
+            if (isLarge) {
+                chatState.lastTopic = 'festival';
+                return `🎪 <strong>Setup Festival Grande (${entities.people} personas)</strong>\n\n<strong>Main PA:</strong> 14-18 K1/Panther por lado\n→ <em>Cobertura >100m, SPL 105-110dB @ FOH</em>\n\n<strong>Subs:</strong> 10-16 KS28 (cardioid)\n<strong>Delay Towers:</strong> 3 torres @ 40m, 70m, 100m\n<strong>Potencia:</strong> 100-150 kW\n\n💡 LiveSync dimensiona automáticamente según tu audiencia.${cta}`;
+            }
+        }
+
+        // ===================================
         // BÚSQUEDA DE MODELOS (CON FUZZY MATCHING MEJORADO)
         // ===================================
         const modelMatch = msg.match(/(k[12i3]|kara|kiva|ks28|sb28|x1[25]|panther|pantheer|panterr|leo|lyon|leopard|lina|gsl8|gsl|ksl8|j8|v8|y8|sl[-\s]?sub|j[-\s]?sub|m[24]|vtx[-\s]?[agbm]\d+|e1[25]|s10|cs10|e219|hdl[-\s]?\d+|sub[-\s]?\d+)/);
@@ -247,6 +609,7 @@ function initChat() {
             const found = findSpeakerModel(modelMatch[0]);
             if (found) {
                 chatState.lastTopic = 'model-specs';
+                chatState.lastModel = found; // NUEVO: Guardar modelo en contexto
 
                 // Determinar uso recomendado según categoría
                 let uso = '';
@@ -535,9 +898,16 @@ function initChat() {
         }
 
         // ===================================
-        // RESPUESTA GENÉRICA (CON SUGERENCIAS)
+        // RESPUESTA GENÉRICA CON SUGERENCIAS INTELIGENTES (NUEVO)
         // ===================================
-        return `🤔 No estoy seguro de entender.\n\n<strong>Prueba con:</strong>\n• "Specs del K2"\n• "48 canales dante"\n• "delay 80m 25°C"\n• "K2 vs Panther"\n• "setup festival"\n• "¿Cuánto cuesta?"\n• "Efecto Haas"\n• "Power alley"\n• "Room modes"\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="¿Qué es LiveSync Pro?">ℹ️ ¿Qué es LiveSync Pro?</button> <button class="quick-action-btn" data-action="Contactar soporte">📞 Soporte</button>`;
+        const smartSuggestions = generateSmartSuggestions(userMessage);
+        let suggestionButtons = '';
+
+        smartSuggestions.forEach(suggestion => {
+            suggestionButtons += `<button class="quick-action-btn" data-action="${suggestion}">${suggestion}</button> `;
+        });
+
+        return `🤔 No entendí completamente tu pregunta.\n\n<strong>¿Te refieres a alguno de estos temas?</strong>\n\n${suggestionButtons}\n\n💡 O prueba con:\n• "Specs del K2"\n• "mejor line array para 50m"\n• "delay 80m 25°C"\n• "cuánto cuesta"\n\n🚀 https://livesyncpro.com`;
     }
 }
 
