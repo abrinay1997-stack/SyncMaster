@@ -111,9 +111,15 @@ function initChat() {
     // Enviar mensaje al hacer clic en el botón
     sendButton.addEventListener('click', sendChatMessage);
 
+    // NUEVO: Prevenir múltiples envíos rápidos
+    let isSending = false;
+
     function sendChatMessage() {
         const message = chatInput.value.trim();
         if (message === '') return;
+
+        // NUEVO: Prevenir envíos múltiples
+        if (isSending) return;
 
         // Rate limiting check
         const now = Date.now();
@@ -125,6 +131,11 @@ function initChat() {
         }
 
         messageTimestamps.push(now);
+
+        // NUEVO: Bloquear envíos temporalmente
+        isSending = true;
+        sendButton.disabled = true;
+        chatInput.disabled = true;
 
         // Agregar mensaje del usuario
         addMessage(message, 'user');
@@ -154,6 +165,12 @@ function initChat() {
             } else {
                 chatState.showCTA = false;
             }
+
+            // NUEVO: Desbloquear envíos
+            isSending = false;
+            sendButton.disabled = false;
+            chatInput.disabled = false;
+            chatInput.focus();
         }, 400); // Reducido de 1000ms a 400ms
     }
 
@@ -188,7 +205,24 @@ function initChat() {
     }
 
     // ========================================
-    // CARGAR HISTORIAL (NUEVO)
+    // SCROLL SUAVE OPTIMIZADO (NUEVO)
+    // ========================================
+    function scrollToBottom(smooth = true) {
+        // Usar requestAnimationFrame para evitar jank
+        requestAnimationFrame(() => {
+            if (smooth) {
+                chatMessages.scrollTo({
+                    top: chatMessages.scrollHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    }
+
+    // ========================================
+    // CARGAR HISTORIAL (MEJORADO)
     // ========================================
     function loadChatHistory() {
         if (chatHistory.length === 0) return;
@@ -204,6 +238,9 @@ function initChat() {
         chatHistory.forEach(msg => {
             addMessageToDOM(msg.text, msg.sender, false); // false = no guardar en historial de nuevo
         });
+
+        // Scroll al final sin animación (más rápido al cargar historial)
+        scrollToBottom(false);
     }
 
     // ========================================
@@ -302,29 +339,38 @@ function initChat() {
         messageDiv.appendChild(content);
 
         chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Event listeners para botones de acción rápida
-        const quickButtons = content.querySelectorAll('.quick-action-btn');
-        quickButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const action = btn.getAttribute('data-action');
-                chatInput.value = action;
-                sendChatMessage();
-            });
-        });
+        // MEJORADO: Scroll suave optimizado
+        scrollToBottom(true);
 
-        // NUEVO: Event listeners para feedback
-        if (sender === 'bot') {
-            const feedbackButtons = content.querySelectorAll('.feedback-btn');
-            feedbackButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const feedbackType = this.getAttribute('data-feedback');
-                    handleFeedback(messageId, text, feedbackType, this);
-                });
-            });
-        }
+        // MEJORADO: No agregamos listeners individuales aquí
+        // Se usan event delegation global (ver abajo)
     }
+
+    // ========================================
+    // EVENT DELEGATION PARA BOTONES (NUEVO - Evita memory leaks)
+    // ========================================
+    chatMessages.addEventListener('click', function(e) {
+        // Quick action buttons
+        if (e.target.closest('.quick-action-btn')) {
+            const btn = e.target.closest('.quick-action-btn');
+            const action = btn.getAttribute('data-action');
+            chatInput.value = action;
+            sendChatMessage();
+            return;
+        }
+
+        // Feedback buttons
+        if (e.target.closest('.feedback-btn')) {
+            const btn = e.target.closest('.feedback-btn');
+            const messageDiv = btn.closest('.message');
+            const messageId = messageDiv.getAttribute('data-message-id');
+            const messageText = messageDiv.querySelector('.message-content').textContent;
+            const feedbackType = btn.getAttribute('data-feedback');
+            handleFeedback(messageId, messageText, feedbackType, btn);
+            return;
+        }
+    });
 
     // ========================================
     // MANEJAR FEEDBACK (NUEVO)

@@ -517,13 +517,20 @@ body {
 .chat-messages {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    scroll-behavior: smooth; /* NUEVO: Scroll suave */
+    will-change: scroll-position; /* NUEVO: Optimización GPU */
+    /* Optimización de scroll para móviles */
+    -webkit-overflow-scrolling: touch;
+    /* Scroll snap para mejor experiencia */
+    scroll-padding-bottom: 1rem;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - MEJORADO */
 .chat-messages::-webkit-scrollbar {
     width: 8px;
 }
@@ -536,10 +543,17 @@ body {
 .chat-messages::-webkit-scrollbar-thumb {
     background: var(--slate-600);
     border-radius: 4px;
+    transition: background 0.2s ease;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
     background: var(--slate-500);
+}
+
+/* Firefox scrollbar */
+.chat-messages {
+    scrollbar-width: thin;
+    scrollbar-color: var(--slate-600) var(--bg-primary);
 }
 
 .message {
@@ -661,6 +675,19 @@ body {
 
 .btn-send:active {
     transform: scale(0.95);
+}
+
+/* NUEVO: Estados disabled */
+.btn-send:disabled,
+.chat-input-container input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-send:disabled {
+    background: var(--slate-600);
+    box-shadow: none;
 }
 
 /* Modal */
