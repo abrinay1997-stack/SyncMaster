@@ -237,7 +237,7 @@ function initChat() {
                          !/(que|como|donde|cuando|precio|costo|funciona|configurar)/i.test(userMessage);
 
         // CTA inteligente (solo cada 3 mensajes)
-        const cta = chatState.showCTA ? '\n\n🚀 <strong>Accede:</strong> https://livesyncpro.app' : '';
+        const cta = chatState.showCTA ? '\n\n🚀 <strong>Accede:</strong> https://livesyncpro.com' : '';
 
         // ===================================
         // BÚSQUEDA DE MODELOS (CON FUZZY MATCHING MEJORADO)
@@ -247,7 +247,20 @@ function initChat() {
             const found = findSpeakerModel(modelMatch[0]);
             if (found) {
                 chatState.lastTopic = 'model-specs';
-                return `🔊 <strong>${found.brand} ${found.name}</strong>\n\n📊 <strong>Especificaciones:</strong>\n• SPL máximo: ${found.spl} dB\n• Peso: ${found.weight} kg\n• Impedancia: ${found.impedance}Ω\n• Dispersión: ${found.dispersion}°\n• Categoría: ${found.category}\n\n💡 Disponible en LiveSync Pro para cálculo de cobertura.${cta}`;
+
+                // Determinar uso recomendado según categoría
+                let uso = '';
+                if (found.category === 'Line Array Large') {
+                    uso = '\n\n<strong>Uso recomendado:</strong> Festivales grandes, estadios, eventos outdoor masivos';
+                } else if (found.category === 'Line Array Medium') {
+                    uso = '\n\n<strong>Uso recomendado:</strong> Teatros, conciertos medianos, corporativos, delay towers';
+                } else if (found.category === 'Subwoofer') {
+                    uso = '\n\n<strong>Uso recomendado:</strong> Refuerzo de graves, configuración omni/cardioid/end-fire';
+                } else if (found.category === 'Monitor') {
+                    uso = '\n\n<strong>Uso recomendado:</strong> Monitores de piso (wedges), sidefills, escenario';
+                }
+
+                return `🔊 <strong>${found.brand} ${found.name}</strong>\n\n📊 <strong>Especificaciones:</strong>\n• SPL máximo: ${found.spl} dB\n• Peso: ${found.weight} kg\n• Impedancia: ${found.impedance}Ω\n• Dispersión: ${found.dispersion}°\n• Categoría: ${found.category}${uso}\n\n💡 En LiveSync Pro puedes simular este modelo con cálculo de cobertura, delays y rigging.${cta}`;
             }
         }
 
@@ -263,11 +276,11 @@ function initChat() {
         }
 
         // ===================================
-        // COMPARACIÓN (VERSIÓN CORTA)
+        // COMPARACIÓN (VERSIÓN MEJORADA CON CONTEXTO)
         // ===================================
         if (/(compar|diferencia|versus|vs).*(k[123]|panther|gsl8|leo|vtx)/i.test(msg)) {
             chatState.lastTopic = 'comparison';
-            return `⚖️ <strong>Top Line Arrays</strong>\n\n🥇 <strong>Meyer Panther:</strong> SPL 150, 68kg\n🥈 <strong>d&b GSL8:</strong> SPL 150, 80kg\n🥉 <strong>K1:</strong> SPL 149, 106kg\n🏅 <strong>K2:</strong> SPL 147, 56kg${cta}`;
+            return `⚖️ <strong>Comparación Line Arrays</strong>\n\n<strong>ULTRA LARGO ALCANCE (Festivales grandes):</strong>\n🥇 Meyer Panther: 150dB, 68kg - Más ligero\n🥈 d&b GSL8: 150dB, 80kg - Muy potente\n🥉 K1: 149dB, 106kg - Dispersión 5° (tight)\n\n<strong>MEDIO-LARGO (Conciertos, corporativos):</strong>\n🏅 K2: 147dB, 56kg - Muy versátil, peso ideal\n🏅 VTX V25: 147dB, 88kg - Potente\n\n<strong>Criterio de selección:</strong>\n• <strong>Distancia >50m:</strong> Panther, GSL8, K1\n• <strong>30-50m:</strong> K2, V25\n• <strong>Peso crítico:</strong> K2 (56kg) o Panther (68kg)\n\n💡 LiveSync Pro calcula automáticamente qué modelo necesitas según distancia y SPL objetivo.${cta}`;
         }
 
         // ===================================
@@ -299,16 +312,16 @@ function initChat() {
         }
 
         // ===================================
-        // CASOS DE USO (VERSIÓN ULTRA CORTA CON BOTONES)
+        // CASOS DE USO (VERSIÓN MEJORADA CON LÓGICA)
         // ===================================
         if (/(festival|concierto|outdoor).*(config|setup|sistema)/i.test(msg)) {
             chatState.lastTopic = 'festival';
-            return `🎪 <strong>Setup Festival Outdoor</strong>\n\n<strong>Main PA:</strong> 12-16 K2/Panther por lado\n<strong>Subs:</strong> 8-12 KS28/1100-LFC (cardioid)\n<strong>Delay Towers:</strong> @ 40m, 70m\n<strong>FOH:</strong> DiGiCo SD7/Avid S6L\n<strong>Potencia:</strong> 80-120 kW${cta}\n\n<button class="quick-action-btn" data-action="¿Cómo calculo delays?">🧮 Calcular delays</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver precios</button>`;
+            return `🎪 <strong>Setup Festival Outdoor</strong>\n\n<strong>Main PA:</strong> 12-16 K2/Panther por lado\n→ <em>Cobertura 80-100m con SPL >105dB @ FOH</em>\n\n<strong>Subs:</strong> 8-12 KS28/1100-LFC (cardioid)\n→ <em>Rechazo trasero -20dB, protege FOH y backstage</em>\n\n<strong>Delay Towers:</strong> @ 40m, 70m\n→ <em>Mantener SPL uniforme, calcular con temperatura del evento</em>\n\n<strong>FOH:</strong> DiGiCo SD7/Avid S6L\n<strong>Potencia:</strong> 80-120 kW (distribución trifásica)\n\n💡 LiveSync calcula automáticamente cantidades exactas según distancia y audiencia.${cta}\n\n<button class="quick-action-btn" data-action="delay 80m 25°C">🧮 Calcular delays</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver precios</button>`;
         }
 
         if (/(teatro|corporativo|indoor).*(config|setup)/i.test(msg)) {
             chatState.lastTopic = 'teatro';
-            return `🎭 <strong>Setup Teatro Indoor</strong>\n\n<strong>Main PA:</strong> 6-10 K3/Kara II por lado\n<strong>Subs:</strong> 4-6 SB28 (end-fire)\n<strong>FOH:</strong> Yamaha CL5/dLive\n<strong>Potencia:</strong> 15-30 kW\n<strong>Sin delay towers</strong> (<30m)${cta}`;
+            return `🎭 <strong>Setup Teatro Indoor</strong>\n\n<strong>Main PA:</strong> 6-10 K3/Kara II por lado\n→ <em>Dispersión 10°, ideal para <30m en indoor</em>\n\n<strong>Subs:</strong> 4-6 SB28 (end-fire)\n→ <em>Direccional, evita reflexiones en paredes traseras</em>\n\n<strong>FOH:</strong> Yamaha CL5/dLive\n<strong>Potencia:</strong> 15-30 kW\n<strong>Sin delay towers</strong> (distancia <30m)\n\n💡 En salas con acústica controlada, priorizar direccionalidad sobre potencia bruta.${cta}`;
         }
 
         // ===================================
@@ -317,8 +330,8 @@ function initChat() {
         if (/^(hola|hey|hi|buenas|buenos dias|hello)/.test(msg)) {
             chatState.lastTopic = 'greeting';
             return isEnglish
-                ? `👋 Hi! I'm the LiveSync Pro assistant.\n\nI can help with PA Systems, line arrays, delays, and more.\n\n🚀 https://livesyncpro.app\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 K2 Specs</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Dante Calc</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Pricing</button>`
-                : `👋 ¡Hola! Soy el asistente de LiveSync Pro.\n\nPuedo ayudarte con PA Systems, line arrays, delays, y más.\n\n🚀 https://livesyncpro.app\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>`;
+                ? `👋 Hi! I'm the LiveSync Pro assistant.\n\nI can help with PA Systems, line arrays, delays, and more.\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 K2 Specs</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Dante Calc</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Pricing</button>`
+                : `👋 ¡Hola! Soy el asistente de LiveSync Pro.\n\nPuedo ayudarte con PA Systems, line arrays, delays, y más.\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>`;
         }
 
         if (/gracias|thanks/i.test(msg)) {
@@ -332,7 +345,7 @@ function initChat() {
         // ===================================
         if (/que es|qué es|what is/.test(msg) && /(livesync|app|software)/.test(msg)) {
             chatState.lastTopic = 'about';
-            return `🎯 <strong>LiveSync Pro</strong> es un sistema profesional de diseño de <strong>PA Systems</strong>.\n\nCalcula line arrays, delay towers, rigging, potencia, redes Dante/AVB y exporta a CAD.\n\n💰 <strong>$97 USD/año</strong>\n\n🚀 https://livesyncpro.app\n\n<button class="quick-action-btn" data-action="¿Funciona offline?">💻 ¿Offline?</button> <button class="quick-action-btn" data-action="¿Cómo exporto?">📤 Exportar</button>`;
+            return `🎯 <strong>LiveSync Pro</strong> es un sistema profesional de diseño de <strong>PA Systems</strong>.\n\nCalcula line arrays, delay towers, rigging, potencia, redes Dante/AVB y exporta a CAD.\n\n💰 <strong>$97 USD/año</strong>\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="¿Funciona offline?">💻 ¿Offline?</button> <button class="quick-action-btn" data-action="¿Cómo exporto?">📤 Exportar</button>`;
         }
 
         // ===================================
@@ -340,7 +353,7 @@ function initChat() {
         // ===================================
         if (/(precio|cuanto cuesta|cost|suscripci[oó]n|pago)/.test(msg)) {
             chatState.lastTopic = 'pricing';
-            return `💰 <strong>LiveSync Pro</strong>\n\n<strong>$97 USD/año</strong>\n\n✅ 100+ modelos de speakers\n✅ Exportación DXF/PDF ilimitada\n✅ Sincronización multi-dispositivo\n✅ Todas las actualizaciones\n\n🔒 Garantía 7 días\n\n🚀 https://livesyncpro.app`;
+            return `💰 <strong>LiveSync Pro</strong>\n\n<strong>$97 USD/año</strong>\n\n✅ 100+ modelos de speakers\n✅ Exportación DXF/PDF ilimitada\n✅ Sincronización multi-dispositivo\n✅ Todas las actualizaciones\n\n🔒 Garantía 7 días\n\n🚀 https://livesyncpro.com`;
         }
 
         // ===================================
@@ -360,11 +373,11 @@ function initChat() {
         }
 
         // ===================================
-        // DELAY TOWERS (COMPACTA)
+        // DELAY TOWERS (MEJORADA CON EJEMPLOS PRÁCTICOS)
         // ===================================
         if (/(delay tower|torre de delay|torres)/.test(msg) && !/(festival|config)/i.test(msg)) {
             chatState.lastTopic = 'delay-towers';
-            return `🗼 <strong>Delay Towers</strong>\n\nLiveSync calcula:\n• Posición óptima de cada torre\n• Delay time (ms) exacto\n• Ajuste por temperatura automático\n• SPL en cada zona\n\n💡 Tip: "delay 50m 25°C"${cta}`;
+            return `🗼 <strong>Delay Towers</strong>\n\nLiveSync calcula:\n• <strong>Posición óptima:</strong> Cada 30-40m en outdoor, 20-25m indoor\n• <strong>Delay time exacto:</strong> Ej: 50m @ 20°C = 145.7 ms\n• <strong>Gain shading:</strong> Torre más cerca del PA = -3dB típico\n• <strong>SPL uniforme:</strong> Mantener 95-105dB en toda la audiencia\n\n<strong>Criterio:</strong>\n• <strong>Distancia PA >50m:</strong> Necesaria 1 torre\n• <strong>>80m:</strong> 2 torres (@ 40m, 70m)\n• <strong>>120m:</strong> 3+ torres\n\n💡 Temperatura afecta el delay: mídela siempre antes del show.${cta}`;
         }
 
         // ===================================
@@ -376,35 +389,35 @@ function initChat() {
         }
 
         // ===================================
-        // MONITORES (COMPACTA)
+        // MONITORES (MEJORADA CON RECOMENDACIONES POR TIPO)
         // ===================================
         if (/(monitor|monitoreo|wedge|sidefill|iem)/.test(msg)) {
             chatState.lastTopic = 'monitors';
-            return `🔈 <strong>Sistemas de Monitores</strong>\n\n<strong>Wedges:</strong> X15, X12, M2, M4, MJF-212A, VTX M22\n<strong>Sidefills:</strong> Line arrays como sidefill\n<strong>IEMs:</strong> Configuración RF\n\nCalcula SPL, potencia, y patcheo.${cta}`;
+            return `🔈 <strong>Sistemas de Monitores</strong>\n\n<strong>WEDGES (Piso):</strong>\n• Rock/Metal: X15, M2 (>138dB, alta potencia)\n• Acústico/Jazz: X12, M4 (136-138dB, controlado)\n• Corporativo: Cualquier modelo (90-100dB suficiente)\n\n<strong>SIDEFILLS:</strong>\n• Line arrays pequeños (Kiva II, Y8, LINA)\n• Objetivo: 105-110dB en escenario\n\n<strong>IEMs:</strong> Shure PSM1000, Sennheiser EW IEM G4\n→ <em>Elimina wedges, mejor control de gain before feedback</em>\n\n💡 LiveSync calcula patcheo mono/estéreo y potencia por mix.${cta}`;
         }
 
         // ===================================
-        // RIGGING (COMPACTA)
+        // RIGGING (MEJORADA CON CONTEXTO DE SEGURIDAD)
         // ===================================
         if (/(rigging|colgado|suspens|truss|bridle|carga)/.test(msg)) {
             chatState.lastTopic = 'rigging';
-            return `⚙️ <strong>Análisis de Rigging</strong>\n\nCalcula:\n• Peso total del sistema\n• Distribución de carga en bridles\n• Alertas de seguridad (factor 5:1)\n\n<strong>Ejemplos peso:</strong>\n• K1: 106 kg\n• Panther: 68 kg\n• GSL8: 80 kg${cta}`;
+            return `⚙️ <strong>Análisis de Rigging</strong>\n\nLiveSync calcula:\n• <strong>Peso total:</strong> Array + accesorios (bumpers, frames)\n• <strong>Distribución en bridles:</strong> Front/rear según ángulo\n• <strong>Factor de seguridad 5:1 mínimo</strong> (normativa internacional)\n\n<strong>Ejemplos configuración grande:</strong>\n• 12x K2 = 672kg → Requiere truss 520kg WLL (factor 5:1 = 3360kg total)\n• 10x Panther = 680kg → Truss similar pero array más ligero/caja\n\n⚠️ <strong>CRÍTICO:</strong> Nunca exceder WLL (Working Load Limit) del truss.\n\n💡 LiveSync alerta automáticamente si superas límites de seguridad.${cta}`;
         }
 
         // ===================================
-        // POTENCIA (COMPACTA)
+        // POTENCIA (MEJORADA CON EJEMPLOS DE CÁLCULO)
         // ===================================
         if (/(potencia|el[ée]ctric|power|ampli|watts?|voltage)/.test(msg)) {
             chatState.lastTopic = 'power';
-            return `⚡ <strong>Análisis de Potencia</strong>\n\nAmplificadores:\n• Lab.gruppen PLM 20000Q\n• Powersoft X8, Quattrocanali\n• L-Acoustics LA12X, LA8\n• d&b D80, D20\n\nCalcula consumo (kW), distribución trifásica, voltage drop.${cta}`;
+            return `⚡ <strong>Análisis de Potencia</strong>\n\nAmplificadores soportados:\n• Lab.gruppen PLM 20000Q (20kW)\n• Powersoft X8 (8kW), Quattrocanali (10kW)\n• L-Acoustics LA12X (8.4kW), LA8 (3.3kW)\n• d&b D80 (4kW), D20 (2kW)\n\n<strong>Ejemplo setup festival:</strong>\n• 32x K2 + subs = 12x LA12X\n• Consumo: ~60kW continuo, 80kW peak\n• Trifásica 400V/32A por fase\n\n<strong>Criterio:</strong> Factor 0.6-0.7 (eficiencia amplificador clase D)\n\n💡 LiveSync calcula distribución por rack y voltage drop en cables.${cta}`;
         }
 
         // ===================================
-        // DANTE/AVB (COMPACTA)
+        // DANTE/AVB (MEJORADA CON EJEMPLOS CONCRETOS)
         // ===================================
         if (/(dante|avb|red|network|bandwidth)/.test(msg) && !/\d+.*canal/i.test(msg)) {
             chatState.lastTopic = 'network';
-            return `🌐 <strong>Redes Dante/AVB</strong>\n\n<strong>Dante:</strong>\n• 48kHz: ~1.15 Mbps/canal\n• 96kHz: ~2.3 Mbps/canal\n• Overhead: 20%\n\n<strong>AVB:</strong> Overhead 10%\n\n💡 Tip: "48 canales dante"${cta}`;
+            return `🌐 <strong>Redes Dante/AVB</strong>\n\n<strong>Dante:</strong>\n• 48kHz/24bit: ~1.15 Mbps/canal\n• 96kHz/24bit: ~2.3 Mbps/canal\n• Overhead: 20%\n\n<strong>Ejemplos:</strong>\n• 64 ch @ 48kHz = 88 Mbps → Switch Gigabit OK\n• 128 ch @ 48kHz = 176 Mbps → Gigabit con margen\n• 64 ch @ 96kHz = 176 Mbps → Requiere switch de calidad\n• >400 ch → Múltiples switches o 10Gb\n\n<strong>Regla:</strong> Mantener <70% uso del switch (headroom para QoS)\n\n💡 Usa switches con QoS/DSCP para audio (Cisco SG, Netgear M4300).${cta}`;
         }
 
         // ===================================
@@ -416,11 +429,11 @@ function initChat() {
         }
 
         // ===================================
-        // TEMPERATURA (COMPACTA)
+        // TEMPERATURA (MEJORADA CON RECOMENDACIÓN PRÁCTICA)
         // ===================================
         if (/(temperatura|thermal|drift|calor)/.test(msg) && !/\d+\s*m.*\d+\s*°?c/i.test(msg)) {
             chatState.lastTopic = 'thermal';
-            return `🌡️ <strong>Thermal Drift</strong>\n\nLa velocidad del sonido cambia con temperatura:\n• 10°C = 337.5 m/s\n• 20°C = 343.2 m/s\n• 30°C = 349.0 m/s\n\n<strong>Impacto en 50m:</strong>\n20°C → 30°C = 2.4 ms diferencia\n\nLiveSync ajusta delays automáticamente.${cta}`;
+            return `🌡️ <strong>Thermal Drift</strong>\n\nLa velocidad del sonido cambia con temperatura:\n• 10°C = 337.5 m/s (invierno)\n• 20°C = 343.2 m/s (estándar)\n• 30°C = 349.0 m/s (verano/calor)\n\n<strong>Impacto real en 50m:</strong>\n20°C → 30°C = 2.4 ms diferencia\n→ <em>Delay towers se "desalinean" si no ajustas</em>\n\n<strong>RECOMENDACIÓN CRÍTICA:</strong>\n✅ Medir temperatura @ FOH antes del soundcheck\n✅ Re-medir antes del show (puede cambiar 5-10°C tarde vs día)\n✅ Usar LiveSync para recalcular delays si cambió >3°C\n\n💡 En outdoor, temperatura baja al atardecer = delays más largos.${cta}`;
         }
 
         // ===================================
@@ -428,7 +441,7 @@ function initChat() {
         // ===================================
         if (/(soporte|contacto|support|problema|error)/.test(msg) && !/(quiero|necesito)/i.test(msg)) {
             chatState.lastTopic = 'support';
-            return `📞 <strong>Soporte Técnico</strong>\n\n📧 <strong>Email:</strong> abrinay@livesyncpro.com\n\nPara bugs, problemas técnicos o consultas de licencia.\n\n🚀 https://livesyncpro.app`;
+            return `📞 <strong>Soporte Técnico</strong>\n\n📧 <strong>Email:</strong> abrinay@livesyncpro.com\n\nPara bugs, problemas técnicos o consultas de licencia.\n\n🚀 https://livesyncpro.com`;
         }
 
         // ===================================
@@ -524,7 +537,7 @@ function initChat() {
         // ===================================
         // RESPUESTA GENÉRICA (CON SUGERENCIAS)
         // ===================================
-        return `🤔 No estoy seguro de entender.\n\n<strong>Prueba con:</strong>\n• "Specs del K2"\n• "48 canales dante"\n• "delay 80m 25°C"\n• "K2 vs Panther"\n• "setup festival"\n• "¿Cuánto cuesta?"\n• "Efecto Haas"\n• "Power alley"\n• "Room modes"\n\n🚀 https://livesyncpro.app\n\n<button class="quick-action-btn" data-action="¿Qué es LiveSync Pro?">ℹ️ ¿Qué es LiveSync Pro?</button> <button class="quick-action-btn" data-action="Contactar soporte">📞 Soporte</button>`;
+        return `🤔 No estoy seguro de entender.\n\n<strong>Prueba con:</strong>\n• "Specs del K2"\n• "48 canales dante"\n• "delay 80m 25°C"\n• "K2 vs Panther"\n• "setup festival"\n• "¿Cuánto cuesta?"\n• "Efecto Haas"\n• "Power alley"\n• "Room modes"\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="¿Qué es LiveSync Pro?">ℹ️ ¿Qué es LiveSync Pro?</button> <button class="quick-action-btn" data-action="Contactar soporte">📞 Soporte</button>`;
     }
 }
 
