@@ -432,9 +432,99 @@ function initChat() {
         }
 
         // ===================================
+        // CONCEPTOS TÉCNICOS AVANZADOS (KNOWLEDGE_BASE)
+        // ===================================
+
+        // EFECTO HAAS / PRECEDENCIA
+        if (/(haas|precedencia|precedence|efecto.*temporal)/.test(msg)) {
+            chatState.lastTopic = 'haas';
+            return `🎯 <strong>Efecto Haas (Precedencia)</strong>\n\n${KNOWLEDGE_BASE.environmental.haasEffect.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.haasEffect.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.haasEffect.proTip}${cta}`;
+        }
+
+        // POWER ALLEY
+        if (/(power alley|callej[oó]n.*potencia|centro.*bajo|bass center)/.test(msg)) {
+            chatState.lastTopic = 'power-alley';
+            return `⚡ <strong>Power Alley</strong>\n\n${KNOWLEDGE_BASE.analysis.powerAlley.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.powerAlley.advanced}\n\n<strong>Boost:</strong> ${KNOWLEDGE_BASE.analysis.powerAlley.boost}\n\n💡 ${KNOWLEDGE_BASE.analysis.powerAlley.proTip}${cta}`;
+        }
+
+        // ARRAY LIMIT / TRANSICIÓN FRESNEL
+        if (/(array limit|l[íi]mite.*array|fresnel|fraunhofer|transici[oó]n)/.test(msg)) {
+            chatState.lastTopic = 'array-limit';
+            return `📐 <strong>Array Limit (Transición)</strong>\n\n${KNOWLEDGE_BASE.analysis.arrayLimit.basic}\n\n<strong>Fórmula:</strong> ${KNOWLEDGE_BASE.analysis.arrayLimit.formula}\n\n<strong>Atenuación:</strong>\n• Campo cercano: ${KNOWLEDGE_BASE.analysis.arrayLimit.attenuation.nearField}\n• Campo lejano: ${KNOWLEDGE_BASE.analysis.arrayLimit.attenuation.farField}${cta}`;
+        }
+
+        // ROOM MODES / MODOS PROPIOS
+        if (/(room mode|modo.*propio|resonancia.*sala|standing wave)/.test(msg)) {
+            chatState.lastTopic = 'room-modes';
+            return `🏛️ <strong>Modos Propios (Room Modes)</strong>\n\n${KNOWLEDGE_BASE.analysis.roomModes.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.roomModes.advanced}\n\n💡 ${KNOWLEDGE_BASE.analysis.roomModes.proTip}${cta}`;
+        }
+
+        // WST / GRATING LOBES
+        if (/(wst|wavefront|grating lobe|l[oó]bulo.*rejilla|coherencia.*line array)/.test(msg)) {
+            chatState.lastTopic = 'wst';
+            return `🌊 <strong>WST & Grating Lobes</strong>\n\n${KNOWLEDGE_BASE.analysis.wst.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.wst.advanced}\n\n<strong>Espaciado:</strong> ${KNOWLEDGE_BASE.analysis.wst.spacing}\n\n💡 ${KNOWLEDGE_BASE.analysis.wst.proTip}${cta}`;
+        }
+
+        // SPLAY ANGLES / ÁNGULOS
+        if (/(splay|[aá]ngulo.*inter.*caja|curvatura|banana)/.test(msg)) {
+            chatState.lastTopic = 'splay';
+            return `📐 <strong>Ángulos Splay (Curvatura)</strong>\n\n${KNOWLEDGE_BASE.systemConfig.splayAngles.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.splayAngles.advanced}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.splayAngles.proTip}${cta}`;
+        }
+
+        // GAIN SHADING
+        if (/(gain shading|nivel.*torre|volumen.*delay.*tower)/.test(msg)) {
+            chatState.lastTopic = 'gain-shading';
+            return `🎚️ <strong>Gain Shading</strong>\n\n${KNOWLEDGE_BASE.delayAlignment.gainShading.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.delayAlignment.gainShading.advanced}\n\n<strong>Recomendación:</strong> ${KNOWLEDGE_BASE.delayAlignment.gainShading.recommendation}${cta}`;
+        }
+
+        // GROUND BOUNCE / EFECTO SUELO
+        if (/(ground bounce|efecto suelo|rebote.*piso|comb filter.*ground)/.test(msg)) {
+            chatState.lastTopic = 'ground-bounce';
+            return `🌊 <strong>Ground Bounce (Rebote de Suelo)</strong>\n\n${KNOWLEDGE_BASE.analysis.groundBounce.basic}\n\n<strong>Fórmula:</strong> ${KNOWLEDGE_BASE.analysis.groundBounce.formula}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.groundBounce.advanced}${cta}`;
+        }
+
+        // COMPRESIÓN TÉRMICA
+        if (/(compresi[oó]n.*t[ée]rmica|thermal compression|altavoz.*caliente|power.*loss.*heat)/.test(msg)) {
+            chatState.lastTopic = 'thermal-comp';
+            return `🔥 <strong>Compresión Térmica</strong>\n\n${KNOWLEDGE_BASE.analysis.thermalCompression.basic}\n\n<strong>Pérdida:</strong> ${KNOWLEDGE_BASE.analysis.thermalCompression.loss}\n\n💡 ${KNOWLEDGE_BASE.analysis.thermalCompression.proTip}${cta}`;
+        }
+
+        // HUMEDAD
+        if (/(humedad|humidity|aire.*seco|high.*frequency.*loss)/.test(msg)) {
+            chatState.lastTopic = 'humidity';
+            return `💧 <strong>Humedad Relativa</strong>\n\n${KNOWLEDGE_BASE.environmental.humidity.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.humidity.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.humidity.proTip}${cta}`;
+        }
+
+        // VIENTO
+        if (/(viento|wind|refracci[oó]n.*sonido)/.test(msg) && !/(festival|config)/i.test(msg)) {
+            chatState.lastTopic = 'wind';
+            return `🌬️ <strong>Viento y Refracción</strong>\n\n${KNOWLEDGE_BASE.environmental.wind.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.wind.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.wind.proTip}${cta}`;
+        }
+
+        // ARREGLOS DE SUBWOOFERS
+        if (/(arreglo.*sub|sub.*array|cardioid|end.*fire|omni.*sub)/.test(msg)) {
+            chatState.lastTopic = 'sub-array';
+            const types = KNOWLEDGE_BASE.subwoofers.arrayTopology.types;
+            return `🔊 <strong>Topología de Subgraves</strong>\n\n${KNOWLEDGE_BASE.subwoofers.arrayTopology.basic}\n\n<strong>OMNI:</strong> ${types.omni.description} - ${types.omni.efficiency}\n<strong>CARDIOID:</strong> ${types.cardioid.description} - Rechazo: ${types.cardioid.rearRejection}\n<strong>END-FIRE:</strong> ${types.endFire.description} - Rechazo: ${types.endFire.rearRejection}\n\n💡 ${KNOWLEDGE_BASE.subwoofers.arrayTopology.proTip}${cta}`;
+        }
+
+        // SPL TARGETS / OBJETIVOS
+        if (/(spl.*target|objetivo.*spl|cu[aá]nto.*spl|volumen.*ideal)/.test(msg)) {
+            chatState.lastTopic = 'spl-targets';
+            const targets = KNOWLEDGE_BASE.systemConfig.targets.rules.spl;
+            return `🎯 <strong>Objetivos SPL</strong>\n\n<strong>Corporativo:</strong> ${targets.corporativo}\n<strong>Concierto:</strong> ${targets.concierto}\n<strong>Festival:</strong> ${targets.festival}\n\n<strong>FOH:</strong> ${KNOWLEDGE_BASE.systemConfig.targets.rules.fohPosition}\n<strong>Distancia PA-FOH:</strong> ${KNOWLEDGE_BASE.systemConfig.targets.rules.paToFoh.ideal}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.targets.proTip}${cta}`;
+        }
+
+        // DIRECTIVIDAD OLSON
+        if (/(olson|directividad.*linear|off.*axis.*loss|foh.*elevation)/.test(msg)) {
+            chatState.lastTopic = 'olson';
+            return `📊 <strong>Directividad Lineal (Olson)</strong>\n\n${KNOWLEDGE_BASE.analysis.olsonDirectivity.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.olsonDirectivity.advanced}${cta}`;
+        }
+
+        // ===================================
         // RESPUESTA GENÉRICA (CON SUGERENCIAS)
         // ===================================
-        return `🤔 No estoy seguro de entender.\n\n<strong>Prueba con:</strong>\n• "Specs del K2"\n• "48 canales dante"\n• "delay 80m 25°C"\n• "K2 vs Panther"\n• "setup festival"\n• "¿Cuánto cuesta?"\n\n🚀 https://livesyncpro.app\n\n<button class="quick-action-btn" data-action="¿Qué es LiveSync Pro?">ℹ️ ¿Qué es LiveSync Pro?</button> <button class="quick-action-btn" data-action="Contactar soporte">📞 Soporte</button>`;
+        return `🤔 No estoy seguro de entender.\n\n<strong>Prueba con:</strong>\n• "Specs del K2"\n• "48 canales dante"\n• "delay 80m 25°C"\n• "K2 vs Panther"\n• "setup festival"\n• "¿Cuánto cuesta?"\n• "Efecto Haas"\n• "Power alley"\n• "Room modes"\n\n🚀 https://livesyncpro.app\n\n<button class="quick-action-btn" data-action="¿Qué es LiveSync Pro?">ℹ️ ¿Qué es LiveSync Pro?</button> <button class="quick-action-btn" data-action="Contactar soporte">📞 Soporte</button>`;
     }
 }
 
