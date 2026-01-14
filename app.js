@@ -838,11 +838,22 @@ function initChat() {
         }
 
         // ===================================
-        // PRECIO (VERSIÓN ULTRA CORTA)
+        // PRECIO CON TODAS LAS MEMBRESÍAS (MEJORADO)
         // ===================================
-        if (/(precio|cuanto cuesta|cost|suscripci[oó]n|pago)/.test(msg)) {
+        if (/(precio|cuanto cuesta|cost|suscripci[oó]n|pago|membres[ií]a|plan)/.test(msg)) {
             chatState.lastTopic = 'pricing';
-            return `💰 <strong>LiveSync Pro</strong>\n\n<strong>$97 USD/año</strong>\n\n✅ 100+ modelos de speakers\n✅ Exportación DXF/PDF ilimitada\n✅ Sincronización multi-dispositivo\n✅ Todas las actualizaciones\n\n🔒 Garantía 7 días\n\n🚀 https://livesyncpro.com`;
+
+            // Detectar si preguntan por membresía específica
+            if (/(partner|empresas? peque|rental.*local|visibilidad)/i.test(msg)) {
+                return `🏢 <strong>Partner Estándar</strong> - $199/año\n\n✅ 1 Licencia Pro incluida\n✅ Visibilidad Básica en Directorio\n✅ Perfil de empresa público\n✅ Badge 'Partner Verificado'\n✅ Todas las features Pro\n\n<strong>Ideal para:</strong> Empresas pequeñas de audio, rental shops locales\n\n🚀 https://livesyncpro.com`;
+            }
+
+            if (/(corporativo|corporate|equipos?|teams?|5 licencias|empresas? grande)/i.test(msg)) {
+                return `🏆 <strong>Corporativo PRO</strong> - $499/año\n\n✅ 5 Licencias Pro incluidas\n✅ Gestión de Equipos (Teams)\n✅ Posicionamiento TOP en Directorio\n✅ Perfil Verificado con Badges Premium\n✅ Analytics avanzados\n✅ Soporte prioritario\n\n<strong>Ideal para:</strong> Empresas grandes de producción, rental houses profesionales\n\n🚀 https://livesyncpro.com`;
+            }
+
+            // Respuesta general con todos los planes
+            return `💰 <strong>Planes LiveSync Pro</strong>\n\n<strong>🎯 Individual</strong> - $97/año\n→ Técnicos independientes, freelancers\n\n<strong>🏢 Partner Estándar</strong> - $199/año\n→ 1 Licencia + Visibilidad en Directorio\n→ Empresas pequeñas, rental shops\n\n<strong>🏆 Corporativo PRO</strong> - $499/año\n→ 5 Licencias + Teams + TOP positioning\n→ Empresas grandes, rental houses\n\n🔒 Garantía 7 días en todos los planes\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Plan Partner Estándar">🏢 Detalles Partner</button> <button class="quick-action-btn" data-action="Plan Corporativo PRO">🏆 Detalles Corporativo</button>`;
         }
 
         // ===================================
@@ -1021,6 +1032,47 @@ function initChat() {
         if (/(olson|directividad.*linear|off.*axis.*loss|foh.*elevation)/.test(msg)) {
             chatState.lastTopic = 'olson';
             return `📊 <strong>Directividad Lineal (Olson)</strong>\n\n${KNOWLEDGE_BASE.analysis.olsonDirectivity.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.olsonDirectivity.advanced}${cta}`;
+        }
+
+        // ===================================
+        // TÓPICOS ADICIONALES (NUEVO)
+        // ===================================
+
+        // ANÁLISIS FÍSICO DEL SISTEMA
+        if (/(an[aá]lisis.*f[ií]sico|f[ií]sica.*sistema|salud.*sistema|velocidad.*sonido.*actual)/.test(msg)) {
+            chatState.lastTopic = 'physics';
+            return `🔬 <strong>Análisis Físico del Sistema</strong>\n\n${KNOWLEDGE_BASE.analysis.physics.basic}\n\n<strong>Métricas clave:</strong>\n• ${KNOWLEDGE_BASE.analysis.physics.metrics.join('\n• ')}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.physics.advanced}${cta}`;
+        }
+
+        // LOGÍSTICA Y CREW
+        if (/(log[ií]stica|crew|personal|trucks?|camiones|metros.*cable)/.test(msg)) {
+            chatState.lastTopic = 'logistics';
+            return `🚛 <strong>Logística y Crew</strong>\n\n${KNOWLEDGE_BASE.analysis.logistics.basic}\n\n<strong>Estimados incluyen:</strong>\n• Cable: ${KNOWLEDGE_BASE.analysis.logistics.estimates.cable}\n• Crew: ${KNOWLEDGE_BASE.analysis.logistics.estimates.crew}\n• Trucks: ${KNOWLEDGE_BASE.analysis.logistics.estimates.trucks}\n\n💡 LiveSync calcula automáticamente según tu configuración.${cta}`;
+        }
+
+        // PESO TOTAL Y RIGGING LOAD
+        if (/(peso.*total|carga.*rigging|cu[aá]nto.*pesa|weight.*total)/.test(msg)) {
+            chatState.lastTopic = 'weight';
+            return `⚖️ <strong>Peso Total del Sistema</strong>\n\n${KNOWLEDGE_BASE.analysis.weight.basic}\n\n<strong>Incluye:</strong>\n• Altavoces + bumpers\n• Top grid y hardware\n• Cables: ${KNOWLEDGE_BASE.analysis.weight.cableWeight}\n\n⚠️ <strong>Factor de seguridad:</strong> ${KNOWLEDGE_BASE.analysis.weight.safetyFactor}\n\n💡 ${KNOWLEDGE_BASE.analysis.weight.proTip}${cta}`;
+        }
+
+        // CABLEADO / SNAKE SYSTEM
+        if (/(snake|cableado|multipar|fibra.*[oó]ptica|cat6.*audio)/.test(msg) && !/(dante|avb)/i.test(msg)) {
+            chatState.lastTopic = 'cable-system';
+            return `🔌 <strong>Sistema de Cableado (Snake)</strong>\n\n${KNOWLEDGE_BASE.analysis.cableSystem.basic}\n\n<strong>Tipos:</strong>\n• Analógico: ${KNOWLEDGE_BASE.analysis.cableSystem.types.analog}\n• CAT6: ${KNOWLEDGE_BASE.analysis.cableSystem.types.cat6}\n• Fibra: ${KNOWLEDGE_BASE.analysis.cableSystem.types.fiber}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.cableSystem.advanced}${cta}`;
+        }
+
+        // FINGERPRINT / VERIFICACIÓN DE ARRAY
+        if (/(fingerprint|verificar.*array|salud.*array|curvatura.*array|array.*health)/.test(msg)) {
+            chatState.lastTopic = 'fingerprint';
+            return `🎯 <strong>Array Health (Fingerprint)</strong>\n\n${KNOWLEDGE_BASE.analysis.fingerprint.basic}\n\n<strong>Forma ideal:</strong> ${KNOWLEDGE_BASE.analysis.fingerprint.idealShape}\n\n<strong>Ángulos recomendados:</strong>\n• Superiores: ${KNOWLEDGE_BASE.analysis.fingerprint.upperAngles}\n• Inferiores: ${KNOWLEDGE_BASE.analysis.fingerprint.lowerAngles}\n\n💡 ${KNOWLEDGE_BASE.analysis.fingerprint.proTip}${cta}`;
+        }
+
+        // TIPO DE PA SYSTEM
+        if (/(tipo.*pa|tipo.*sistema.*principal|line array.*vs.*mono|configuraci[oó]n.*pa)/.test(msg) && !/(setup|festival|teatro)/i.test(msg)) {
+            chatState.lastTopic = 'pa-type';
+            const types = KNOWLEDGE_BASE.systemConfig.mainPA.types;
+            return `🔊 <strong>Tipos de PA System</strong>\n\n<strong>LINE ARRAY:</strong> ${types.lineArray}\n→ <em>Máximo control direccional, ideal >30m</em>\n\n<strong>LEFT/RIGHT:</strong> ${types.leftRight}\n→ <em>Configuración clásica, teatro y conciertos</em>\n\n<strong>MONO CENTER:</strong> ${types.monoCenter}\n→ <em>Discursos, corporativos, inteligibilidad</em>\n\n💡 ${KNOWLEDGE_BASE.systemConfig.mainPA.advanced}${cta}`;
         }
 
         // ===================================
