@@ -68,10 +68,32 @@ let chatState = {
 // NUEVO: Sistema de feedback con localStorage
 let feedbackData = JSON.parse(localStorage.getItem('syncmaster-feedback') || '{"helpful": [], "notHelpful": [], "responses": {}}');
 
+// NUEVO: Historial persistente
+let chatHistory = JSON.parse(localStorage.getItem('syncmaster-history') || '[]');
+
 function initChat() {
     const chatInput = document.getElementById('chatInput');
     const sendButton = document.getElementById('sendMessage');
     const chatMessages = document.getElementById('chatMessages');
+
+    // NUEVO: Cargar historial al iniciar
+    loadChatHistory();
+
+    // NUEVO: Event listener para botón de limpiar historial
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', clearChatHistory);
+
+        // Efecto hover
+        clearHistoryBtn.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+            this.style.borderColor = '#ef4444';
+        });
+        clearHistoryBtn.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'transparent';
+            this.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+        });
+    }
 
     // Rate limiting: 30 mensajes por minuto (mejorado)
     let messageTimestamps = [];
@@ -166,9 +188,78 @@ function initChat() {
     }
 
     // ========================================
+    // CARGAR HISTORIAL (NUEVO)
+    // ========================================
+    function loadChatHistory() {
+        if (chatHistory.length === 0) return;
+
+        // Limpiar mensajes existentes (excepto el mensaje de bienvenida)
+        const welcomeMessage = chatMessages.querySelector('.message.bot');
+        chatMessages.innerHTML = '';
+        if (welcomeMessage) {
+            chatMessages.appendChild(welcomeMessage);
+        }
+
+        // Cargar mensajes del historial
+        chatHistory.forEach(msg => {
+            addMessageToDOM(msg.text, msg.sender, false); // false = no guardar en historial de nuevo
+        });
+    }
+
+    // ========================================
+    // LIMPIAR HISTORIAL (NUEVO)
+    // ========================================
+    function clearChatHistory() {
+        if (confirm('¿Estás seguro de que quieres borrar todo el historial de la conversación?')) {
+            chatHistory = [];
+            localStorage.removeItem('syncmaster-history');
+
+            // Limpiar visualmente
+            chatMessages.innerHTML = '';
+
+            // Agregar mensaje de bienvenida de nuevo
+            addMessageToDOM(`👋 ¡Hola! Soy el asistente automático de LiveSync Pro.\n\nPuedo ayudarte con:\n• Diseño de PA Systems (line arrays, delay towers)\n• Configuración FOH y monitores\n• Rigging, potencia eléctrica y redes Dante/AVB\n• Precios, exportación y funcionalidades\n\n💡 Para soporte técnico personalizado: abrinay@livesyncpro.com`, 'bot', false);
+
+            showNotification('Historial borrado correctamente', 'success');
+        }
+    }
+
+    // ========================================
     // AGREGAR MENSAJE CON MARKDOWN Y FEEDBACK (MEJORADO)
     // ========================================
     function addMessage(text, sender) {
+        // Guardar en historial persistente
+        chatHistory.push({
+            text: text,
+            sender: sender,
+            timestamp: Date.now()
+        });
+
+        // Limitar historial a últimos 100 mensajes
+        if (chatHistory.length > 100) {
+            chatHistory = chatHistory.slice(-100);
+        }
+
+        // Guardar en localStorage
+        localStorage.setItem('syncmaster-history', JSON.stringify(chatHistory));
+
+        // Agregar al DOM
+        addMessageToDOM(text, sender, false);
+    }
+
+    // ========================================
+    // AGREGAR MENSAJE AL DOM (REFACTORIZADO)
+    // ========================================
+    function addMessageToDOM(text, sender, saveToHistory = true) {
+        if (saveToHistory) {
+            chatHistory.push({
+                text: text,
+                sender: sender,
+                timestamp: Date.now()
+            });
+            localStorage.setItem('syncmaster-history', JSON.stringify(chatHistory));
+        }
+
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
         const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -312,7 +403,7 @@ function initChat() {
     }
 
     // ========================================
-    // NLP BÁSICO - EXTRACCIÓN DE ENTIDADES
+    // NLP BÁSICO - EXTRACCIÓN DE ENTIDADES CON VALIDACIÓN (NUEVO)
     // ========================================
     function extractEntities(message) {
         const msg = message.toLowerCase();
@@ -323,24 +414,53 @@ function initChat() {
             channels: null,
             sampleRate: null,
             eventType: null,
-            characteristics: []
+            characteristics: [],
+            validationErrors: []
         };
 
-        // Extraer distancia (metros)
+        // Extraer distancia (metros) con validación
         const distMatch = msg.match(/(\d+)\s*m(?:etros?)?(?!\s*hz)/i);
-        if (distMatch) entities.distance = parseInt(distMatch[1]);
+        if (distMatch) {
+            const dist = parseInt(distMatch[1]);
+            if (dist < 1 || dist > 500) {
+                entities.validationErrors.push(`Distancia ${dist}m fuera de rango válido (1-500m)`);
+            } else {
+                entities.distance = dist;
+            }
+        }
 
-        // Extraer temperatura
+        // Extraer temperatura con validación
         const tempMatch = msg.match(/(\d+)\s*[°º]?c/i);
-        if (tempMatch) entities.temperature = parseInt(tempMatch[1]);
+        if (tempMatch) {
+            const temp = parseInt(tempMatch[1]);
+            if (temp < -20 || temp > 50) {
+                entities.validationErrors.push(`Temperatura ${temp}°C fuera de rango válido (-20 a 50°C)`);
+            } else {
+                entities.temperature = temp;
+            }
+        }
 
-        // Extraer cantidad de personas
+        // Extraer cantidad de personas con validación
         const peopleMatch = msg.match(/(\d+)\s*(personas?|gente|audiencia|público)/i);
-        if (peopleMatch) entities.people = parseInt(peopleMatch[1]);
+        if (peopleMatch) {
+            const people = parseInt(peopleMatch[1]);
+            if (people < 10 || people > 100000) {
+                entities.validationErrors.push(`Cantidad ${people} personas fuera de rango válido (10-100,000)`);
+            } else {
+                entities.people = people;
+            }
+        }
 
-        // Extraer canales
+        // Extraer canales con validación
         const channelsMatch = msg.match(/(\d+)\s*(canales?|ch)/i);
-        if (channelsMatch) entities.channels = parseInt(channelsMatch[1]);
+        if (channelsMatch) {
+            const ch = parseInt(channelsMatch[1]);
+            if (ch < 1 || ch > 512) {
+                entities.validationErrors.push(`${ch} canales fuera de rango válido (1-512 ch)`);
+            } else {
+                entities.channels = ch;
+            }
+        }
 
         // Extraer sample rate
         if (/96\s*k|96000/i.test(msg)) entities.sampleRate = 96;
@@ -496,6 +616,12 @@ function initChat() {
 
         // NUEVO: Extraer entidades con NLP básico
         const entities = extractEntities(userMessage);
+
+        // NUEVO: Verificar errores de validación
+        if (entities.validationErrors.length > 0) {
+            const errors = entities.validationErrors.map(err => `• ${err}`).join('\n');
+            return `⚠️ <strong>Valores fuera de rango</strong>\n\n${errors}\n\n💡 Verifica los valores e intenta de nuevo.`;
+        }
 
         // NUEVO: Detectar preguntas de seguimiento
         const contextInfo = detectContextualQuestion(userMessage, chatState);
