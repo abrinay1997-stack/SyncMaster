@@ -43,7 +43,12 @@ const KNOWLEDGE_BASE = {
     systemConfig: {
         mainPA: {
             basic: "Define qué tipo de sistema principal tienes. ¿Es un arreglo Line Array colgado? ¿Izquierda/Derecha o solo uno central?",
-            advanced: "La longitud del line array determina la frecuencia de control vertical. Arrays más largos controlan frecuencias más bajas. El modelo de altavoz define el SPL máximo y la respuesta de fase nativa para la alineación."
+            advanced: "La longitud del line array determina la frecuencia de control vertical. Arrays más largos controlan frecuencias más bajas. El modelo de altavoz define el SPL máximo y la respuesta de fase nativa para la alineación.",
+            types: {
+                lineArray: "Colgado verticalmente, máximo control direccional",
+                leftRight: "Configuración estéreo estándar",
+                monoCenter: "Sistema mono central (corporativos, discursos)"
+            }
         },
         splayAngles: {
             basic: "La curvatura de la banana. Si está muy recta (0°), dispara lejos como un láser. Si está muy curva, abre el sonido.",
@@ -133,6 +138,44 @@ const KNOWLEDGE_BASE = {
         olsonDirectivity: {
             basic: "Los Line Arrays son muy direccionales en vertical. Si tu mesa está muy arriba o abajo, escucharás menos agudos.",
             advanced: "Fórmula clásica de Olson para fuentes lineales finitas: R(α) = sin(x)/x. Calcula la penalización de atenuación fuera del eje. >6dB de pérdida HF significa FOH no representativo de la audiencia principal."
+        },
+        physics: {
+            basic: "Resumen de salud del sistema mostrando la interacción del PA con el ambiente y subwoofers.",
+            advanced: "Incluye velocidad del sonido en tiempo real, SPL máximo teórico (todas las cajas en fase), interacción con el suelo (ground bounce), límite del array (transición Fresnel/Fraunhofer).",
+            metrics: ["Velocidad del sonido actual", "SPL teórico máximo", "Límite de array", "Factor de ground bounce"]
+        },
+        logistics: {
+            basic: "Cantidad de trucks, metros de cable, y personal necesario basado en el equipo configurado.",
+            advanced: "Los estimados incluyen cableado (Socapex/Multicore) y bumpers. La crew escala con la complejidad del rigging. Camiones calculados por peso y volumen total del sistema.",
+            estimates: {
+                cable: "Socapex/Multicore según distancias",
+                crew: "Técnicos escalan con complejidad de rigging",
+                trucks: "Basado en peso y volumen total"
+            }
+        },
+        weight: {
+            basic: "Carga de rigging aproximada incluyendo altavoces, bumpers y cableado pesado.",
+            advanced: "Carga estática de rigging estimada: cajas + top grid + peso de cables (~0.5kg/m). Siempre verificar con ingeniero estructural antes del montaje.",
+            proTip: "El factor de seguridad 5:1 debe aplicarse al WLL (Working Load Limit) del truss. Nunca exceder capacidad.",
+            cableWeight: "~0.5kg por metro de cable",
+            safetyFactor: "5:1 mínimo"
+        },
+        cableSystem: {
+            basic: "Las 'venas' del sistema - señal desde consola (FOH) hasta escenario y amplificadores.",
+            advanced: "Asume longitudes estándar de snake analógico o digital (CAT6/fiber) contabilizando distancia FOH más holgura. Fibra recomendada >100m (inmune a EMI).",
+            types: {
+                analog: "Multipar analógico, hasta 50m",
+                cat6: "Digital, limitado a 100m",
+                fiber: "Fibra óptica, >100m, inmune a EMI"
+            }
+        },
+        fingerprint: {
+            basic: "Verifica la curvatura del line array. Ángulos excesivos 'rompen' el sonido (gaps); ángulos muy cerrados causan interferencia.",
+            advanced: "Detecta línea rota (splay excede dispersión de caja), over-coupling (comb filtering). Busca forma logarítmica J suave. Mantén ángulos superiores cerrados (0-1°) para largo alcance.",
+            proTip: "Si aparecen grating lobes debajo de 8kHz, cierra ángulos o agrega downfills dedicados en lugar de abrir el array principal.",
+            idealShape: "Forma logarítmica J suave",
+            upperAngles: "0-1° para largo alcance",
+            lowerAngles: "Progresivamente abiertos para cobertura cercana"
         }
     },
 
@@ -277,6 +320,74 @@ const KNOWLEDGE_BASE = {
         iems: {
             description: "In-Ear Monitors",
             features: ["Configuración de RF", "Gestión de canales"]
+        }
+    },
+
+    // ========================================
+    // PRECIOS Y MEMBRESÍAS
+    // ========================================
+    pricing: {
+        individual: {
+            name: "Licencia Individual",
+            price: "$97 USD/año",
+            features: [
+                "100+ modelos de speakers",
+                "Exportación DXF/PDF ilimitada",
+                "Sincronización multi-dispositivo",
+                "Todas las actualizaciones",
+                "Soporte técnico por email"
+            ],
+            guarantee: "Garantía de reembolso 7 días",
+            ideal: "Técnicos independientes, freelancers"
+        },
+        partner: {
+            name: "Partner Estándar",
+            price: "$199 USD/año",
+            features: [
+                "✅ 1 Licencia Pro incluida",
+                "✅ Visibilidad Básica en Directorio",
+                "✅ Perfil de empresa público",
+                "✅ Badge 'Partner Verificado'",
+                "✅ Todas las features Pro"
+            ],
+            ideal: "Empresas pequeñas de audio, rental shops locales"
+        },
+        corporate: {
+            name: "Corporativo PRO",
+            price: "$499 USD/año",
+            features: [
+                "✅ 5 Licencias Pro incluidas",
+                "✅ Gestión de Equipos (Teams)",
+                "✅ Posicionamiento TOP en Directorio",
+                "✅ Perfil Verificado con Badges Premium",
+                "✅ Analytics avanzados",
+                "✅ Soporte prioritario",
+                "✅ API access (próximamente)"
+            ],
+            ideal: "Empresas grandes de producción, rental houses profesionales"
+        },
+        comparison: {
+            individual: {
+                price: "$97/año",
+                licenses: "1 usuario",
+                directory: "No incluido",
+                teams: "No",
+                support: "Email estándar"
+            },
+            partner: {
+                price: "$199/año",
+                licenses: "1 licencia Pro",
+                directory: "Visibilidad Básica",
+                teams: "No",
+                support: "Email + perfil público"
+            },
+            corporate: {
+                price: "$499/año",
+                licenses: "5 licencias Pro",
+                directory: "TOP positioning",
+                teams: "Sí, con gestión",
+                support: "Prioritario + API"
+            }
         }
     },
 
