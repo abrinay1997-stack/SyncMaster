@@ -125,7 +125,12 @@
                     <div class="chat-main">
                         <div class="chat-header">
                             <h3>Asistente Automático - LiveSync Pro</h3>
-                            <span class="chat-status">🤖 Bot Activo</span>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <button id="clearHistoryBtn" title="Borrar historial de conversación" style="background: none; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 0.4rem 0.8rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fas fa-trash-alt"></i> Limpiar chat
+                                </button>
+                                <span class="chat-status">🤖 Bot Activo</span>
+                            </div>
                         </div>
                         <div class="chat-messages" id="chatMessages">
                             <div class="message bot">
