@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Chatbot - Diagnóstico</title>
+</head>
+<body>
+    <h1>Diagnóstico del Chatbot</h1>
+    <div id="output"></div>
+
+    <script src="config.js"></script>
+    <script src="knowledge-base.js"></script>
+    <script src="chatbot-data.js"></script>
+    <script src="nlp-engine.js"></script>
+    <script src="context-manager.js"></script>
+    <script src="response-generator.js"></script>
+
+    <script>
+        const output = document.getElementById('output');
+
+        function log(message, isError = false) {
+            const p = document.createElement('p');
+            p.textContent = message;
+            p.style.color = isError ? 'red' : 'green';
+            output.appendChild(p);
+        }
+
+        // Test 1: Verificar que SPEAKER_DATABASE existe
+        log('Test 1: SPEAKER_DATABASE');
+        if (typeof SPEAKER_DATABASE !== 'undefined' && SPEAKER_DATABASE !== null) {
+            log(`✓ SPEAKER_DATABASE cargado con ${Object.keys(SPEAKER_DATABASE).length} modelos`);
+        } else {
+            log('✗ SPEAKER_DATABASE no está definido', true);
+        }
+
+        // Test 2: Verificar función analyzeMessage
+        log('\nTest 2: analyzeMessage()');
+        if (typeof analyzeMessage === 'function') {
+            log('✓ analyzeMessage() está definida');
+            try {
+                const result = analyzeMessage('specs del K2', SPEAKER_DATABASE);
+                log(`✓ analyzeMessage() funciona - Intent: ${result.intent.intent}`);
+            } catch (e) {
+                log(`✗ analyzeMessage() error: ${e.message}`, true);
+            }
+        } else {
+            log('✗ analyzeMessage() no está definida', true);
+        }
+
+        // Test 3: Verificar ConversationContext
+        log('\nTest 3: ConversationContext');
+        if (typeof ConversationContext === 'function') {
+            log('✓ ConversationContext está definida');
+            try {
+                const ctx = new ConversationContext();
+                log(`✓ ConversationContext se puede instanciar`);
+            } catch (e) {
+                log(`✗ ConversationContext error: ${e.message}`, true);
+            }
+        } else {
+            log('✗ ConversationContext no está definida', true);
+        }
+
+        // Test 4: Verificar getAdaptiveResponse
+        log('\nTest 4: getAdaptiveResponse()');
+        if (typeof getAdaptiveResponse === 'function') {
+            log('✓ getAdaptiveResponse() está definida');
+            try {
+                const response = getAdaptiveResponse('greeting', 'intermedio');
+                log(`✓ getAdaptiveResponse() retorna: "${response?.substring(0, 50)}..."`);
+            } catch (e) {
+                log(`✗ getAdaptiveResponse() error: ${e.message}`, true);
+            }
+        } else {
+            log('✗ getAdaptiveResponse() no está definida', true);
+        }
+
+        // Test 5: Verificar compareModelsInContext
+        log('\nTest 5: compareModelsInContext()');
+        if (typeof compareModelsInContext === 'function') {
+            log('✓ compareModelsInContext() está definida');
+            try {
+                const models = [
+                    {model: SPEAKER_DATABASE['k2'], key: 'k2'},
+                    {model: SPEAKER_DATABASE['panther'], key: 'panther'}
+                ];
+                const comparison = compareModelsInContext(models, null, 'intermedio');
+                log(`✓ compareModelsInContext() retorna: "${comparison?.substring(0, 50)}..."`);
+            } catch (e) {
+                log(`✗ compareModelsInContext() error: ${e.message}`, true);
+            }
+        } else {
+            log('✗ compareModelsInContext() no está definida', true);
+        }
+
+        log('\n=== FIN DE TESTS ===');
+    </script>
+</body>
+</html>
