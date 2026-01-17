@@ -71,6 +71,17 @@ let feedbackData = JSON.parse(localStorage.getItem('syncmaster-feedback') || '{"
 // NUEVO: Historial persistente
 let chatHistory = JSON.parse(localStorage.getItem('syncmaster-history') || '[]');
 
+// ========================================
+// FASE 1+2: NLP & CONTEXTO AVANZADO
+// ========================================
+let conversationContext = null;
+let lastAnalysisResult = null; // Variable temporal para el último análisis
+
+if (typeof ConversationContext !== 'undefined') {
+    conversationContext = new ConversationContext();
+    console.log('✅ NLP Engine activado - Fase 1+2 cargadas');
+}
+
 function initChat() {
     const chatInput = document.getElementById('chatInput');
     const sendButton = document.getElementById('sendMessage');
@@ -155,6 +166,13 @@ function initChat() {
             hideTypingIndicator();
             const response = generateBotResponse(message);
             addMessage(response, 'bot');
+
+            // FASE 2: Guardar turn en contexto conversacional
+            if (conversationContext && lastAnalysisResult) {
+                conversationContext.addTurn(message, response, lastAnalysisResult);
+                console.log('💾 Contexto actualizado. Turns:', conversationContext.turns.length);
+                console.log('👤 Expertise detectado:', conversationContext.userProfile.expertise);
+            }
 
             // Incrementar contador de mensajes
             chatState.messageCount++;
@@ -660,17 +678,61 @@ function initChat() {
     function generateBotResponse(userMessage) {
         const msg = userMessage.toLowerCase().trim();
 
-        // NUEVO: Extraer entidades con NLP básico
-        const entities = extractEntities(userMessage);
+        // ========================================
+        // FASE 1+2: ANÁLISIS NLP AVANZADO
+        // ========================================
+        let analysisResult = null;
+        let entities = null;
+        let intent = null;
+
+        if (typeof analyzeMessage !== 'undefined' && conversationContext) {
+            // Usar motor NLP avanzado
+            analysisResult = analyzeMessage(userMessage, SPEAKER_DATABASE);
+            entities = analysisResult.entities;
+            intent = analysisResult.intent;
+
+            console.log('🧠 NLP Analysis:', {
+                intent: intent.intent,
+                confidence: intent.confidence,
+                entities: Object.keys(entities).filter(k => entities[k] !== null && (Array.isArray(entities[k]) ? entities[k].length > 0 : true))
+            });
+        } else {
+            // Fallback a sistema antiguo
+            entities = extractEntities(userMessage);
+        }
 
         // NUEVO: Verificar errores de validación
-        if (entities.validationErrors.length > 0) {
+        if (entities.validationErrors && entities.validationErrors.length > 0) {
             const errors = entities.validationErrors.map(err => `• ${err}`).join('\n');
             return `⚠️ <strong>Valores fuera de rango</strong>\n\n${errors}\n\n💡 Verifica los valores e intenta de nuevo.`;
         }
 
-        // NUEVO: Detectar preguntas de seguimiento
-        const contextInfo = detectContextualQuestion(userMessage, chatState);
+        // Obtener expertise del usuario
+        const expertise = conversationContext ? conversationContext.userProfile.expertise : 'intermedio';
+
+        // Guardar analysisResult para uso posterior
+        if (analysisResult) {
+            lastAnalysisResult = analysisResult;
+        }
+
+        // NUEVO: Detectar preguntas de seguimiento (mejorado con contexto)
+        let contextInfo = null;
+        if (conversationContext && conversationContext.isFollowUpQuestion(userMessage)) {
+            // Resolver referencias
+            const reference = conversationContext.resolveReference(userMessage);
+            if (reference && reference.resolved) {
+                contextInfo = {
+                    type: reference.type,
+                    resolved: reference.resolved,
+                    confidence: reference.confidence
+                };
+            }
+        }
+
+        // Fallback a detección antigua si no hay contexto avanzado
+        if (!contextInfo) {
+            contextInfo = detectContextualQuestion(userMessage, chatState);
+        }
 
         // Detección de idioma
         const isEnglish = /(what|how|where|when|why|can|does|is|specs?|price|cost|work)/i.test(userMessage) &&
@@ -811,6 +873,22 @@ function initChat() {
         }
 
         // ===================================
+        // COMPARACIONES CONTEXTUALES (FASE 2 - NUEVO)
+        // ===================================
+        // "cuál es más ligero?", "cuál es mejor?" después de mencionar modelos
+        if (/(cu[aá]l|cual|qui[eé]n|quien)\s+(es\s+)?(m[aá]s|mejor)/i.test(msg)) {
+            if (conversationContext && typeof compareModelsInContext !== 'undefined') {
+                const recentModels = conversationContext.getRecentModels(2);
+                if (recentModels.length >= 2) {
+                    const property = msg; // Toda la pregunta
+                    const comparison = compareModelsInContext(recentModels, property, expertise);
+                    chatState.lastTopic = 'comparison';
+                    return comparison;
+                }
+            }
+        }
+
+        // ===================================
         // COMPARACIÓN (VERSIÓN MEJORADA CON CONTEXTO)
         // ===================================
         if (/(compar|diferencia|versus|vs).*(k[123]|panther|gsl8|leo|vtx)/i.test(msg)) {
@@ -860,16 +938,28 @@ function initChat() {
         }
 
         // ===================================
-        // SALUDOS (CON BOTONES DE ACCIÓN RÁPIDA)
+        // SALUDOS (CON RESPUESTAS ADAPTATIVAS - FASE 2)
         // ===================================
         if (/^(hola|hey|hi|buenas|buenos dias|hello)/.test(msg)) {
             chatState.lastTopic = 'greeting';
+
+            // Usar respuestas adaptativas si están disponibles
+            if (typeof getAdaptiveResponse !== 'undefined') {
+                const greeting = getAdaptiveResponse('greeting', expertise);
+                return greeting + '\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>';
+            }
+
             return isEnglish
                 ? `👋 Hi! I'm the LiveSync Pro assistant.\n\nI can help with PA Systems, line arrays, delays, and more.\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 K2 Specs</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Dante Calc</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Pricing</button>`
                 : `👋 ¡Hola! Soy el asistente de LiveSync Pro.\n\nPuedo ayudarte con PA Systems, line arrays, delays, y más.\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>`;
         }
 
         if (/gracias|thanks/i.test(msg)) {
+            // Usar respuestas variables
+            if (typeof getAdaptiveResponse !== 'undefined') {
+                return getAdaptiveResponse('thanks', expertise);
+            }
+
             return isEnglish
                 ? '😊 You\'re welcome!'
                 : '😊 ¡De nada! ¿Algo más?';
@@ -1122,7 +1212,7 @@ function initChat() {
         }
 
         // ===================================
-        // RESPUESTA GENÉRICA CON SUGERENCIAS INTELIGENTES (NUEVO)
+        // RESPUESTA GENÉRICA CON SUGERENCIAS INTELIGENTES (FASE 2)
         // ===================================
         const smartSuggestions = generateSmartSuggestions(userMessage);
         let suggestionButtons = '';
@@ -1131,7 +1221,17 @@ function initChat() {
             suggestionButtons += `<button class="quick-action-btn" data-action="${suggestion}">${suggestion}</button> `;
         });
 
-        return `🤔 No entendí completamente tu pregunta.\n\n<strong>¿Te refieres a alguno de estos temas?</strong>\n\n${suggestionButtons}\n\n💡 O prueba con:\n• "Specs del K2"\n• "mejor line array para 50m"\n• "delay 80m 25°C"\n• "cuánto cuesta"\n\n🚀 https://livesyncpro.com`;
+        // Usar respuesta adaptativa para "unknown"
+        let unknownResponse = `🤔 No entendí completamente tu pregunta.\n\n<strong>¿Te refieres a alguno de estos temas?</strong>\n\n${suggestionButtons}\n\n💡 O prueba con:\n• "Specs del K2"\n• "mejor line array para 50m"\n• "delay 80m 25°C"\n• "cuánto cuesta"\n\n🚀 https://livesyncpro.com`;
+
+        if (typeof getAdaptiveResponse !== 'undefined') {
+            const adaptiveUnknown = getAdaptiveResponse('unknown', expertise);
+            if (adaptiveUnknown) {
+                unknownResponse = adaptiveUnknown + '\n\n' + suggestionButtons;
+            }
+        }
+
+        return unknownResponse;
     }
 }
 
