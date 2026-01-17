@@ -829,7 +829,7 @@ function initChat() {
 
                 response += `\n💡 LiveSync calcula la configuración exacta automáticamente.${cta}`;
 
-                return response;
+                return formatBotResponse(response, analysisResult);
             }
         }
 
@@ -905,7 +905,7 @@ function initChat() {
                     const property = msg; // Toda la pregunta
                     const comparison = compareModelsInContext(recentModels, property, expertise);
                     chatState.lastTopic = 'comparison';
-                    return comparison;
+                    return formatBotResponse(comparison, analysisResult);
                 }
             }
         }
@@ -968,23 +968,23 @@ function initChat() {
             // Usar respuestas adaptativas si están disponibles
             if (typeof getAdaptiveResponse !== 'undefined') {
                 const greeting = getAdaptiveResponse('greeting', expertise);
-                return greeting + '\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>';
+                return formatBotResponse(greeting + '\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>', analysisResult);
             }
 
-            return isEnglish
+            return formatBotResponse(isEnglish
                 ? `👋 Hi! I'm the LiveSync Pro assistant.\n\nI can help with PA Systems, line arrays, delays, and more.\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 K2 Specs</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Dante Calc</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Pricing</button>`
-                : `👋 ¡Hola! Soy el asistente de LiveSync Pro.\n\nPuedo ayudarte con PA Systems, line arrays, delays, y más.\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>`;
+                : `👋 ¡Hola! Soy el asistente de LiveSync Pro.\n\nPuedo ayudarte con PA Systems, line arrays, delays, y más.\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Specs del K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="48 canales dante">🌐 Calcular Dante</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta?">💰 Precios</button>`, analysisResult);
         }
 
         if (/gracias|thanks/i.test(msg)) {
             // Usar respuestas variables
             if (typeof getAdaptiveResponse !== 'undefined') {
-                return getAdaptiveResponse('thanks', expertise);
+                return formatBotResponse(getAdaptiveResponse('thanks', expertise), analysisResult);
             }
 
-            return isEnglish
+            return formatBotResponse(isEnglish
                 ? '😊 You\'re welcome!'
-                : '😊 ¡De nada! ¿Algo más?';
+                : '😊 ¡De nada! ¿Algo más?', analysisResult);
         }
 
         // ===================================
