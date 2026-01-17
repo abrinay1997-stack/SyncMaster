@@ -74,6 +74,7 @@ class ConversationContext {
 
     /**
      * Actualiza entidades activas con decay temporal
+     * IMPORTANTE 4 CORREGIDO: Limitar a 20 entidades máximo
      */
     updateActiveEntities(newEntities) {
         // Incrementar turnsSinceUpdate en todas las entidades existentes
@@ -83,6 +84,18 @@ class ConversationContext {
             // Eliminar si excede decay limit
             if (data.turnsSinceUpdate > this.entityDecayTurns) {
                 this.activeEntities.delete(key);
+            }
+        }
+
+        // IMPORTANTE 4: Limitar tamaño máximo de activeEntities
+        const MAX_ACTIVE_ENTITIES = 20;
+        if (this.activeEntities.size > MAX_ACTIVE_ENTITIES) {
+            // Eliminar las más antiguas (mayor turnsSinceUpdate)
+            const sorted = [...this.activeEntities.entries()]
+                .sort((a, b) => b[1].turnsSinceUpdate - a[1].turnsSinceUpdate);
+
+            for (let i = MAX_ACTIVE_ENTITIES; i < sorted.length; i++) {
+                this.activeEntities.delete(sorted[i][0]);
             }
         }
 
@@ -130,6 +143,7 @@ class ConversationContext {
 
     /**
      * Obtiene todos los modelos mencionados recientemente
+     * IMPORTANTE 5 CORREGIDO: Validar estructura de modelos
      */
     getRecentModels(limit = 5) {
         const models = [];
@@ -139,8 +153,14 @@ class ConversationContext {
             const turn = this.turns[i];
             if (turn.analysis?.entities?.speakerModels) {
                 turn.analysis.entities.speakerModels.forEach(sm => {
-                    if (!models.find(m => m.key === sm.key)) {
-                        models.push(sm);
+                    // IMPORTANTE 5: Validar estructura completa
+                    if (sm && sm.key && sm.model) {
+                        // Verificar que no esté ya en la lista
+                        if (!models.find(m => m.key === sm.key)) {
+                            models.push(sm);
+                        }
+                    } else {
+                        console.warn('Modelo inválido en contexto:', sm);
                     }
                 });
             }

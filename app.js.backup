@@ -775,9 +775,9 @@ function initChat() {
                     if (entities.distance || entities.people) {
                         const dist = entities.distance || (entities.people > 1000 ? 80 : 40);
                         const qty = Math.ceil(dist / 8) + 4; // Aproximación simple
-                        return formatBotResponse(`📊 <strong>Para ${dist}m aproximadamente:</strong>\n\n• ${qty}-${qty+4} ${lastModel.name} por lado (Main PA)\n• Configuración típica para esa distancia\n\n💡 LiveSync Pro calcula la cantidad exacta según cobertura y SPL objetivo.${cta}\n\n<button class="quick-action-btn" data-action="Setup festival">🎪 Ver setup completo</button>`, analysisResult);
+                        return `📊 <strong>Para ${dist}m aproximadamente:</strong>\n\n• ${qty}-${qty+4} ${lastModel.name} por lado (Main PA)\n• Configuración típica para esa distancia\n\n💡 LiveSync Pro calcula la cantidad exacta según cobertura y SPL objetivo.${cta}\n\n<button class="quick-action-btn" data-action="Setup festival">🎪 Ver setup completo</button>`;
                     }
-                    return formatBotResponse(`❓ ¿Para qué distancia? Ej: "cuántos ${lastModel.name} para 50m"`, analysisResult);
+                    return `❓ ¿Para qué distancia? Ej: "cuántos ${lastModel.name} para 50m"`;
                 }
 
                 // "sirve para outdoor?" después de specs
@@ -786,18 +786,18 @@ function initChat() {
                                 entities.eventType === 'teatro' ? 'teatros indoor' : 'ese tipo de evento';
 
                     if (lastModel.category === 'Line Array Large' && entities.eventType === 'festival') {
-                        return formatBotResponse(`✅ <strong>Sí, ${lastModel.name} es ideal para ${uso}</strong>\n\n• SPL: ${lastModel.spl}dB (suficiente para grandes distancias)\n• Categoría: ${lastModel.category}\n• Alcance: >80m\n\n💡 Perfecto para outdoor masivo.${cta}`, analysisResult);
+                        return `✅ <strong>Sí, ${lastModel.name} es ideal para ${uso}</strong>\n\n• SPL: ${lastModel.spl}dB (suficiente para grandes distancias)\n• Categoría: ${lastModel.category}\n• Alcance: >80m\n\n💡 Perfecto para outdoor masivo.${cta}`;
                     } else if (lastModel.category === 'Line Array Medium' && entities.eventType === 'teatro') {
-                        return formatBotResponse(`✅ <strong>Sí, ${lastModel.name} funciona bien para ${uso}</strong>\n\n• Dispersión: ${lastModel.dispersion}° (ideal indoor)\n• SPL: ${lastModel.spl}dB\n• Alcance: 30-50m\n\n💡 Excelente para salas y teatros.${cta}`, analysisResult);
+                        return `✅ <strong>Sí, ${lastModel.name} funciona bien para ${uso}</strong>\n\n• Dispersión: ${lastModel.dispersion}° (ideal indoor)\n• SPL: ${lastModel.spl}dB\n• Alcance: 30-50m\n\n💡 Excelente para salas y teatros.${cta}`;
                     }
                 }
 
                 // "y para 50m?" después de specs
                 if (/(y )?para (\d+)m/i.test(msg) && entities.distance) {
                     if (entities.distance > 80 && lastModel.category !== 'Line Array Large') {
-                        return formatBotResponse(`⚠️ <strong>${lastModel.name} puede quedarse corto para ${entities.distance}m</strong>\n\n<strong>Mejor opción:</strong>\n• K1, Panther, GSL8 (>80m)\n• Line Arrays Large con alto SPL\n\n<button class="quick-action-btn" data-action="K2 vs Panther">⚖️ Comparar modelos</button>`, analysisResult);
+                        return `⚠️ <strong>${lastModel.name} puede quedarse corto para ${entities.distance}m</strong>\n\n<strong>Mejor opción:</strong>\n• K1, Panther, GSL8 (>80m)\n• Line Arrays Large con alto SPL\n\n<button class="quick-action-btn" data-action="K2 vs Panther">⚖️ Comparar modelos</button>`;
                     } else {
-                        return formatBotResponse(`✅ <strong>${lastModel.name} funciona para ${entities.distance}m</strong>\n\n• SPL @ ${entities.distance}m: ~${lastModel.spl - Math.ceil(entities.distance/10)}dB\n• Configuración recomendada: ${Math.ceil(entities.distance/8)}-${Math.ceil(entities.distance/6)} cajas por lado\n\n💡 LiveSync calcula SPL exacto.${cta}`, analysisResult);
+                        return `✅ <strong>${lastModel.name} funciona para ${entities.distance}m</strong>\n\n• SPL @ ${entities.distance}m: ~${lastModel.spl - Math.ceil(entities.distance/10)}dB\n• Configuración recomendada: ${Math.ceil(entities.distance/8)}-${Math.ceil(entities.distance/6)} cajas por lado\n\n💡 LiveSync calcula SPL exacto.${cta}`;
                     }
                 }
             }
@@ -838,14 +838,14 @@ function initChat() {
             const temp = entities.temperature || 20;
             const calc = calculateDelayByTemp(entities.distance, temp);
             chatState.lastTopic = 'delay-calc';
-            return formatBotResponse(`🗼 <strong>Calculadora de Delay</strong>\n\n• Distancia: ${calc.distance}m @ ${calc.temperature}°C\n• Velocidad sonido: ${calc.speedOfSound} m/s\n• <strong>Delay: ${calc.delayMs} ms</strong>${cta}`, analysisResult);
+            return `🗼 <strong>Calculadora de Delay</strong>\n\n• Distancia: ${calc.distance}m @ ${calc.temperature}°C\n• Velocidad sonido: ${calc.speedOfSound} m/s\n• <strong>Delay: ${calc.delayMs} ms</strong>${cta}`;
         }
 
         // "cuántos canales dante para 64 canales" (formato natural)
         if (/(calcul|necesito|cu[aá]nto).*dante/i.test(msg) && entities.channels) {
             const calc = calculateDanteBandwidth(entities.channels, entities.sampleRate || 48);
             chatState.lastTopic = 'dante-calc';
-            return formatBotResponse(`🌐 <strong>Dante Bandwidth</strong>\n\n• Canales: ${calc.channels}\n• Sample rate: ${calc.sampleRate}kHz/24bit\n• <strong>Total: ${calc.totalMbps} Mbps</strong>\n• ${calc.recommendation}${cta}`, analysisResult);
+            return `🌐 <strong>Dante Bandwidth</strong>\n\n• Canales: ${calc.channels}\n• Sample rate: ${calc.sampleRate}kHz/24bit\n• <strong>Total: ${calc.totalMbps} Mbps</strong>\n• ${calc.recommendation}${cta}`;
         }
 
         // "configuración para 5000 personas festival"
@@ -853,7 +853,7 @@ function initChat() {
             const isLarge = entities.people > 3000;
             if (isLarge) {
                 chatState.lastTopic = 'festival';
-                return formatBotResponse(`🎪 <strong>Setup Festival Grande (${entities.people} personas)</strong>\n\n<strong>Main PA:</strong> 14-18 K1/Panther por lado\n→ <em>Cobertura >100m, SPL 105-110dB @ FOH</em>\n\n<strong>Subs:</strong> 10-16 KS28 (cardioid)\n<strong>Delay Towers:</strong> 3 torres @ 40m, 70m, 100m\n<strong>Potencia:</strong> 100-150 kW\n\n💡 LiveSync dimensiona automáticamente según tu audiencia.${cta}`, analysisResult);
+                return `🎪 <strong>Setup Festival Grande (${entities.people} personas)</strong>\n\n<strong>Main PA:</strong> 14-18 K1/Panther por lado\n→ <em>Cobertura >100m, SPL 105-110dB @ FOH</em>\n\n<strong>Subs:</strong> 10-16 KS28 (cardioid)\n<strong>Delay Towers:</strong> 3 torres @ 40m, 70m, 100m\n<strong>Potencia:</strong> 100-150 kW\n\n💡 LiveSync dimensiona automáticamente según tu audiencia.${cta}`;
             }
         }
 
@@ -879,7 +879,7 @@ function initChat() {
                     uso = '\n\n<strong>Uso recomendado:</strong> Monitores de piso (wedges), sidefills, escenario';
                 }
 
-                return formatBotResponse(`🔊 <strong>${found.brand} ${found.name}</strong>\n\n📊 <strong>Especificaciones:</strong>\n• SPL máximo: ${found.spl} dB\n• Peso: ${found.weight} kg\n• Impedancia: ${found.impedance}Ω\n• Dispersión: ${found.dispersion}°\n• Categoría: ${found.category}${uso}\n\n💡 En LiveSync Pro puedes simular este modelo con cálculo de cobertura, delays y rigging.${cta}`, analysisResult);
+                return `🔊 <strong>${found.brand} ${found.name}</strong>\n\n📊 <strong>Especificaciones:</strong>\n• SPL máximo: ${found.spl} dB\n• Peso: ${found.weight} kg\n• Impedancia: ${found.impedance}Ω\n• Dispersión: ${found.dispersion}°\n• Categoría: ${found.category}${uso}\n\n💡 En LiveSync Pro puedes simular este modelo con cálculo de cobertura, delays y rigging.${cta}`;
             }
         }
 
@@ -889,7 +889,7 @@ function initChat() {
             if (contextMatch) {
                 const found = findSpeakerModel(contextMatch[0]);
                 if (found) {
-                    return formatBotResponse(`🔊 <strong>${found.brand} ${found.name}</strong>\n\n📊 <strong>Especificaciones:</strong>\n• SPL: ${found.spl} dB, Peso: ${found.weight} kg\n• Impedancia: ${found.impedance}Ω, Dispersión: ${found.dispersion}°${cta}`, analysisResult);
+                    return `🔊 <strong>${found.brand} ${found.name}</strong>\n\n📊 <strong>Especificaciones:</strong>\n• SPL: ${found.spl} dB, Peso: ${found.weight} kg\n• Impedancia: ${found.impedance}Ω, Dispersión: ${found.dispersion}°${cta}`;
                 }
             }
         }
@@ -915,7 +915,7 @@ function initChat() {
         // ===================================
         if (/(compar|diferencia|versus|vs).*(k[123]|panther|gsl8|leo|vtx)/i.test(msg)) {
             chatState.lastTopic = 'comparison';
-            return formatBotResponse(`⚖️ <strong>Comparación Line Arrays</strong>\n\n<strong>ULTRA LARGO ALCANCE (Festivales grandes):</strong>\n🥇 Meyer Panther: 150dB, 68kg - Más ligero\n🥈 d&b GSL8: 150dB, 80kg - Muy potente\n🥉 K1: 149dB, 106kg - Dispersión 5° (tight)\n\n<strong>MEDIO-LARGO (Conciertos, corporativos):</strong>\n🏅 K2: 147dB, 56kg - Muy versátil, peso ideal\n🏅 VTX V25: 147dB, 88kg - Potente\n\n<strong>Criterio de selección:</strong>\n• <strong>Distancia >50m:</strong> Panther, GSL8, K1\n• <strong>30-50m:</strong> K2, V25\n• <strong>Peso crítico:</strong> K2 (56kg) o Panther (68kg)\n\n💡 LiveSync Pro calcula automáticamente qué modelo necesitas según distancia y SPL objetivo.${cta}`, analysisResult);
+            return `⚖️ <strong>Comparación Line Arrays</strong>\n\n<strong>ULTRA LARGO ALCANCE (Festivales grandes):</strong>\n🥇 Meyer Panther: 150dB, 68kg - Más ligero\n🥈 d&b GSL8: 150dB, 80kg - Muy potente\n🥉 K1: 149dB, 106kg - Dispersión 5° (tight)\n\n<strong>MEDIO-LARGO (Conciertos, corporativos):</strong>\n🏅 K2: 147dB, 56kg - Muy versátil, peso ideal\n🏅 VTX V25: 147dB, 88kg - Potente\n\n<strong>Criterio de selección:</strong>\n• <strong>Distancia >50m:</strong> Panther, GSL8, K1\n• <strong>30-50m:</strong> K2, V25\n• <strong>Peso crítico:</strong> K2 (56kg) o Panther (68kg)\n\n💡 LiveSync Pro calcula automáticamente qué modelo necesitas según distancia y SPL objetivo.${cta}`;
         }
 
         // ===================================
@@ -927,7 +927,7 @@ function initChat() {
             const is96k = /96\s*k|96000/i.test(msg);
             const calc = calculateDanteBandwidth(channels, is96k ? 96 : 48);
             chatState.lastTopic = 'dante-calc';
-            return formatBotResponse(`🌐 <strong>Dante Bandwidth</strong>\n\n• Canales: ${calc.channels}\n• Sample rate: ${calc.sampleRate}kHz/24bit\n• <strong>Total: ${calc.totalMbps} Mbps</strong>\n• ${calc.recommendation}${cta}`, analysisResult);
+            return `🌐 <strong>Dante Bandwidth</strong>\n\n• Canales: ${calc.channels}\n• Sample rate: ${calc.sampleRate}kHz/24bit\n• <strong>Total: ${calc.totalMbps} Mbps</strong>\n• ${calc.recommendation}${cta}`;
         }
 
         // ===================================
@@ -942,7 +942,7 @@ function initChat() {
                 const temp = tempMatch ? parseInt(tempMatch[1]) : 20;
                 const calc = calculateDelayByTemp(distance, temp);
                 chatState.lastTopic = 'delay-calc';
-                return formatBotResponse(`🗼 <strong>Calculadora de Delay</strong>\n\n• Distancia: ${calc.distance}m @ ${calc.temperature}°C\n• Velocidad sonido: ${calc.speedOfSound} m/s\n• <strong>Delay: ${calc.delayMs} ms</strong>${cta}`, analysisResult);
+                return `🗼 <strong>Calculadora de Delay</strong>\n\n• Distancia: ${calc.distance}m @ ${calc.temperature}°C\n• Velocidad sonido: ${calc.speedOfSound} m/s\n• <strong>Delay: ${calc.delayMs} ms</strong>${cta}`;
             }
         }
 
@@ -951,12 +951,12 @@ function initChat() {
         // ===================================
         if (/(festival|concierto|outdoor).*(config|setup|sistema)/i.test(msg)) {
             chatState.lastTopic = 'festival';
-            return formatBotResponse(`🎪 <strong>Setup Festival Outdoor</strong>\n\n<strong>Main PA:</strong> 12-16 K2/Panther por lado\n→ <em>Cobertura 80-100m con SPL >105dB @ FOH</em>\n\n<strong>Subs:</strong> 8-12 KS28/1100-LFC (cardioid)\n→ <em>Rechazo trasero -20dB, protege FOH y backstage</em>\n\n<strong>Delay Towers:</strong> @ 40m, 70m\n→ <em>Mantener SPL uniforme, calcular con temperatura del evento</em>\n\n<strong>FOH:</strong> DiGiCo SD7/Avid S6L\n<strong>Potencia:</strong> 80-120 kW (distribución trifásica)\n\n💡 LiveSync calcula automáticamente cantidades exactas según distancia y audiencia.${cta}\n\n<button class="quick-action-btn" data-action="delay 80m 25°C">🧮 Calcular delays</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver precios</button>`, analysisResult);
+            return `🎪 <strong>Setup Festival Outdoor</strong>\n\n<strong>Main PA:</strong> 12-16 K2/Panther por lado\n→ <em>Cobertura 80-100m con SPL >105dB @ FOH</em>\n\n<strong>Subs:</strong> 8-12 KS28/1100-LFC (cardioid)\n→ <em>Rechazo trasero -20dB, protege FOH y backstage</em>\n\n<strong>Delay Towers:</strong> @ 40m, 70m\n→ <em>Mantener SPL uniforme, calcular con temperatura del evento</em>\n\n<strong>FOH:</strong> DiGiCo SD7/Avid S6L\n<strong>Potencia:</strong> 80-120 kW (distribución trifásica)\n\n💡 LiveSync calcula automáticamente cantidades exactas según distancia y audiencia.${cta}\n\n<button class="quick-action-btn" data-action="delay 80m 25°C">🧮 Calcular delays</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver precios</button>`;
         }
 
         if (/(teatro|corporativo|indoor).*(config|setup)/i.test(msg)) {
             chatState.lastTopic = 'teatro';
-            return formatBotResponse(`🎭 <strong>Setup Teatro Indoor</strong>\n\n<strong>Main PA:</strong> 6-10 K3/Kara II por lado\n→ <em>Dispersión 10°, ideal para <30m en indoor</em>\n\n<strong>Subs:</strong> 4-6 SB28 (end-fire)\n→ <em>Direccional, evita reflexiones en paredes traseras</em>\n\n<strong>FOH:</strong> Yamaha CL5/dLive\n<strong>Potencia:</strong> 15-30 kW\n<strong>Sin delay towers</strong> (distancia <30m)\n\n💡 En salas con acústica controlada, priorizar direccionalidad sobre potencia bruta.${cta}`, analysisResult);
+            return `🎭 <strong>Setup Teatro Indoor</strong>\n\n<strong>Main PA:</strong> 6-10 K3/Kara II por lado\n→ <em>Dispersión 10°, ideal para <30m en indoor</em>\n\n<strong>Subs:</strong> 4-6 SB28 (end-fire)\n→ <em>Direccional, evita reflexiones en paredes traseras</em>\n\n<strong>FOH:</strong> Yamaha CL5/dLive\n<strong>Potencia:</strong> 15-30 kW\n<strong>Sin delay towers</strong> (distancia <30m)\n\n💡 En salas con acústica controlada, priorizar direccionalidad sobre potencia bruta.${cta}`;
         }
 
         // ===================================
@@ -992,7 +992,7 @@ function initChat() {
         // ===================================
         if (/que es|qué es|what is/.test(msg) && /(livesync|app|software)/.test(msg)) {
             chatState.lastTopic = 'about';
-            return formatBotResponse(`🎯 <strong>LiveSync Pro</strong> es un sistema profesional de diseño de <strong>PA Systems</strong>.\n\nCalcula line arrays, delay towers, rigging, potencia, redes Dante/AVB y exporta a CAD.\n\n💰 <strong>$97 USD/año</strong>\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="¿Funciona offline?">💻 ¿Offline?</button> <button class="quick-action-btn" data-action="¿Cómo exporto?">📤 Exportar</button>`, analysisResult);
+            return `🎯 <strong>LiveSync Pro</strong> es un sistema profesional de diseño de <strong>PA Systems</strong>.\n\nCalcula line arrays, delay towers, rigging, potencia, redes Dante/AVB y exporta a CAD.\n\n💰 <strong>$97 USD/año</strong>\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="¿Funciona offline?">💻 ¿Offline?</button> <button class="quick-action-btn" data-action="¿Cómo exporto?">📤 Exportar</button>`;
         }
 
         // ===================================
@@ -1003,15 +1003,15 @@ function initChat() {
 
             // Detectar si preguntan por membresía específica
             if (/(partner|empresas? peque|rental.*local|visibilidad)/i.test(msg)) {
-                return formatBotResponse(`🏢 <strong>Partner Estándar</strong> - $199/año\n\n✅ 1 Licencia Pro incluida\n✅ Visibilidad Básica en Directorio\n✅ Perfil de empresa público\n✅ Badge 'Partner Verificado'\n✅ Todas las features Pro\n\n<strong>Ideal para:</strong> Empresas pequeñas de audio, rental shops locales\n\n🚀 https://livesyncpro.com`, analysisResult);
+                return `🏢 <strong>Partner Estándar</strong> - $199/año\n\n✅ 1 Licencia Pro incluida\n✅ Visibilidad Básica en Directorio\n✅ Perfil de empresa público\n✅ Badge 'Partner Verificado'\n✅ Todas las features Pro\n\n<strong>Ideal para:</strong> Empresas pequeñas de audio, rental shops locales\n\n🚀 https://livesyncpro.com`;
             }
 
             if (/(corporativo|corporate|equipos?|teams?|5 licencias|empresas? grande)/i.test(msg)) {
-                return formatBotResponse(`🏆 <strong>Corporativo PRO</strong> - $499/año\n\n✅ 5 Licencias Pro incluidas\n✅ Gestión de Equipos (Teams)\n✅ Posicionamiento TOP en Directorio\n✅ Perfil Verificado con Badges Premium\n✅ Analytics avanzados\n✅ Soporte prioritario\n\n<strong>Ideal para:</strong> Empresas grandes de producción, rental houses profesionales\n\n🚀 https://livesyncpro.com`, analysisResult);
+                return `🏆 <strong>Corporativo PRO</strong> - $499/año\n\n✅ 5 Licencias Pro incluidas\n✅ Gestión de Equipos (Teams)\n✅ Posicionamiento TOP en Directorio\n✅ Perfil Verificado con Badges Premium\n✅ Analytics avanzados\n✅ Soporte prioritario\n\n<strong>Ideal para:</strong> Empresas grandes de producción, rental houses profesionales\n\n🚀 https://livesyncpro.com`;
             }
 
             // Respuesta general con todos los planes
-            return formatBotResponse(`💰 <strong>Planes LiveSync Pro</strong>\n\n<strong>🎯 Individual</strong> - $97/año\n→ Técnicos independientes, freelancers\n\n<strong>🏢 Partner Estándar</strong> - $199/año\n→ 1 Licencia + Visibilidad en Directorio\n→ Empresas pequeñas, rental shops\n\n<strong>🏆 Corporativo PRO</strong> - $499/año\n→ 5 Licencias + Teams + TOP positioning\n→ Empresas grandes, rental houses\n\n🔒 Garantía 7 días en todos los planes\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Plan Partner Estándar">🏢 Detalles Partner</button> <button class="quick-action-btn" data-action="Plan Corporativo PRO">🏆 Detalles Corporativo</button>`, analysisResult);
+            return `💰 <strong>Planes LiveSync Pro</strong>\n\n<strong>🎯 Individual</strong> - $97/año\n→ Técnicos independientes, freelancers\n\n<strong>🏢 Partner Estándar</strong> - $199/año\n→ 1 Licencia + Visibilidad en Directorio\n→ Empresas pequeñas, rental shops\n\n<strong>🏆 Corporativo PRO</strong> - $499/año\n→ 5 Licencias + Teams + TOP positioning\n→ Empresas grandes, rental houses\n\n🔒 Garantía 7 días en todos los planes\n\n🚀 https://livesyncpro.com\n\n<button class="quick-action-btn" data-action="Plan Partner Estándar">🏢 Detalles Partner</button> <button class="quick-action-btn" data-action="Plan Corporativo PRO">🏆 Detalles Corporativo</button>`;
         }
 
         // ===================================
@@ -1019,7 +1019,7 @@ function initChat() {
         // ===================================
         if (/(offline|sin internet|instalaci[oó]n|windows|mac)/.test(msg)) {
             chatState.lastTopic = 'offline';
-            return formatBotResponse(`💻 <strong>Modo Offline</strong>\n\n✅ Funciona <strong>100% offline</strong> después del acceso inicial\n❌ <strong>No necesitas instalar nada</strong> (es una PWA)\n✅ Compatible: Windows, Mac, iPad, Android\n✅ Licencia: Laptop + Tablet simultáneamente${cta}`, analysisResult);
+            return `💻 <strong>Modo Offline</strong>\n\n✅ Funciona <strong>100% offline</strong> después del acceso inicial\n❌ <strong>No necesitas instalar nada</strong> (es una PWA)\n✅ Compatible: Windows, Mac, iPad, Android\n✅ Licencia: Laptop + Tablet simultáneamente${cta}`;
         }
 
         // ===================================
@@ -1027,7 +1027,7 @@ function initChat() {
         // ===================================
         if (/(line array|l[íi]nea|arreglo)/.test(msg)) {
             chatState.lastTopic = 'line-arrays';
-            return formatBotResponse(`📡 <strong>Line Arrays soportados:</strong>\n\n🔷 L-Acoustics: K1, K2, K3, Kara II, KS28\n🔷 Meyer: Panther, LEO-M, Leopard, LINA\n🔷 d&b: GSL8, KSL8, J8, V8, SL-SUB\n🔷 JBL: VTX A12, V25, A8, B28\n🔷 Adamson: E15, E12, S10\n\n💡 Escribe el modelo (ej: "K2", "Panther")${cta}`, analysisResult);
+            return `📡 <strong>Line Arrays soportados:</strong>\n\n🔷 L-Acoustics: K1, K2, K3, Kara II, KS28\n🔷 Meyer: Panther, LEO-M, Leopard, LINA\n🔷 d&b: GSL8, KSL8, J8, V8, SL-SUB\n🔷 JBL: VTX A12, V25, A8, B28\n🔷 Adamson: E15, E12, S10\n\n💡 Escribe el modelo (ej: "K2", "Panther")${cta}`;
         }
 
         // ===================================
@@ -1035,7 +1035,7 @@ function initChat() {
         // ===================================
         if (/(delay tower|torre de delay|torres)/.test(msg) && !/(festival|config)/i.test(msg)) {
             chatState.lastTopic = 'delay-towers';
-            return formatBotResponse(`🗼 <strong>Delay Towers</strong>\n\nLiveSync calcula:\n• <strong>Posición óptima:</strong> Cada 30-40m en outdoor, 20-25m indoor\n• <strong>Delay time exacto:</strong> Ej: 50m @ 20°C = 145.7 ms\n• <strong>Gain shading:</strong> Torre más cerca del PA = -3dB típico\n• <strong>SPL uniforme:</strong> Mantener 95-105dB en toda la audiencia\n\n<strong>Criterio:</strong>\n• <strong>Distancia PA >50m:</strong> Necesaria 1 torre\n• <strong>>80m:</strong> 2 torres (@ 40m, 70m)\n• <strong>>120m:</strong> 3+ torres\n\n💡 Temperatura afecta el delay: mídela siempre antes del show.${cta}`, analysisResult);
+            return `🗼 <strong>Delay Towers</strong>\n\nLiveSync calcula:\n• <strong>Posición óptima:</strong> Cada 30-40m en outdoor, 20-25m indoor\n• <strong>Delay time exacto:</strong> Ej: 50m @ 20°C = 145.7 ms\n• <strong>Gain shading:</strong> Torre más cerca del PA = -3dB típico\n• <strong>SPL uniforme:</strong> Mantener 95-105dB en toda la audiencia\n\n<strong>Criterio:</strong>\n• <strong>Distancia PA >50m:</strong> Necesaria 1 torre\n• <strong>>80m:</strong> 2 torres (@ 40m, 70m)\n• <strong>>120m:</strong> 3+ torres\n\n💡 Temperatura afecta el delay: mídela siempre antes del show.${cta}`;
         }
 
         // ===================================
@@ -1043,7 +1043,7 @@ function initChat() {
         // ===================================
         if (/(foh|front of house|consola|mixer)/.test(msg)) {
             chatState.lastTopic = 'foh';
-            return formatBotResponse(`🎛️ <strong>FOH Configuration</strong>\n\nProcesadores soportados:\n• Lake LM44, LM26\n• XTA DP448\n• BSS BLU-160\n• Q-SYS Core\n• Meyer Galaxy\n• L-Acoustics P1\n\nGenera IO lists automáticas y patcheo Dante/AVB.${cta}`, analysisResult);
+            return `🎛️ <strong>FOH Configuration</strong>\n\nProcesadores soportados:\n• Lake LM44, LM26\n• XTA DP448\n• BSS BLU-160\n• Q-SYS Core\n• Meyer Galaxy\n• L-Acoustics P1\n\nGenera IO lists automáticas y patcheo Dante/AVB.${cta}`;
         }
 
         // ===================================
@@ -1051,7 +1051,7 @@ function initChat() {
         // ===================================
         if (/(monitor|monitoreo|wedge|sidefill|iem)/.test(msg)) {
             chatState.lastTopic = 'monitors';
-            return formatBotResponse(`🔈 <strong>Sistemas de Monitores</strong>\n\n<strong>WEDGES (Piso):</strong>\n• Rock/Metal: X15, M2 (>138dB, alta potencia)\n• Acústico/Jazz: X12, M4 (136-138dB, controlado)\n• Corporativo: Cualquier modelo (90-100dB suficiente)\n\n<strong>SIDEFILLS:</strong>\n• Line arrays pequeños (Kiva II, Y8, LINA)\n• Objetivo: 105-110dB en escenario\n\n<strong>IEMs:</strong> Shure PSM1000, Sennheiser EW IEM G4\n→ <em>Elimina wedges, mejor control de gain before feedback</em>\n\n💡 LiveSync calcula patcheo mono/estéreo y potencia por mix.${cta}`, analysisResult);
+            return `🔈 <strong>Sistemas de Monitores</strong>\n\n<strong>WEDGES (Piso):</strong>\n• Rock/Metal: X15, M2 (>138dB, alta potencia)\n• Acústico/Jazz: X12, M4 (136-138dB, controlado)\n• Corporativo: Cualquier modelo (90-100dB suficiente)\n\n<strong>SIDEFILLS:</strong>\n• Line arrays pequeños (Kiva II, Y8, LINA)\n• Objetivo: 105-110dB en escenario\n\n<strong>IEMs:</strong> Shure PSM1000, Sennheiser EW IEM G4\n→ <em>Elimina wedges, mejor control de gain before feedback</em>\n\n💡 LiveSync calcula patcheo mono/estéreo y potencia por mix.${cta}`;
         }
 
         // ===================================
@@ -1059,7 +1059,7 @@ function initChat() {
         // ===================================
         if (/(rigging|colgado|suspens|truss|bridle|carga)/.test(msg)) {
             chatState.lastTopic = 'rigging';
-            return formatBotResponse(`⚙️ <strong>Análisis de Rigging</strong>\n\nLiveSync calcula:\n• <strong>Peso total:</strong> Array + accesorios (bumpers, frames)\n• <strong>Distribución en bridles:</strong> Front/rear según ángulo\n• <strong>Factor de seguridad 5:1 mínimo</strong> (normativa internacional)\n\n<strong>Ejemplos configuración grande:</strong>\n• 12x K2 = 672kg → Requiere truss 520kg WLL (factor 5:1 = 3360kg total)\n• 10x Panther = 680kg → Truss similar pero array más ligero/caja\n\n⚠️ <strong>CRÍTICO:</strong> Nunca exceder WLL (Working Load Limit) del truss.\n\n💡 LiveSync alerta automáticamente si superas límites de seguridad.${cta}`, analysisResult);
+            return `⚙️ <strong>Análisis de Rigging</strong>\n\nLiveSync calcula:\n• <strong>Peso total:</strong> Array + accesorios (bumpers, frames)\n• <strong>Distribución en bridles:</strong> Front/rear según ángulo\n• <strong>Factor de seguridad 5:1 mínimo</strong> (normativa internacional)\n\n<strong>Ejemplos configuración grande:</strong>\n• 12x K2 = 672kg → Requiere truss 520kg WLL (factor 5:1 = 3360kg total)\n• 10x Panther = 680kg → Truss similar pero array más ligero/caja\n\n⚠️ <strong>CRÍTICO:</strong> Nunca exceder WLL (Working Load Limit) del truss.\n\n💡 LiveSync alerta automáticamente si superas límites de seguridad.${cta}`;
         }
 
         // ===================================
@@ -1067,7 +1067,7 @@ function initChat() {
         // ===================================
         if (/(potencia|el[ée]ctric|power|ampli|watts?|voltage)/.test(msg)) {
             chatState.lastTopic = 'power';
-            return formatBotResponse(`⚡ <strong>Análisis de Potencia</strong>\n\nAmplificadores soportados:\n• Lab.gruppen PLM 20000Q (20kW)\n• Powersoft X8 (8kW), Quattrocanali (10kW)\n• L-Acoustics LA12X (8.4kW), LA8 (3.3kW)\n• d&b D80 (4kW), D20 (2kW)\n\n<strong>Ejemplo setup festival:</strong>\n• 32x K2 + subs = 12x LA12X\n• Consumo: ~60kW continuo, 80kW peak\n• Trifásica 400V/32A por fase\n\n<strong>Criterio:</strong> Factor 0.6-0.7 (eficiencia amplificador clase D)\n\n💡 LiveSync calcula distribución por rack y voltage drop en cables.${cta}`, analysisResult);
+            return `⚡ <strong>Análisis de Potencia</strong>\n\nAmplificadores soportados:\n• Lab.gruppen PLM 20000Q (20kW)\n• Powersoft X8 (8kW), Quattrocanali (10kW)\n• L-Acoustics LA12X (8.4kW), LA8 (3.3kW)\n• d&b D80 (4kW), D20 (2kW)\n\n<strong>Ejemplo setup festival:</strong>\n• 32x K2 + subs = 12x LA12X\n• Consumo: ~60kW continuo, 80kW peak\n• Trifásica 400V/32A por fase\n\n<strong>Criterio:</strong> Factor 0.6-0.7 (eficiencia amplificador clase D)\n\n💡 LiveSync calcula distribución por rack y voltage drop en cables.${cta}`;
         }
 
         // ===================================
@@ -1075,7 +1075,7 @@ function initChat() {
         // ===================================
         if (/(dante|avb|red|network|bandwidth)/.test(msg) && !/\d+.*canal/i.test(msg)) {
             chatState.lastTopic = 'network';
-            return formatBotResponse(`🌐 <strong>Redes Dante/AVB</strong>\n\n<strong>Dante:</strong>\n• 48kHz/24bit: ~1.15 Mbps/canal\n• 96kHz/24bit: ~2.3 Mbps/canal\n• Overhead: 20%\n\n<strong>Ejemplos:</strong>\n• 64 ch @ 48kHz = 88 Mbps → Switch Gigabit OK\n• 128 ch @ 48kHz = 176 Mbps → Gigabit con margen\n• 64 ch @ 96kHz = 176 Mbps → Requiere switch de calidad\n• >400 ch → Múltiples switches o 10Gb\n\n<strong>Regla:</strong> Mantener <70% uso del switch (headroom para QoS)\n\n💡 Usa switches con QoS/DSCP para audio (Cisco SG, Netgear M4300).${cta}`, analysisResult);
+            return `🌐 <strong>Redes Dante/AVB</strong>\n\n<strong>Dante:</strong>\n• 48kHz/24bit: ~1.15 Mbps/canal\n• 96kHz/24bit: ~2.3 Mbps/canal\n• Overhead: 20%\n\n<strong>Ejemplos:</strong>\n• 64 ch @ 48kHz = 88 Mbps → Switch Gigabit OK\n• 128 ch @ 48kHz = 176 Mbps → Gigabit con margen\n• 64 ch @ 96kHz = 176 Mbps → Requiere switch de calidad\n• >400 ch → Múltiples switches o 10Gb\n\n<strong>Regla:</strong> Mantener <70% uso del switch (headroom para QoS)\n\n💡 Usa switches con QoS/DSCP para audio (Cisco SG, Netgear M4300).${cta}`;
         }
 
         // ===================================
@@ -1083,7 +1083,7 @@ function initChat() {
         // ===================================
         if (/(export|exporta|dxf|pdf|cad|autocad|plano)/.test(msg)) {
             chatState.lastTopic = 'export';
-            return formatBotResponse(`📤 <strong>Exportación</strong>\n\n<strong>DXF (CAD):</strong>\nPlano 2D con posiciones, compatible AutoCAD, Vectorworks, SketchUp\n\n<strong>PDF Técnico:</strong>\nReporte completo: specs, delays, SPL, rigging, potencia, IO lists${cta}`, analysisResult);
+            return `📤 <strong>Exportación</strong>\n\n<strong>DXF (CAD):</strong>\nPlano 2D con posiciones, compatible AutoCAD, Vectorworks, SketchUp\n\n<strong>PDF Técnico:</strong>\nReporte completo: specs, delays, SPL, rigging, potencia, IO lists${cta}`;
         }
 
         // ===================================
@@ -1091,7 +1091,7 @@ function initChat() {
         // ===================================
         if (/(temperatura|thermal|drift|calor)/.test(msg) && !/\d+\s*m.*\d+\s*°?c/i.test(msg)) {
             chatState.lastTopic = 'thermal';
-            return formatBotResponse(`🌡️ <strong>Thermal Drift</strong>\n\nLa velocidad del sonido cambia con temperatura:\n• 10°C = 337.5 m/s (invierno)\n• 20°C = 343.2 m/s (estándar)\n• 30°C = 349.0 m/s (verano/calor)\n\n<strong>Impacto real en 50m:</strong>\n20°C → 30°C = 2.4 ms diferencia\n→ <em>Delay towers se "desalinean" si no ajustas</em>\n\n<strong>RECOMENDACIÓN CRÍTICA:</strong>\n✅ Medir temperatura @ FOH antes del soundcheck\n✅ Re-medir antes del show (puede cambiar 5-10°C tarde vs día)\n✅ Usar LiveSync para recalcular delays si cambió >3°C\n\n💡 En outdoor, temperatura baja al atardecer = delays más largos.${cta}`, analysisResult);
+            return `🌡️ <strong>Thermal Drift</strong>\n\nLa velocidad del sonido cambia con temperatura:\n• 10°C = 337.5 m/s (invierno)\n• 20°C = 343.2 m/s (estándar)\n• 30°C = 349.0 m/s (verano/calor)\n\n<strong>Impacto real en 50m:</strong>\n20°C → 30°C = 2.4 ms diferencia\n→ <em>Delay towers se "desalinean" si no ajustas</em>\n\n<strong>RECOMENDACIÓN CRÍTICA:</strong>\n✅ Medir temperatura @ FOH antes del soundcheck\n✅ Re-medir antes del show (puede cambiar 5-10°C tarde vs día)\n✅ Usar LiveSync para recalcular delays si cambió >3°C\n\n💡 En outdoor, temperatura baja al atardecer = delays más largos.${cta}`;
         }
 
         // ===================================
@@ -1099,7 +1099,7 @@ function initChat() {
         // ===================================
         if (/(soporte|contacto|support|problema|error)/.test(msg) && !/(quiero|necesito)/i.test(msg)) {
             chatState.lastTopic = 'support';
-            return formatBotResponse(`📞 <strong>Soporte Técnico</strong>\n\n📧 <strong>Email:</strong> abrinay@livesyncpro.com\n\nPara bugs, problemas técnicos o consultas de licencia.\n\n🚀 https://livesyncpro.com`, analysisResult);
+            return `📞 <strong>Soporte Técnico</strong>\n\n📧 <strong>Email:</strong> abrinay@livesyncpro.com\n\nPara bugs, problemas técnicos o consultas de licencia.\n\n🚀 https://livesyncpro.com`;
         }
 
         // ===================================
@@ -1109,87 +1109,87 @@ function initChat() {
         // EFECTO HAAS / PRECEDENCIA
         if (/(haas|precedencia|precedence|efecto.*temporal)/.test(msg)) {
             chatState.lastTopic = 'haas';
-            return formatBotResponse(`🎯 <strong>Efecto Haas (Precedencia)</strong>\n\n${KNOWLEDGE_BASE.environmental.haasEffect.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.haasEffect.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.haasEffect.proTip}${cta}`, analysisResult);
+            return `🎯 <strong>Efecto Haas (Precedencia)</strong>\n\n${KNOWLEDGE_BASE.environmental.haasEffect.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.haasEffect.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.haasEffect.proTip}${cta}`;
         }
 
         // POWER ALLEY
         if (/(power alley|callej[oó]n.*potencia|centro.*bajo|bass center)/.test(msg)) {
             chatState.lastTopic = 'power-alley';
-            return formatBotResponse(`⚡ <strong>Power Alley</strong>\n\n${KNOWLEDGE_BASE.analysis.powerAlley.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.powerAlley.advanced}\n\n<strong>Boost:</strong> ${KNOWLEDGE_BASE.analysis.powerAlley.boost}\n\n💡 ${KNOWLEDGE_BASE.analysis.powerAlley.proTip}${cta}`, analysisResult);
+            return `⚡ <strong>Power Alley</strong>\n\n${KNOWLEDGE_BASE.analysis.powerAlley.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.powerAlley.advanced}\n\n<strong>Boost:</strong> ${KNOWLEDGE_BASE.analysis.powerAlley.boost}\n\n💡 ${KNOWLEDGE_BASE.analysis.powerAlley.proTip}${cta}`;
         }
 
         // ARRAY LIMIT / TRANSICIÓN FRESNEL
         if (/(array limit|l[íi]mite.*array|fresnel|fraunhofer|transici[oó]n)/.test(msg)) {
             chatState.lastTopic = 'array-limit';
-            return formatBotResponse(`📐 <strong>Array Limit (Transición)</strong>\n\n${KNOWLEDGE_BASE.analysis.arrayLimit.basic}\n\n<strong>Fórmula:</strong> ${KNOWLEDGE_BASE.analysis.arrayLimit.formula}\n\n<strong>Atenuación:</strong>\n• Campo cercano: ${KNOWLEDGE_BASE.analysis.arrayLimit.attenuation.nearField}\n• Campo lejano: ${KNOWLEDGE_BASE.analysis.arrayLimit.attenuation.farField}${cta}`, analysisResult);
+            return `📐 <strong>Array Limit (Transición)</strong>\n\n${KNOWLEDGE_BASE.analysis.arrayLimit.basic}\n\n<strong>Fórmula:</strong> ${KNOWLEDGE_BASE.analysis.arrayLimit.formula}\n\n<strong>Atenuación:</strong>\n• Campo cercano: ${KNOWLEDGE_BASE.analysis.arrayLimit.attenuation.nearField}\n• Campo lejano: ${KNOWLEDGE_BASE.analysis.arrayLimit.attenuation.farField}${cta}`;
         }
 
         // ROOM MODES / MODOS PROPIOS
         if (/(room mode|modo.*propio|resonancia.*sala|standing wave)/.test(msg)) {
             chatState.lastTopic = 'room-modes';
-            return formatBotResponse(`🏛️ <strong>Modos Propios (Room Modes)</strong>\n\n${KNOWLEDGE_BASE.analysis.roomModes.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.roomModes.advanced}\n\n💡 ${KNOWLEDGE_BASE.analysis.roomModes.proTip}${cta}`, analysisResult);
+            return `🏛️ <strong>Modos Propios (Room Modes)</strong>\n\n${KNOWLEDGE_BASE.analysis.roomModes.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.roomModes.advanced}\n\n💡 ${KNOWLEDGE_BASE.analysis.roomModes.proTip}${cta}`;
         }
 
         // WST / GRATING LOBES
         if (/(wst|wavefront|grating lobe|l[oó]bulo.*rejilla|coherencia.*line array)/.test(msg)) {
             chatState.lastTopic = 'wst';
-            return formatBotResponse(`🌊 <strong>WST & Grating Lobes</strong>\n\n${KNOWLEDGE_BASE.analysis.wst.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.wst.advanced}\n\n<strong>Espaciado:</strong> ${KNOWLEDGE_BASE.analysis.wst.spacing}\n\n💡 ${KNOWLEDGE_BASE.analysis.wst.proTip}${cta}`, analysisResult);
+            return `🌊 <strong>WST & Grating Lobes</strong>\n\n${KNOWLEDGE_BASE.analysis.wst.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.wst.advanced}\n\n<strong>Espaciado:</strong> ${KNOWLEDGE_BASE.analysis.wst.spacing}\n\n💡 ${KNOWLEDGE_BASE.analysis.wst.proTip}${cta}`;
         }
 
         // SPLAY ANGLES / ÁNGULOS
         if (/(splay|[aá]ngulo.*inter.*caja|curvatura|banana)/.test(msg)) {
             chatState.lastTopic = 'splay';
-            return formatBotResponse(`📐 <strong>Ángulos Splay (Curvatura)</strong>\n\n${KNOWLEDGE_BASE.systemConfig.splayAngles.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.splayAngles.advanced}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.splayAngles.proTip}${cta}`, analysisResult);
+            return `📐 <strong>Ángulos Splay (Curvatura)</strong>\n\n${KNOWLEDGE_BASE.systemConfig.splayAngles.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.splayAngles.advanced}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.splayAngles.proTip}${cta}`;
         }
 
         // GAIN SHADING
         if (/(gain shading|nivel.*torre|volumen.*delay.*tower)/.test(msg)) {
             chatState.lastTopic = 'gain-shading';
-            return formatBotResponse(`🎚️ <strong>Gain Shading</strong>\n\n${KNOWLEDGE_BASE.delayAlignment.gainShading.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.delayAlignment.gainShading.advanced}\n\n<strong>Recomendación:</strong> ${KNOWLEDGE_BASE.delayAlignment.gainShading.recommendation}${cta}`, analysisResult);
+            return `🎚️ <strong>Gain Shading</strong>\n\n${KNOWLEDGE_BASE.delayAlignment.gainShading.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.delayAlignment.gainShading.advanced}\n\n<strong>Recomendación:</strong> ${KNOWLEDGE_BASE.delayAlignment.gainShading.recommendation}${cta}`;
         }
 
         // GROUND BOUNCE / EFECTO SUELO
         if (/(ground bounce|efecto suelo|rebote.*piso|comb filter.*ground)/.test(msg)) {
             chatState.lastTopic = 'ground-bounce';
-            return formatBotResponse(`🌊 <strong>Ground Bounce (Rebote de Suelo)</strong>\n\n${KNOWLEDGE_BASE.analysis.groundBounce.basic}\n\n<strong>Fórmula:</strong> ${KNOWLEDGE_BASE.analysis.groundBounce.formula}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.groundBounce.advanced}${cta}`, analysisResult);
+            return `🌊 <strong>Ground Bounce (Rebote de Suelo)</strong>\n\n${KNOWLEDGE_BASE.analysis.groundBounce.basic}\n\n<strong>Fórmula:</strong> ${KNOWLEDGE_BASE.analysis.groundBounce.formula}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.groundBounce.advanced}${cta}`;
         }
 
         // COMPRESIÓN TÉRMICA
         if (/(compresi[oó]n.*t[ée]rmica|thermal compression|altavoz.*caliente|power.*loss.*heat)/.test(msg)) {
             chatState.lastTopic = 'thermal-comp';
-            return formatBotResponse(`🔥 <strong>Compresión Térmica</strong>\n\n${KNOWLEDGE_BASE.analysis.thermalCompression.basic}\n\n<strong>Pérdida:</strong> ${KNOWLEDGE_BASE.analysis.thermalCompression.loss}\n\n💡 ${KNOWLEDGE_BASE.analysis.thermalCompression.proTip}${cta}`, analysisResult);
+            return `🔥 <strong>Compresión Térmica</strong>\n\n${KNOWLEDGE_BASE.analysis.thermalCompression.basic}\n\n<strong>Pérdida:</strong> ${KNOWLEDGE_BASE.analysis.thermalCompression.loss}\n\n💡 ${KNOWLEDGE_BASE.analysis.thermalCompression.proTip}${cta}`;
         }
 
         // HUMEDAD
         if (/(humedad|humidity|aire.*seco|high.*frequency.*loss)/.test(msg)) {
             chatState.lastTopic = 'humidity';
-            return formatBotResponse(`💧 <strong>Humedad Relativa</strong>\n\n${KNOWLEDGE_BASE.environmental.humidity.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.humidity.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.humidity.proTip}${cta}`, analysisResult);
+            return `💧 <strong>Humedad Relativa</strong>\n\n${KNOWLEDGE_BASE.environmental.humidity.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.humidity.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.humidity.proTip}${cta}`;
         }
 
         // VIENTO
         if (/(viento|wind|refracci[oó]n.*sonido)/.test(msg) && !/(festival|config)/i.test(msg)) {
             chatState.lastTopic = 'wind';
-            return formatBotResponse(`🌬️ <strong>Viento y Refracción</strong>\n\n${KNOWLEDGE_BASE.environmental.wind.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.wind.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.wind.proTip}${cta}`, analysisResult);
+            return `🌬️ <strong>Viento y Refracción</strong>\n\n${KNOWLEDGE_BASE.environmental.wind.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.wind.advanced}\n\n💡 ${KNOWLEDGE_BASE.environmental.wind.proTip}${cta}`;
         }
 
         // ARREGLOS DE SUBWOOFERS
         if (/(arreglo.*sub|sub.*array|cardioid|end.*fire|omni.*sub)/.test(msg)) {
             chatState.lastTopic = 'sub-array';
             const types = KNOWLEDGE_BASE.subwoofers.arrayTopology.types;
-            return formatBotResponse(`🔊 <strong>Topología de Subgraves</strong>\n\n${KNOWLEDGE_BASE.subwoofers.arrayTopology.basic}\n\n<strong>OMNI:</strong> ${types.omni.description} - ${types.omni.efficiency}\n<strong>CARDIOID:</strong> ${types.cardioid.description} - Rechazo: ${types.cardioid.rearRejection}\n<strong>END-FIRE:</strong> ${types.endFire.description} - Rechazo: ${types.endFire.rearRejection}\n\n💡 ${KNOWLEDGE_BASE.subwoofers.arrayTopology.proTip}${cta}`, analysisResult);
+            return `🔊 <strong>Topología de Subgraves</strong>\n\n${KNOWLEDGE_BASE.subwoofers.arrayTopology.basic}\n\n<strong>OMNI:</strong> ${types.omni.description} - ${types.omni.efficiency}\n<strong>CARDIOID:</strong> ${types.cardioid.description} - Rechazo: ${types.cardioid.rearRejection}\n<strong>END-FIRE:</strong> ${types.endFire.description} - Rechazo: ${types.endFire.rearRejection}\n\n💡 ${KNOWLEDGE_BASE.subwoofers.arrayTopology.proTip}${cta}`;
         }
 
         // SPL TARGETS / OBJETIVOS
         if (/(spl.*target|objetivo.*spl|cu[aá]nto.*spl|volumen.*ideal)/.test(msg)) {
             chatState.lastTopic = 'spl-targets';
             const targets = KNOWLEDGE_BASE.systemConfig.targets.rules.spl;
-            return formatBotResponse(`🎯 <strong>Objetivos SPL</strong>\n\n<strong>Corporativo:</strong> ${targets.corporativo}\n<strong>Concierto:</strong> ${targets.concierto}\n<strong>Festival:</strong> ${targets.festival}\n\n<strong>FOH:</strong> ${KNOWLEDGE_BASE.systemConfig.targets.rules.fohPosition}\n<strong>Distancia PA-FOH:</strong> ${KNOWLEDGE_BASE.systemConfig.targets.rules.paToFoh.ideal}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.targets.proTip}${cta}`, analysisResult);
+            return `🎯 <strong>Objetivos SPL</strong>\n\n<strong>Corporativo:</strong> ${targets.corporativo}\n<strong>Concierto:</strong> ${targets.concierto}\n<strong>Festival:</strong> ${targets.festival}\n\n<strong>FOH:</strong> ${KNOWLEDGE_BASE.systemConfig.targets.rules.fohPosition}\n<strong>Distancia PA-FOH:</strong> ${KNOWLEDGE_BASE.systemConfig.targets.rules.paToFoh.ideal}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.targets.proTip}${cta}`;
         }
 
         // DIRECTIVIDAD OLSON
         if (/(olson|directividad.*linear|off.*axis.*loss|foh.*elevation)/.test(msg)) {
             chatState.lastTopic = 'olson';
-            return formatBotResponse(`📊 <strong>Directividad Lineal (Olson)</strong>\n\n${KNOWLEDGE_BASE.analysis.olsonDirectivity.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.olsonDirectivity.advanced}${cta}`, analysisResult);
+            return `📊 <strong>Directividad Lineal (Olson)</strong>\n\n${KNOWLEDGE_BASE.analysis.olsonDirectivity.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.olsonDirectivity.advanced}${cta}`;
         }
 
         // ===================================
@@ -1199,38 +1199,38 @@ function initChat() {
         // ANÁLISIS FÍSICO DEL SISTEMA
         if (/(an[aá]lisis.*f[ií]sico|f[ií]sica.*sistema|salud.*sistema|velocidad.*sonido.*actual)/.test(msg)) {
             chatState.lastTopic = 'physics';
-            return formatBotResponse(`🔬 <strong>Análisis Físico del Sistema</strong>\n\n${KNOWLEDGE_BASE.analysis.physics.basic}\n\n<strong>Métricas clave:</strong>\n• ${KNOWLEDGE_BASE.analysis.physics.metrics.join('\n• ')}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.physics.advanced}${cta}`, analysisResult);
+            return `🔬 <strong>Análisis Físico del Sistema</strong>\n\n${KNOWLEDGE_BASE.analysis.physics.basic}\n\n<strong>Métricas clave:</strong>\n• ${KNOWLEDGE_BASE.analysis.physics.metrics.join('\n• ')}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.physics.advanced}${cta}`;
         }
 
         // LOGÍSTICA Y CREW
         if (/(log[ií]stica|crew|personal|trucks?|camiones|metros.*cable)/.test(msg)) {
             chatState.lastTopic = 'logistics';
-            return formatBotResponse(`🚛 <strong>Logística y Crew</strong>\n\n${KNOWLEDGE_BASE.analysis.logistics.basic}\n\n<strong>Estimados incluyen:</strong>\n• Cable: ${KNOWLEDGE_BASE.analysis.logistics.estimates.cable}\n• Crew: ${KNOWLEDGE_BASE.analysis.logistics.estimates.crew}\n• Trucks: ${KNOWLEDGE_BASE.analysis.logistics.estimates.trucks}\n\n💡 LiveSync calcula automáticamente según tu configuración.${cta}`, analysisResult);
+            return `🚛 <strong>Logística y Crew</strong>\n\n${KNOWLEDGE_BASE.analysis.logistics.basic}\n\n<strong>Estimados incluyen:</strong>\n• Cable: ${KNOWLEDGE_BASE.analysis.logistics.estimates.cable}\n• Crew: ${KNOWLEDGE_BASE.analysis.logistics.estimates.crew}\n• Trucks: ${KNOWLEDGE_BASE.analysis.logistics.estimates.trucks}\n\n💡 LiveSync calcula automáticamente según tu configuración.${cta}`;
         }
 
         // PESO TOTAL Y RIGGING LOAD
         if (/(peso.*total|carga.*rigging|cu[aá]nto.*pesa|weight.*total)/.test(msg)) {
             chatState.lastTopic = 'weight';
-            return formatBotResponse(`⚖️ <strong>Peso Total del Sistema</strong>\n\n${KNOWLEDGE_BASE.analysis.weight.basic}\n\n<strong>Incluye:</strong>\n• Altavoces + bumpers\n• Top grid y hardware\n• Cables: ${KNOWLEDGE_BASE.analysis.weight.cableWeight}\n\n⚠️ <strong>Factor de seguridad:</strong> ${KNOWLEDGE_BASE.analysis.weight.safetyFactor}\n\n💡 ${KNOWLEDGE_BASE.analysis.weight.proTip}${cta}`, analysisResult);
+            return `⚖️ <strong>Peso Total del Sistema</strong>\n\n${KNOWLEDGE_BASE.analysis.weight.basic}\n\n<strong>Incluye:</strong>\n• Altavoces + bumpers\n• Top grid y hardware\n• Cables: ${KNOWLEDGE_BASE.analysis.weight.cableWeight}\n\n⚠️ <strong>Factor de seguridad:</strong> ${KNOWLEDGE_BASE.analysis.weight.safetyFactor}\n\n💡 ${KNOWLEDGE_BASE.analysis.weight.proTip}${cta}`;
         }
 
         // CABLEADO / SNAKE SYSTEM
         if (/(snake|cableado|multipar|fibra.*[oó]ptica|cat6.*audio)/.test(msg) && !/(dante|avb)/i.test(msg)) {
             chatState.lastTopic = 'cable-system';
-            return formatBotResponse(`🔌 <strong>Sistema de Cableado (Snake)</strong>\n\n${KNOWLEDGE_BASE.analysis.cableSystem.basic}\n\n<strong>Tipos:</strong>\n• Analógico: ${KNOWLEDGE_BASE.analysis.cableSystem.types.analog}\n• CAT6: ${KNOWLEDGE_BASE.analysis.cableSystem.types.cat6}\n• Fibra: ${KNOWLEDGE_BASE.analysis.cableSystem.types.fiber}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.cableSystem.advanced}${cta}`, analysisResult);
+            return `🔌 <strong>Sistema de Cableado (Snake)</strong>\n\n${KNOWLEDGE_BASE.analysis.cableSystem.basic}\n\n<strong>Tipos:</strong>\n• Analógico: ${KNOWLEDGE_BASE.analysis.cableSystem.types.analog}\n• CAT6: ${KNOWLEDGE_BASE.analysis.cableSystem.types.cat6}\n• Fibra: ${KNOWLEDGE_BASE.analysis.cableSystem.types.fiber}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.analysis.cableSystem.advanced}${cta}`;
         }
 
         // FINGERPRINT / VERIFICACIÓN DE ARRAY
         if (/(fingerprint|verificar.*array|salud.*array|curvatura.*array|array.*health)/.test(msg)) {
             chatState.lastTopic = 'fingerprint';
-            return formatBotResponse(`🎯 <strong>Array Health (Fingerprint)</strong>\n\n${KNOWLEDGE_BASE.analysis.fingerprint.basic}\n\n<strong>Forma ideal:</strong> ${KNOWLEDGE_BASE.analysis.fingerprint.idealShape}\n\n<strong>Ángulos recomendados:</strong>\n• Superiores: ${KNOWLEDGE_BASE.analysis.fingerprint.upperAngles}\n• Inferiores: ${KNOWLEDGE_BASE.analysis.fingerprint.lowerAngles}\n\n💡 ${KNOWLEDGE_BASE.analysis.fingerprint.proTip}${cta}`, analysisResult);
+            return `🎯 <strong>Array Health (Fingerprint)</strong>\n\n${KNOWLEDGE_BASE.analysis.fingerprint.basic}\n\n<strong>Forma ideal:</strong> ${KNOWLEDGE_BASE.analysis.fingerprint.idealShape}\n\n<strong>Ángulos recomendados:</strong>\n• Superiores: ${KNOWLEDGE_BASE.analysis.fingerprint.upperAngles}\n• Inferiores: ${KNOWLEDGE_BASE.analysis.fingerprint.lowerAngles}\n\n💡 ${KNOWLEDGE_BASE.analysis.fingerprint.proTip}${cta}`;
         }
 
         // TIPO DE PA SYSTEM
         if (/(tipo.*pa|tipo.*sistema.*principal|line array.*vs.*mono|configuraci[oó]n.*pa)/.test(msg) && !/(setup|festival|teatro)/i.test(msg)) {
             chatState.lastTopic = 'pa-type';
             const types = KNOWLEDGE_BASE.systemConfig.mainPA.types;
-            return formatBotResponse(`🔊 <strong>Tipos de PA System</strong>\n\n<strong>LINE ARRAY:</strong> ${types.lineArray}\n→ <em>Máximo control direccional, ideal >30m</em>\n\n<strong>LEFT/RIGHT:</strong> ${types.leftRight}\n→ <em>Configuración clásica, teatro y conciertos</em>\n\n<strong>MONO CENTER:</strong> ${types.monoCenter}\n→ <em>Discursos, corporativos, inteligibilidad</em>\n\n💡 ${KNOWLEDGE_BASE.systemConfig.mainPA.advanced}${cta}`, analysisResult);
+            return `🔊 <strong>Tipos de PA System</strong>\n\n<strong>LINE ARRAY:</strong> ${types.lineArray}\n→ <em>Máximo control direccional, ideal >30m</em>\n\n<strong>LEFT/RIGHT:</strong> ${types.leftRight}\n→ <em>Configuración clásica, teatro y conciertos</em>\n\n<strong>MONO CENTER:</strong> ${types.monoCenter}\n→ <em>Discursos, corporativos, inteligibilidad</em>\n\n💡 ${KNOWLEDGE_BASE.systemConfig.mainPA.advanced}${cta}`;
         }
 
         // ===================================

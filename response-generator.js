@@ -87,18 +87,30 @@ function getAdaptiveResponse(responseType, expertise = 'intermedio') {
 
 /**
  * Compara modelos mencionados en el contexto
+ * IMPORTANTE 6 CORREGIDO: Validar inputs
  */
 function compareModelsInContext(models, property = null, expertise = 'intermedio') {
-    if (!models || models.length < 2) {
+    // IMPORTANTE 6: Validación estricta de modelos
+    if (!models || !Array.isArray(models) || models.length < 2) {
         return "❓ Necesito al menos 2 modelos para comparar. Menciona los modelos primero (ej: 'K2 y Panther').";
     }
+
+    // Validar estructura de modelos
+    if (!models[0]?.model || !models[1]?.model) {
+        console.error('Modelos inválidos en comparación:', models);
+        return "❌ Error: modelos en contexto no válidos. Intenta preguntar de nuevo sobre modelos específicos.";
+    }
+
+    // Validar expertise
+    const validExpertise = ['principiante', 'intermedio', 'profesional'];
+    const safeExpertise = validExpertise.includes(expertise) ? expertise : 'intermedio';
 
     const model1 = models[0].model;
     const model2 = models[1].model;
 
     // Si no especifican propiedad, comparación general
     if (!property) {
-        return generateGeneralComparison(model1, model2, expertise);
+        return generateGeneralComparison(model1, model2, safeExpertise);
     }
 
     // Comparación por propiedad específica
@@ -106,7 +118,7 @@ function compareModelsInContext(models, property = null, expertise = 'intermedio
         const lighter = model1.weight < model2.weight ? model1 : model2;
         const heavier = model1.weight < model2.weight ? model2 : model1;
 
-        if (expertise === 'principiante') {
+        if (safeExpertise === 'principiante') {
             return `⚖️ <strong>${lighter.brand} ${lighter.name}</strong> es más ligero (${lighter.weight}kg) que <strong>${heavier.brand} ${heavier.name}</strong> (${heavier.weight}kg).\n\n💡 Un speaker más ligero es más fácil de transportar y colgar.`;
         } else {
             return `⚖️ <strong>Peso:</strong>\n• ${lighter.brand} ${lighter.name}: ${lighter.weight}kg (${Math.round((heavier.weight - lighter.weight) / lighter.weight * 100)}% más ligero)\n• ${heavier.brand} ${heavier.name}: ${heavier.weight}kg`;
@@ -117,7 +129,7 @@ function compareModelsInContext(models, property = null, expertise = 'intermedio
         const louder = model1.spl > model2.spl ? model1 : model2;
         const quieter = model1.spl > model2.spl ? model2 : model1;
 
-        if (expertise === 'principiante') {
+        if (safeExpertise === 'principiante') {
             return `🔊 <strong>${louder.brand} ${louder.name}</strong> es más potente (${louder.spl}dB) que <strong>${quieter.brand} ${quieter.name}</strong> (${quieter.spl}dB).\n\n💡 Más SPL significa que puede llegar más lejos o sonar más fuerte.`;
         } else {
             return `🔊 <strong>SPL Máximo:</strong>\n• ${louder.brand} ${louder.name}: ${louder.spl}dB (+${louder.spl - quieter.spl}dB)\n• ${quieter.brand} ${quieter.name}: ${quieter.spl}dB\n\n📏 Diferencia: ~${Math.round((louder.spl - quieter.spl) * 3.3)}m de alcance extra aproximadamente.`;
@@ -125,7 +137,7 @@ function compareModelsInContext(models, property = null, expertise = 'intermedio
     }
 
     // Default: comparación general
-    return generateGeneralComparison(model1, model2, expertise);
+    return generateGeneralComparison(model1, model2, safeExpertise);
 }
 
 /**
