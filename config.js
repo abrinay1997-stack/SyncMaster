@@ -1,8 +1,8 @@
-// Configuración de SyncMaster - Soporte para LiveSync Pro
+// Configuración de Soporte LiveSync Pro - Asistencia Técnica
 const CONFIG = {
     // Información de la aplicación de soporte
     app: {
-        name: 'SyncMaster',
+        name: 'Soporte LiveSync Pro',
         version: '1.0.0',
         description: 'Centro de Soporte Técnico para LiveSync Pro - Sistema de Diseño Acústico',
         supportEmail: 'abrinay@livesyncpro.com',
@@ -144,7 +144,7 @@ const CONFIG = {
     // Configuración de chat
     chat: {
         enabled: true,
-        welcomeMessage: '¡Hola! Soy el asistente automático de SyncMaster. ¿En qué puedo ayudarte con LiveSync Pro?',
+        welcomeMessage: '¡Hola! Soy el asistente de Soporte LiveSync Pro. ¿En qué puedo ayudarte?',
         maxMessageLength: 1000
     },
 

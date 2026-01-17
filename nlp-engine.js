@@ -46,6 +46,13 @@ const SYNONYMS = {
 const DOMAIN_STOPWORDS = ['por favor', 'gracias', 'hola', 'hey', 'bueno', 'bien', 'ok', 'vale'];
 
 /**
+ * Escapa caracteres especiales de regex para construcción segura
+ */
+function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * Expande queries con sinónimos para mejor matching
  */
 function expandQuery(query) {
@@ -53,7 +60,7 @@ function expandQuery(query) {
 
     // Remover stopwords
     DOMAIN_STOPWORDS.forEach(stopword => {
-        const regex = new RegExp(`\\b${stopword}\\b`, 'gi');
+        const regex = new RegExp(`\\b${escapeRegex(stopword)}\\b`, 'gi');
         expanded = expanded.replace(regex, '');
     });
 
@@ -63,7 +70,7 @@ function expandQuery(query) {
     // Expandir con sinónimos (reemplazar sinónimos por palabra clave)
     for (const [keyword, synonyms] of Object.entries(SYNONYMS)) {
         synonyms.forEach(synonym => {
-            const regex = new RegExp(`\\b${synonym}\\b`, 'gi');
+            const regex = new RegExp(`\\b${escapeRegex(synonym)}\\b`, 'gi');
             if (regex.test(expanded)) {
                 expanded = expanded.replace(regex, keyword);
             }
@@ -157,7 +164,13 @@ function classifyIntent(message, entities) {
 
         // Score por patterns matched
         const patternMatches = config.patterns.filter(pattern => {
-            const regex = new RegExp(`\\b${pattern}\\b`, 'i');
+            // Validar que pattern no esté vacío
+            if (!pattern || pattern.trim().length === 0) return false;
+
+            // Escapar caracteres especiales de regex
+            const escapedPattern = escapeRegex(pattern);
+            const regex = new RegExp(`\\b${escapedPattern}\\b`, 'i');
+
             if (regex.test(expandedMsg)) {
                 matchedPatterns.push(pattern);
                 return true;
@@ -189,7 +202,10 @@ function classifyIntent(message, entities) {
         let subIntent = null;
         if (config.subIntents) {
             for (const [subName, subPatterns] of Object.entries(config.subIntents)) {
-                if (subPatterns.some(p => new RegExp(`\\b${p}\\b`, 'i').test(expandedMsg))) {
+                if (subPatterns.some(p => {
+                    if (!p || p.trim().length === 0) return false;
+                    return new RegExp(`\\b${escapeRegex(p)}\\b`, 'i').test(expandedMsg);
+                })) {
                     subIntent = subName;
                     score += 0.15;
                     break;
@@ -300,8 +316,9 @@ function extractAdvancedEntities(message, speakerDatabase) {
 
     // Speaker Models (de la base de datos)
     for (const [key, model] of Object.entries(speakerDatabase)) {
-        const modelNameRegex = new RegExp(`\\b${model.name.replace(/\s+/g, '\\s*')}\\b`, 'i');
-        const keyRegex = new RegExp(`\\b${key}\\b`, 'i');
+        const escapedModelName = escapeRegex(model.name).replace(/\s+/g, '\\s*');
+        const modelNameRegex = new RegExp(`\\b${escapedModelName}\\b`, 'i');
+        const keyRegex = new RegExp(`\\b${escapeRegex(key)}\\b`, 'i');
 
         if (modelNameRegex.test(message) || keyRegex.test(message)) {
             entities.speakerModels.push({

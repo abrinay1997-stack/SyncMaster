@@ -1,4 +1,4 @@
-// SyncMaster - Sistema de Soporte para LiveSync Pro (v2.0 - Optimizado)
+// Soporte LiveSync Pro - Sistema de Asistencia Técnica (v2.0 - Optimizado)
 // Gestión de navegación
 document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
