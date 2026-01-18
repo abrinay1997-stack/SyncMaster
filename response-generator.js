@@ -4,25 +4,47 @@
 // Fase 2: Respuestas variables, adaptativas por nivel, formateo inteligente
 
 // ========================================
-// 1. VARIANTES DE RESPUESTAS (ANTI-REPETICIÓN)
+// 1. VARIANTES DE RESPUESTAS (ANTI-REPETICIÓN v2.0)
 // ========================================
+// Expandido de 3-4 variantes a 10-15 variantes por tipo
 
 const RESPONSE_VARIANTS = {
     greeting: {
         principiante: [
             "👋 ¡Hola! Soy el asistente de LiveSync Pro. Puedo ayudarte a diseñar sistemas de sonido profesionales.",
             "👋 ¡Qué tal! Estoy aquí para ayudarte con LiveSync Pro. ¿En qué te puedo ayudar?",
-            "👋 ¡Bienvenido! Soy tu asistente para diseño de PA Systems con LiveSync Pro."
+            "👋 ¡Bienvenido! Soy tu asistente para diseño de PA Systems con LiveSync Pro.",
+            "👋 ¡Hey! ¿Cómo estás? Te ayudo con todo lo relacionado a sistemas de audio profesional.",
+            "👋 ¡Hola! Soy tu chatbot de LiveSync Pro. Cuéntame, ¿qué necesitas para tu evento?",
+            "😊 ¡Bienvenido! Estoy para ayudarte a encontrar el equipo perfecto para tu proyecto.",
+            "👋 ¡Qué gusto verte por aquí! ¿En qué puedo asistirte hoy?",
+            "👋 ¡Hola! Puedo ayudarte a elegir speakers, calcular delays, diseñar setups... ¿Por dónde empezamos?",
+            "😊 ¡Hey! Bienvenido al soporte de LiveSync Pro. ¿Qué sistema necesitas armar?",
+            "👋 ¡Hola! Soy tu guía para diseño de PA Systems. Pregúntame lo que necesites."
         ],
         intermedio: [
             "👋 ¡Hola! Soy el asistente de LiveSync Pro. Puedo ayudarte con line arrays, delays, rigging y más.",
             "👋 ¡Qué tal! ¿Qué sistema necesitas diseñar hoy?",
-            "👋 ¡Bienvenido! ¿En qué proyecto de audio estás trabajando?"
+            "👋 ¡Bienvenido! ¿En qué proyecto de audio estás trabajando?",
+            "👋 ¡Hey! ¿Buscas specs de modelos, configuraciones de setup o cálculos técnicos?",
+            "👋 ¡Hola! LiveSync Pro support. ¿PA design, coverage analysis o network planning?",
+            "👋 ¿Qué tal? ¿Necesitas ayuda con dimensionamiento, comparativas o configuraciones?",
+            "👋 ¡Hola! ¿En qué evento o instalación estás trabajando?",
+            "👋 ¡Bienvenido! Cuéntame sobre tu proyecto y te ayudo a optimizarlo.",
+            "👋 ¡Hey! ¿Festival, teatro o corporativo? Te ayudo con el diseño.",
+            "👋 ¡Qué tal! ¿Qué line array, subs o delays necesitas calcular?"
         ],
         profesional: [
             "👋 ¡Hola! LiveSync Pro assistant. PA design, coverage calc, rigging analysis.",
             "👋 Hey! ¿Specs, cálculos o configuración?",
-            "👋 ¡Qué tal! Sistema disponible para consultas técnicas."
+            "👋 ¡Qué tal! Sistema disponible para consultas técnicas.",
+            "👋 LiveSync Pro support. SPL analysis, delay calc, network design available.",
+            "👋 Ready. Specs query, system config, or technical calculations?",
+            "👋 Pro support active. Line array sizing, throw distance, rigging load?",
+            "👋 Hey! Array design, delay alignment, power distribution, Dante/AVB?",
+            "👋 Technical assistant online. Coverage optimization, splay angles, or budget analysis?",
+            "👋 LiveSync Pro ready. Touring setup, install design, or performance venue?",
+            "👋 System engineer assistant. What do you need: modeling, specs, or calculations?"
         ]
     },
 
@@ -31,7 +53,15 @@ const RESPONSE_VARIANTS = {
             "😊 ¡De nada! ¿Algo más en lo que pueda ayudarte?",
             "😊 ¡Un placer! Si necesitas más info, pregunta nomás.",
             "😊 ¡Para eso estoy! ¿Alguna otra duda?",
-            "😊 ¡Encantado de ayudar! ¿Necesitas algo más?"
+            "😊 ¡Encantado de ayudar! ¿Necesitas algo más?",
+            "😊 ¡Con gusto! Si surge algo más, aquí estoy.",
+            "😊 ¡No hay problema! ¿Te ayudo con algo más?",
+            "🙂 ¡Feliz de asistir! Cualquier otra cosa, solo pregunta.",
+            "😊 ¡Siempre a la orden! ¿Algo más que necesites saber?",
+            "😊 ¡Es un gusto ayudarte! Si tienes más dudas, adelante.",
+            "😊 ¡Para eso estamos! ¿Hay algo más que quieras consultar?",
+            "🙂 ¡Sin problema! Si necesitas más ayuda, aquí sigo.",
+            "😊 ¡Genial! ¿Hay algo más en lo que pueda echarte una mano?"
         ]
     },
 
@@ -39,17 +69,74 @@ const RESPONSE_VARIANTS = {
         principiante: [
             "🤔 No estoy seguro de entender tu pregunta. ¿Podrías reformularla?",
             "🤔 Hmm, no logro entender qué necesitas. ¿Puedes darme más detalles?",
-            "🤔 Creo que no entendí bien. ¿Me lo explicas de otra forma?"
+            "🤔 Creo que no entendí bien. ¿Me lo explicas de otra forma?",
+            "💭 No entendí completamente. ¿Me ayudas con un poco más de información?",
+            "🤔 Esa pregunta me dejó pensando... ¿Podrías ser más específico?",
+            "❓ No logré captar qué necesitas. ¿Estás buscando info sobre modelos, configuraciones o precios?",
+            "🤔 Mmm, no estoy seguro. ¿Buscas specs de equipos, setups de eventos, o cálculos técnicos?",
+            "💭 No entendí del todo. Intenta preguntarme sobre line arrays (K1, K2, Panther) o configuraciones (festival, teatro).",
+            "🤔 No capté bien la pregunta. ¿Quieres saber sobre especificaciones, precios o diseño de sistemas?",
+            "❓ Hmm, necesito más contexto. ¿Me cuentas un poco más sobre qué necesitas?",
+            "🤔 Esa pregunta está un poco fuera de mi alcance. ¿Podrías reformularla?",
+            "💭 No logré entender. ¿Buscas ayuda con equipos específicos o configuraciones generales?"
         ],
         intermedio: [
             "🤔 No identifiqué tu consulta. ¿Podrías ser más específico?",
             "🤔 No entendí completamente. ¿Buscas specs, setup o cálculos?",
-            "🤔 No reconocí el patrón. Prueba con algo como 'specs del K2' o 'setup festival'."
+            "🤔 No reconocí el patrón. Prueba con algo como 'specs del K2' o 'setup festival'.",
+            "💭 Query no clara. ¿Necesitas: specs de modelos, configuración de eventos, o cálculos (delay/Dante)?",
+            "🤔 No detecté el intent. Intenta: 'recomienda PA para 3000 personas' o 'compara K2 vs Panther'.",
+            "❓ Consulta ambigua. ¿Buscas dimensionamiento de sistema, comparativas de modelos, o info de precios?",
+            "🤔 No entendí. Ejemplos válidos: 'K2 specs', 'setup teatro 500 personas', 'delay 60m'.",
+            "💭 Pattern no reconocido. ¿Estás buscando recomendaciones, specs técnicas o configuraciones?",
+            "🤔 No capté la intención. ¿Necesitas ayuda con line arrays, subs, monitores o delays?",
+            "❓ Consulta poco clara. Reformula especificando modelo, evento o tipo de cálculo.",
+            "🤔 No logré identificar qué necesitas. ¿Podrías ser más específico con el modelo o tipo de evento?",
+            "💭 Query fuera de scope. Intenta preguntas sobre PA systems, configuraciones o análisis técnico."
         ],
         profesional: [
             "🤔 Query no reconocido. Intents disponibles: specs, recommendation, comparison, calculation, setup.",
             "🤔 Pattern no detectado. Reformula con términos técnicos específicos.",
-            "🤔 Sin match. Ej: 'K2 specs', 'delay calc 50m 20°C', 'festival setup 3k people'."
+            "🤔 Sin match. Ej: 'K2 specs', 'delay calc 50m 20°C', 'festival setup 3k people'.",
+            "❓ Intent unclear. Valid queries: model specs, system config, SPL calc, rigging analysis.",
+            "🤔 NER failed. Specify: speaker model (K1/K2/Panther), venue type, distance, or calculation type.",
+            "💭 No pattern match. Examples: 'K2 vs GSL8 weight', '80m throw line array recommendation', 'Dante 96ch bandwidth'.",
+            "🤔 Query out of scope. Supported: PA design, coverage analysis, delay calc, power/rigging, network planning.",
+            "❓ Ambiguous request. Clarify: event type (festival/theater/corporate), distance, audience size, or technical spec.",
+            "🤔 No entity extraction. Try structured queries: '[Model] specs', '[Distance]m delay @ [Temp]°C', '[Channels]ch Dante'.",
+            "💭 Intent classification failed. Use domain terms: line array, SPL, throw distance, splay angle, etc.",
+            "🤔 Pattern recognition error. Reformulate with specific model names or technical parameters.",
+            "❓ Query syntax invalid. Format: '[Action] [Subject] [Details]'. E.g., 'calculate delay 75m 22°C'."
+        ]
+    },
+
+    confirmation: {
+        all: [
+            "✅ ¡Perfecto! Déjame ayudarte con eso.",
+            "👍 ¡Entendido! Aquí está la información que necesitas.",
+            "✓ ¡Listo! Esto es lo que encontré.",
+            "✅ ¡Claro! Te muestro los detalles.",
+            "👍 ¡Entendido! Aquí va la info.",
+            "✅ ¡Excelente pregunta! Te explico.",
+            "👍 ¡Ok! Déjame darte los datos.",
+            "✅ ¡Muy bien! Esto te puede servir.",
+            "👍 ¡Entendido! Mira esta información.",
+            "✅ ¡Perfecto! Aquí tienes lo que buscas."
+        ]
+    },
+
+    clarification: {
+        all: [
+            "🎯 Para darte la mejor recomendación, necesito saber:",
+            "💭 Antes de responder, ayúdame con unos detalles:",
+            "🤔 Para ser más preciso, ¿me puedes decir:",
+            "🎯 Déjame hacerte un par de preguntas rápidas:",
+            "💭 Para optimizar la respuesta, necesito saber:",
+            "🤔 Unos datos más y te doy la recomendación perfecta:",
+            "🎯 Para dimensionar correctamente, dime:",
+            "💭 Vamos a afinar la búsqueda. ¿Podrías confirmar:",
+            "🤔 Para calcular con precisión, necesito:",
+            "🎯 Ayúdame con estos datos para darte la mejor opción:"
         ]
     }
 };

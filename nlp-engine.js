@@ -4,42 +4,94 @@
 // Fase 1 + 2: Sinónimos, Intents, NER, Negaciones
 
 // ========================================
-// 1. SISTEMA DE SINÓNIMOS
+// 1. SISTEMA DE SINÓNIMOS (EXPANDIDO v2.0)
 // ========================================
+// 150+ términos organizados por categorías
 const SYNONYMS = {
-    // Acciones principales
-    'specs': ['especificaciones', 'características', 'info', 'información', 'datos', 'ficha', 'detalles'],
-    'recomienda': ['sugiere', 'mejor', 'conviene', 'ideal', 'aconsejas', 'propones', 'qué me sirve'],
-    'compara': ['diferencia', 'versus', 'vs', 'contra', 'cuál es mejor entre'],
-    'calcula': ['cuánto', 'dame el cálculo', 'necesito saber', 'quiero calcular'],
-    'setup': ['configuración', 'config', 'diseño', 'sistema para', 'montaje', 'armar'],
+    // ===== ACCIONES PRINCIPALES =====
+    'specs': ['especificaciones', 'características', 'info', 'información', 'datos', 'ficha', 'detalles', 'datasheet', 'technical specs', 'tech specs'],
+    'recomienda': ['sugiere', 'mejor', 'conviene', 'ideal', 'aconsejas', 'propones', 'qué me sirve', 'qué modelo', 'cuál elegir', 'cuál comprar'],
+    'compara': ['diferencia', 'versus', 'vs', 'contra', 'cuál es mejor entre', 'qué diferencia hay', 'cual es mejor'],
+    'calcula': ['cuánto', 'dame el cálculo', 'necesito saber', 'quiero calcular', 'cómo calculo', 'calculadora'],
+    'setup': ['configuración', 'config', 'diseño', 'sistema para', 'montaje', 'armar', 'instalar', 'montar'],
+    'necesito': ['requiero', 'busco', 'quiero', 'me hace falta', 'ocupo', 'estoy buscando', 'ando buscando'],
 
-    // Sustantivos técnicos
-    'personas': ['gente', 'audiencia', 'público', 'asistentes', 'espectadores', 'concurrentes'],
-    'distancia': ['metros', 'alcance', 'cobertura', 'lejos', 'rango'],
-    'potente': ['fuerte', 'alto spl', 'mucho volumen', 'potencia', 'poderoso'],
-    'ligero': ['liviano', 'poco peso', 'lightweight', 'light'],
+    // ===== TIPOS DE EVENTOS =====
+    'festival': ['outdoor', 'aire libre', 'abierto', 'concierto masivo', 'show grande', 'gig', 'tocada', 'festival outdoor', 'concierto grande', 'evento masivo'],
+    'teatro': ['indoor', 'sala', 'cerrado', 'auditorio', 'interior', 'techado', 'recinto cerrado', 'venue', 'sala de eventos'],
+    'corporativo': ['empresa', 'conferencia', 'presentación', 'evento empresarial', 'corporativo', 'negocio', 'convención', 'congreso', 'seminario'],
+    'concierto': ['show', 'gig', 'presentación', 'tocada', 'recital', 'live', 'en vivo'],
 
-    // Tipos de eventos
-    'festival': ['outdoor', 'aire libre', 'abierto', 'concierto masivo', 'show grande'],
-    'teatro': ['indoor', 'sala', 'cerrado', 'auditorio', 'interior', 'techado'],
-    'corporativo': ['empresa', 'conferencia', 'presentación', 'evento empresarial'],
+    // ===== EQUIPAMIENTO PA =====
+    'line array': ['línea', 'arreglo lineal', 'array', 'linea', 'line', 'sistema lineal', 'arreglo'],
+    'speaker': ['altavoz', 'bocina', 'parlante', 'caja', 'bafle', 'cajon'],
+    'sub': ['subwoofer', 'subgraves', 'bajos', 'low end', 'graves', 'bombo', 'woofer'],
+    'monitor': ['wedge', 'monitoreo', 'cuña', 'retorno', 'piso', 'monitor de piso', 'personal monitor'],
+    'delay': ['delay tower', 'torre', 'torres de delay', 'torre de retraso', 'torres', 'tower'],
+    'pa': ['sistema', 'pa system', 'sistema de sonido', 'refuerzo', 'refuerzo sonoro', 'sound system'],
+    'mixer': ['consola', 'mezcladora', 'mesa', 'mesa de mezcla', 'mixing console', 'board'],
+    'amp': ['amplificador', 'potencia', 'power amp', 'ampli', 'rack'],
 
-    // Equipamiento
-    'delay': ['delay tower', 'torre', 'torres de delay', 'torre de retraso'],
-    'sub': ['subwoofer', 'subgraves', 'bajos', 'low end'],
-    'monitor': ['wedge', 'monitoreo', 'cuña', 'retorno'],
-    'line array': ['línea', 'arreglo lineal', 'array'],
+    // ===== JERGA TÉCNICA =====
+    'foh': ['front of house', 'mezcla', 'consola foh', 'mixing', 'mesa foh'],
+    'rigging': ['colgado', 'suspensión', 'fly', 'amarres', 'flying', 'hang', 'colgar'],
+    'spl': ['presión sonora', 'nivel', 'volumen máximo', 'db', 'decibeles'],
+    'cobertura': ['coverage', 'alcance', 'rango', 'área', 'dispersión'],
+    'dispersión': ['dispersion', 'ángulo', 'coverage angle', 'apertura'],
+    'dante': ['red dante', 'audio over ip', 'network', 'digital audio', 'aes67'],
+    'avb': ['audio video bridging', 'milan', 'network audio'],
 
-    // Otros términos
-    'precio': ['costo', 'cuánto cuesta', 'cuánto vale', 'valor', 'tarifa', 'plan'],
-    'problema': ['error', 'bug', 'fallo', 'no funciona', 'issue'],
-    'ayuda': ['help', 'soporte', 'asistencia', 'apoyo'],
+    // ===== SUSTANTIVOS TÉCNICOS =====
+    'personas': ['gente', 'audiencia', 'público', 'asistentes', 'espectadores', 'concurrentes', 'capacity', 'aforo'],
+    'distancia': ['metros', 'alcance', 'cobertura', 'lejos', 'rango', 'throw', 'largo'],
+    'potente': ['fuerte', 'alto spl', 'mucho volumen', 'potencia', 'poderoso', 'potente', 'high output'],
+    'ligero': ['liviano', 'poco peso', 'lightweight', 'light', 'peso bajo'],
+    'peso': ['pesado', 'kg', 'kilogramos', 'weight', 'masa'],
+    'impedancia': ['ohms', 'ohmios', 'impedance', 'z'],
 
-    // Inglés
+    // ===== ESPECIFICACIONES =====
+    'potencia': ['watts', 'vatios', 'power', 'wattage', 'consumo'],
+    'frecuencia': ['hz', 'hertz', 'frequency', 'freq', 'rango de frecuencias'],
+    'sensibilidad': ['sensitivity', 'eficiencia', 'efficiency'],
+    'directividad': ['directivity', 'patrón', 'pattern', 'polar'],
+
+    // ===== ACCIONES BÚSQUEDA =====
+    'busco': ['necesito', 'quiero', 'estoy buscando', 'ando buscando', 'requiero', 'me hace falta'],
+    'sirve': ['funciona', 'va bien', 'es bueno', 'se puede usar', 'aplica'],
+    'mejor': ['óptimo', 'top', 'recomendado', 'ideal', 'perfecto', 'excelente'],
+
+    // ===== PRECIOS Y MEMBRESÍAS =====
+    'precio': ['costo', 'cuánto cuesta', 'cuánto vale', 'valor', 'tarifa', 'plan', 'cuánto sale', 'cuánto es'],
+    'membresía': ['suscripción', 'plan', 'membership', 'licencia', 'subscription'],
+    'pago': ['pagar', 'comprar', 'adquirir', 'payment', 'purchase'],
+    'barato': ['económico', 'accesible', 'bajo costo', 'cheap', 'affordable'],
+    'caro': ['costoso', 'expensive', 'alto precio'],
+
+    // ===== CALIDAD Y COMPARACIONES =====
+    'bueno': ['bien', 'good', 'quality', 'calidad', 'decent'],
+    'malo': ['mal', 'bad', 'poor', 'deficiente'],
+    'profesional': ['pro', 'professional', 'high end', 'touring', 'tour grade'],
+    'básico': ['entry level', 'principiante', 'starter', 'inicial'],
+
+    // ===== PROBLEMAS Y SOPORTE =====
+    'problema': ['error', 'bug', 'fallo', 'no funciona', 'issue', 'trouble', 'problema'],
+    'ayuda': ['help', 'soporte', 'asistencia', 'apoyo', 'support', 'ayúdame'],
+    'duda': ['pregunta', 'consulta', 'question', 'inquiry'],
+
+    // ===== MARCAS (GENERALES) =====
+    'lacoustics': ['l-acoustics', 'la', 'ele acoustics'],
+    'db': ['d&b', 'd and b', 'deb'],
+    'meyer': ['meyer sound'],
+    'jbl': ['jbl professional'],
+
+    // ===== INGLÉS COMÚN =====
     'what': ['qué', 'que'],
     'how': ['cómo', 'como'],
-    'price': ['precio', 'costo']
+    'price': ['precio', 'costo'],
+    'where': ['dónde', 'donde'],
+    'when': ['cuándo', 'cuando'],
+    'which': ['cuál', 'cual'],
+    'why': ['por qué', 'porque']
 };
 
 // Palabras de relleno (stopwords específicas del dominio)

@@ -804,6 +804,98 @@ function initChat() {
         }
 
         // ===================================
+        // SUGERENCIAS PROACTIVAS INTELIGENTES (NUEVO - MEJORA #4)
+        // ===================================
+        // Detectar queries incompletas y pedir información proactivamente
+
+        // Usuario dice "necesito un line array" o "busco un PA" SIN especificar detalles
+        if (/(necesito|busco|quiero|requiero).*(line array|pa|sistema|speaker|altavoz)/i.test(msg) &&
+            !entities.eventType && !entities.distance && !entities.people) {
+
+            chatState.lastTopic = 'proactive-recommendation';
+
+            const clarificationMsg = typeof getAdaptiveResponse !== 'undefined'
+                ? getAdaptiveResponse('clarification', expertise)
+                : '🎯 Para darte la mejor recomendación, necesito saber:';
+
+            return formatBotResponse(`${clarificationMsg}
+
+<strong>🎪 ¿Para qué tipo de evento?</strong>
+<button class="quick-action-btn" data-action="festival outdoor">🎪 Festival</button>
+<button class="quick-action-btn" data-action="teatro indoor">🎭 Teatro</button>
+<button class="quick-action-btn" data-action="corporativo">🏢 Corporativo</button>
+
+<strong>📏 ¿Qué distancia necesitas cubrir?</strong>
+<button class="quick-action-btn" data-action="necesito sistema para 30 metros">30m</button>
+<button class="quick-action-btn" data-action="necesito sistema para 60 metros">60m</button>
+<button class="quick-action-btn" data-action="necesito sistema para 100 metros">100m</button>
+
+<strong>👥 ¿Cuántas personas aproximadamente?</strong>
+<button class="quick-action-btn" data-action="evento 500 personas">500</button>
+<button class="quick-action-btn" data-action="evento 2000 personas">2000</button>
+<button class="quick-action-btn" data-action="evento 5000 personas">5000</button>
+
+💡 O dime todo junto, ej: "Necesito PA para festival de 3000 personas a 80m"`, analysisResult);
+        }
+
+        // Usuario pregunta "cuál es mejor?" sin contexto
+        if (/(cu[aá]l.*mejor|qu[eé].*recomiend|qu[eé].*conviene)/i.test(msg) &&
+            msg.length < 40 && // Query corta = probablemente incompleta
+            !entities.speakerModels.length &&
+            !entities.eventType) {
+
+            chatState.lastTopic = 'proactive-clarification';
+
+            return formatBotResponse(`🤔 Para recomendarte el mejor equipo, ayúdame con esto:
+
+<strong>¿Qué tipo de equipo buscas?</strong>
+<button class="quick-action-btn" data-action="mejor line array">Line Array</button>
+<button class="quick-action-btn" data-action="mejor subwoofer">Subwoofer</button>
+<button class="quick-action-btn" data-action="mejor monitor">Monitor</button>
+
+<strong>¿Para qué aplicación?</strong>
+<button class="quick-action-btn" data-action="mejor para festival">Festival</button>
+<button class="quick-action-btn" data-action="mejor para teatro">Teatro</button>
+<button class="quick-action-btn" data-action="mejor para corporativo">Corporativo</button>
+
+O pregunta directamente, ej: "Mejor line array para teatro 40m"`, analysisResult);
+        }
+
+        // Usuario pregunta por precio/costo sin especificar qué
+        if (/(cuánto|precio|costo)/i.test(msg) &&
+            msg.length < 25 && // Query muy corta
+            !/(livesync|plan|membres[ií]a|suscripci[oó]n)/i.test(msg)) {
+
+            chatState.lastTopic = 'proactive-pricing';
+
+            return formatBotResponse(`💰 ¿Qué precio necesitas saber?
+
+<strong>Planes de LiveSync Pro:</strong>
+<button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver Planes</button>
+
+<strong>O si buscas precio de equipos:</strong>
+LiveSync Pro es un software de diseño, no vendemos equipos. Pero puedo darte specs de modelos para que cotices con tu proveedor.
+
+¿Qué modelo te interesa? Ej: "specs del K2"`, analysisResult);
+        }
+
+        // Usuario pregunta "cómo calculo..." sin especificar qué
+        if (/(c[oó]mo.*calcul|calcul.*c[oó]mo)/i.test(msg) &&
+            !entities.distance && !entities.channels && msg.length < 35) {
+
+            chatState.lastTopic = 'proactive-calculation';
+
+            return formatBotResponse(`🧮 ¿Qué necesitas calcular?
+
+<button class="quick-action-btn" data-action="calcular delay 50m 20°C">⏱️ Delay (tiempo de alineación)</button>
+<button class="quick-action-btn" data-action="48 canales dante">🌐 Dante Bandwidth</button>
+<button class="quick-action-btn" data-action="calcular potencia">⚡ Potencia Eléctrica</button>
+<button class="quick-action-btn" data-action="calcular rigging">🔗 Carga de Rigging</button>
+
+O dímelo directamente, ej: "delay para 60 metros a 25°C"`, analysisResult);
+        }
+
+        // ===================================
         // PROCESAMIENTO NLP - PREGUNTAS COMPLEJAS (NUEVO)
         // ===================================
 
@@ -880,6 +972,13 @@ function initChat() {
                 }
 
                 return formatBotResponse(`🔊 <strong>${found.brand} ${found.name}</strong>\n\n📊 <strong>Especificaciones:</strong>\n• SPL máximo: ${found.spl} dB\n• Peso: ${found.weight} kg\n• Impedancia: ${found.impedance}Ω\n• Dispersión: ${found.dispersion}°\n• Categoría: ${found.category}${uso}\n\n💡 En LiveSync Pro puedes simular este modelo con cálculo de cobertura, delays y rigging.${cta}`, analysisResult);
+            } else {
+                // NUEVO: Sistema "Did You Mean?" para typos
+                const suggestion = suggestModelCorrection(modelMatch[0], SPEAKER_DATABASE);
+                if (suggestion) {
+                    chatState.lastTopic = 'did-you-mean';
+                    return formatBotResponse(generateDidYouMeanMessage(modelMatch[0], suggestion), analysisResult);
+                }
             }
         }
 
@@ -949,12 +1048,15 @@ function initChat() {
         // ===================================
         // CASOS DE USO (VERSIÓN MEJORADA CON LÓGICA)
         // ===================================
-        if (/(festival|concierto|outdoor).*(config|setup|sistema)/i.test(msg)) {
+        // Soporta ambos órdenes: "festival setup" Y "setup festival"
+        if (/(festival|concierto|outdoor).*(config|setup|sistema)/i.test(msg) ||
+            /(config|setup|sistema).*(festival|concierto|outdoor)/i.test(msg)) {
             chatState.lastTopic = 'festival';
             return formatBotResponse(`🎪 <strong>Setup Festival Outdoor</strong>\n\n<strong>Main PA:</strong> 12-16 K2/Panther por lado\n→ <em>Cobertura 80-100m con SPL >105dB @ FOH</em>\n\n<strong>Subs:</strong> 8-12 KS28/1100-LFC (cardioid)\n→ <em>Rechazo trasero -20dB, protege FOH y backstage</em>\n\n<strong>Delay Towers:</strong> @ 40m, 70m\n→ <em>Mantener SPL uniforme, calcular con temperatura del evento</em>\n\n<strong>FOH:</strong> DiGiCo SD7/Avid S6L\n<strong>Potencia:</strong> 80-120 kW (distribución trifásica)\n\n💡 LiveSync calcula automáticamente cantidades exactas según distancia y audiencia.${cta}\n\n<button class="quick-action-btn" data-action="delay 80m 25°C">🧮 Calcular delays</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver precios</button>`, analysisResult);
         }
 
-        if (/(teatro|corporativo|indoor).*(config|setup)/i.test(msg)) {
+        if (/(teatro|corporativo|indoor).*(config|setup)/i.test(msg) ||
+            /(config|setup).*(teatro|corporativo|indoor)/i.test(msg)) {
             chatState.lastTopic = 'teatro';
             return formatBotResponse(`🎭 <strong>Setup Teatro Indoor</strong>\n\n<strong>Main PA:</strong> 6-10 K3/Kara II por lado\n→ <em>Dispersión 10°, ideal para <30m en indoor</em>\n\n<strong>Subs:</strong> 4-6 SB28 (end-fire)\n→ <em>Direccional, evita reflexiones en paredes traseras</em>\n\n<strong>FOH:</strong> Yamaha CL5/dLive\n<strong>Potencia:</strong> 15-30 kW\n<strong>Sin delay towers</strong> (distancia <30m)\n\n💡 En salas con acústica controlada, priorizar direccionalidad sobre potencia bruta.${cta}`, analysisResult);
         }
@@ -1343,6 +1445,79 @@ function levenshteinDistance(str1, str2) {
     }
 
     return matrix[str2.length][str1.length];
+}
+
+// ========================================
+// SISTEMA "DID YOU MEAN?" - CORRECCIÓN DE TYPOS
+// ========================================
+/**
+ * Sugiere correcciones para modelos mal escritos
+ * @param {string} query - Texto ingresado por el usuario
+ * @param {object} speakerDatabase - Base de datos de speakers
+ * @returns {object|null} - {suggestion, distance} o null si no hay sugerencia
+ */
+function suggestModelCorrection(query, speakerDatabase) {
+    const queryLower = query.toLowerCase().trim();
+    const models = Object.entries(speakerDatabase);
+
+    // Buscar modelos con distancia Levenshtein ≤ 3 (permite 1-3 errores)
+    const suggestions = [];
+
+    for (const [key, model] of models) {
+        // Comparar con el nombre del modelo
+        const nameDistance = levenshteinDistance(queryLower, model.name.toLowerCase());
+        if (nameDistance <= 3 && nameDistance > 0) {
+            suggestions.push({
+                key,
+                name: model.name,
+                brand: model.brand,
+                distance: nameDistance,
+                matchType: 'name'
+            });
+        }
+
+        // Comparar con la key (k2, panther, etc.)
+        const keyDistance = levenshteinDistance(queryLower, key.toLowerCase());
+        if (keyDistance <= 2 && keyDistance > 0) {
+            suggestions.push({
+                key,
+                name: model.name,
+                brand: model.brand,
+                distance: keyDistance,
+                matchType: 'key'
+            });
+        }
+    }
+
+    // Ordenar por distancia (menor = mejor match)
+    suggestions.sort((a, b) => a.distance - b.distance);
+
+    // Retornar solo si hay al menos una sugerencia
+    if (suggestions.length > 0) {
+        return suggestions[0]; // Retornar el mejor match
+    }
+
+    return null;
+}
+
+/**
+ * Genera mensaje de sugerencia "Did You Mean?"
+ * @param {string} originalQuery - Query original del usuario
+ * @param {object} suggestion - Sugerencia de corrección
+ * @returns {string} - Mensaje formateado
+ */
+function generateDidYouMeanMessage(originalQuery, suggestion) {
+    const messages = [
+        `🤔 No encontré "${originalQuery}". ¿Quisiste decir <strong>${suggestion.brand} ${suggestion.name}</strong>?`,
+        `❓ No tengo info de "${originalQuery}". ¿Te refieres a <strong>${suggestion.brand} ${suggestion.name}</strong>?`,
+        `💭 Hmm, no encontré "${originalQuery}" en la base. ¿Será <strong>${suggestion.brand} ${suggestion.name}</strong>?`,
+        `🔍 No ubico "${originalQuery}". Tal vez quisiste buscar <strong>${suggestion.brand} ${suggestion.name}</strong>?`,
+        `🤔 "${originalQuery}" no está en mi catálogo. ¿Buscabas <strong>${suggestion.brand} ${suggestion.name}</strong>?`
+    ];
+
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+
+    return `${randomMessage}\n\n<button class="quick-action-btn" data-action="Specs del ${suggestion.name}">📊 Ver ${suggestion.name}</button> <button class="quick-action-btn" data-action="${suggestion.brand}">🔍 Ver modelos ${suggestion.brand}</button>`;
 }
 
 // ========================================
