@@ -949,12 +949,15 @@ function initChat() {
         // ===================================
         // CASOS DE USO (VERSIÓN MEJORADA CON LÓGICA)
         // ===================================
-        if (/(festival|concierto|outdoor).*(config|setup|sistema)/i.test(msg)) {
+        // Soporta ambos órdenes: "festival setup" Y "setup festival"
+        if (/(festival|concierto|outdoor).*(config|setup|sistema)/i.test(msg) ||
+            /(config|setup|sistema).*(festival|concierto|outdoor)/i.test(msg)) {
             chatState.lastTopic = 'festival';
             return formatBotResponse(`🎪 <strong>Setup Festival Outdoor</strong>\n\n<strong>Main PA:</strong> 12-16 K2/Panther por lado\n→ <em>Cobertura 80-100m con SPL >105dB @ FOH</em>\n\n<strong>Subs:</strong> 8-12 KS28/1100-LFC (cardioid)\n→ <em>Rechazo trasero -20dB, protege FOH y backstage</em>\n\n<strong>Delay Towers:</strong> @ 40m, 70m\n→ <em>Mantener SPL uniforme, calcular con temperatura del evento</em>\n\n<strong>FOH:</strong> DiGiCo SD7/Avid S6L\n<strong>Potencia:</strong> 80-120 kW (distribución trifásica)\n\n💡 LiveSync calcula automáticamente cantidades exactas según distancia y audiencia.${cta}\n\n<button class="quick-action-btn" data-action="delay 80m 25°C">🧮 Calcular delays</button> <button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver precios</button>`, analysisResult);
         }
 
-        if (/(teatro|corporativo|indoor).*(config|setup)/i.test(msg)) {
+        if (/(teatro|corporativo|indoor).*(config|setup)/i.test(msg) ||
+            /(config|setup).*(teatro|corporativo|indoor)/i.test(msg)) {
             chatState.lastTopic = 'teatro';
             return formatBotResponse(`🎭 <strong>Setup Teatro Indoor</strong>\n\n<strong>Main PA:</strong> 6-10 K3/Kara II por lado\n→ <em>Dispersión 10°, ideal para <30m en indoor</em>\n\n<strong>Subs:</strong> 4-6 SB28 (end-fire)\n→ <em>Direccional, evita reflexiones en paredes traseras</em>\n\n<strong>FOH:</strong> Yamaha CL5/dLive\n<strong>Potencia:</strong> 15-30 kW\n<strong>Sin delay towers</strong> (distancia <30m)\n\n💡 En salas con acústica controlada, priorizar direccionalidad sobre potencia bruta.${cta}`, analysisResult);
         }
