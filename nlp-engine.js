@@ -97,6 +97,10 @@ const SYNONYMS = {
 // Palabras de relleno (stopwords específicas del dominio)
 const DOMAIN_STOPWORDS = ['por favor', 'gracias', 'hola', 'hey', 'bueno', 'bien', 'ok', 'vale'];
 
+// ========================================
+// MEJORAS NLP v2.0 - UTILIDADES
+// ========================================
+
 /**
  * Escapa caracteres especiales de regex para construcción segura
  */
@@ -105,10 +109,205 @@ function escapeRegex(str) {
 }
 
 /**
+ * NLP #2: SPELL CORRECTION - Diccionario de keywords técnicas
+ */
+const TECHNICAL_KEYWORDS = [
+    // Equipamiento
+    'line array', 'speaker', 'subwoofer', 'monitor', 'delay', 'amplificador', 'consola',
+    // Acciones
+    'especificaciones', 'recomendacion', 'comparar', 'calcular', 'configuracion', 'diseño',
+    // Eventos
+    'festival', 'teatro', 'corporativo', 'concierto', 'outdoor', 'indoor',
+    // Técnico
+    'rigging', 'dante', 'spl', 'cobertura', 'dispersion', 'potencia', 'frecuencia',
+    // Marcas
+    'lacoustics', 'panther', 'kara', 'meyer', 'leopard'
+];
+
+/**
+ * Algoritmo de Levenshtein Distance para spell correction
+ */
+function levenshteinDistance(str1, str2) {
+    const len1 = str1.length;
+    const len2 = str2.length;
+    const matrix = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(0));
+
+    for (let i = 0; i <= len1; i++) matrix[i][0] = i;
+    for (let j = 0; j <= len2; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= len1; i++) {
+        for (let j = 1; j <= len2; j++) {
+            const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+            matrix[i][j] = Math.min(
+                matrix[i - 1][j] + 1,
+                matrix[i][j - 1] + 1,
+                matrix[i - 1][j - 1] + cost
+            );
+        }
+    }
+
+    return matrix[len1][len2];
+}
+
+/**
+ * NLP #2: Corregir typos en keywords técnicas
+ */
+function correctSpelling(word) {
+    const wordLower = word.toLowerCase();
+
+    // Si existe exactamente, retornar
+    if (TECHNICAL_KEYWORDS.some(kw => kw.toLowerCase() === wordLower)) {
+        return word;
+    }
+
+    // Buscar keyword más cercana (distancia <= 2)
+    let bestMatch = null;
+    let minDistance = Infinity;
+
+    for (const keyword of TECHNICAL_KEYWORDS) {
+        const distance = levenshteinDistance(wordLower, keyword.toLowerCase());
+        if (distance <= 2 && distance < minDistance) {
+            minDistance = distance;
+            bestMatch = keyword;
+        }
+    }
+
+    return bestMatch || word;
+}
+
+/**
+ * NLP #3: STEMMING/LEMMATIZATION - Diccionarios de normalización
+ */
+const VERB_STEMS = {
+    // Verbos AR
+    'calculando': 'calcular', 'calculé': 'calcular', 'calcularé': 'calcular', 'calculaba': 'calcular',
+    'recomendando': 'recomendar', 'recomendé': 'recomendar', 'recomendaré': 'recomendar',
+    'comparando': 'comparar', 'comparé': 'comparar', 'compararé': 'comparar',
+    'necesitando': 'necesitar', 'necesité': 'necesitar', 'necesitaré': 'necesitar',
+    'buscando': 'buscar', 'busqué': 'buscar', 'buscaré': 'buscar',
+    'configurando': 'configurar', 'configuré': 'configurar', 'configuraré': 'configurar',
+    // Verbos ER
+    'teniendo': 'tener', 'tuve': 'tener', 'tendré': 'tener', 'tenía': 'tener',
+    'haciendo': 'hacer', 'hice': 'hacer', 'haré': 'hacer', 'hacía': 'hacer',
+    // Verbos IR
+    'sirviendo': 'servir', 'serví': 'servir', 'serviré': 'servir', 'servía': 'servir',
+    'midiendo': 'medir', 'medí': 'medir', 'mediré': 'medir', 'medía': 'medir'
+};
+
+const PLURAL_STEMS = {
+    'arrays': 'array', 'speakers': 'speaker', 'subwoofers': 'subwoofer', 'monitores': 'monitor',
+    'amplificadores': 'amplificador', 'consolas': 'consola', 'torres': 'torre',
+    'metros': 'metro', 'personas': 'persona', 'eventos': 'evento', 'festivales': 'festival',
+    'teatros': 'teatro', 'conciertos': 'concierto', 'sistemas': 'sistema',
+    'cajas': 'caja', 'líneas': 'línea', 'delays': 'delay'
+};
+
+/**
+ * NLP #3: Normalizar palabra (stemming)
+ */
+function stemWord(word) {
+    const wordLower = word.toLowerCase();
+
+    // Verificar verbos conjugados
+    if (VERB_STEMS[wordLower]) return VERB_STEMS[wordLower];
+
+    // Verificar plurales
+    if (PLURAL_STEMS[wordLower]) return PLURAL_STEMS[wordLower];
+
+    // Reglas genéricas de plurales en español
+    if (wordLower.endsWith('es') && wordLower.length > 3) {
+        return wordLower.slice(0, -2); // cables → cable
+    }
+    if (wordLower.endsWith('s') && wordLower.length > 2 && !wordLower.endsWith('is')) {
+        return wordLower.slice(0, -1); // cajas → caja
+    }
+
+    // Conjugaciones -ando/-iendo
+    if (wordLower.endsWith('ando')) {
+        return wordLower.slice(0, -4) + 'ar'; // calculando → calcular
+    }
+    if (wordLower.endsWith('iendo')) {
+        return wordLower.slice(0, -5) + 'ir'; // sirviendo → servir
+    }
+
+    return word;
+}
+
+/**
+ * NLP #4: N-GRAM MATCHING - Detectar frases completas (bigrams/trigrams)
+ * Diccionario de frases importantes que deben matchearse como unidad
+ */
+const IMPORTANT_PHRASES = {
+    // Bigrams (2 palabras)
+    'line array': 'line_array_unit',
+    'mejor para': 'optimization_for',
+    'cómo calcular': 'how_to_calculate',
+    'cuánto cuesta': 'pricing_query',
+    'qué diferencia': 'comparison_query',
+    'para festival': 'event_festival',
+    'para teatro': 'event_teatro',
+    'para corporativo': 'event_corporativo',
+
+    // Trigrams (3 palabras)
+    'line array para': 'line_array_recommendation',
+    'mejor line array': 'best_line_array',
+    'cómo calculo delay': 'delay_calculation',
+    'cuál es mejor': 'recommendation_query',
+    'qué me recomiendas': 'recommendation_query',
+    'a cuántos metros': 'distance_query'
+};
+
+/**
+ * NLP #4: Detectar y marcar n-grams importantes
+ */
+function detectNGrams(query) {
+    let processed = query.toLowerCase();
+    const detectedPhrases = [];
+
+    // Detectar trigrams primero (más específicos)
+    for (const [phrase, token] of Object.entries(IMPORTANT_PHRASES)) {
+        if (phrase.split(' ').length === 3) {
+            const regex = new RegExp(`\\b${escapeRegex(phrase)}\\b`, 'gi');
+            if (regex.test(processed)) {
+                processed = processed.replace(regex, token);
+                detectedPhrases.push({ phrase, token, type: 'trigram' });
+            }
+        }
+    }
+
+    // Luego detectar bigrams
+    for (const [phrase, token] of Object.entries(IMPORTANT_PHRASES)) {
+        if (phrase.split(' ').length === 2) {
+            const regex = new RegExp(`\\b${escapeRegex(phrase)}\\b`, 'gi');
+            if (regex.test(processed)) {
+                processed = processed.replace(regex, token);
+                detectedPhrases.push({ phrase, token, type: 'bigram' });
+            }
+        }
+    }
+
+    return { processed, detectedPhrases };
+}
+
+/**
  * Expande queries con sinónimos para mejor matching
+ * MEJORADO v2.0: Integra spell correction + stemming + n-grams
  */
 function expandQuery(query) {
     let expanded = query.toLowerCase();
+
+    // NUEVO: NLP #4 - N-gram detection (PRIMERO, antes de modificar palabras)
+    const ngramResult = detectNGrams(expanded);
+    expanded = ngramResult.processed;
+
+    // NUEVO: NLP #2 - Spell Correction en palabras clave
+    const words = expanded.split(/\s+/);
+    const correctedWords = words.map(word => correctSpelling(word));
+    expanded = correctedWords.join(' ');
+
+    // NUEVO: NLP #3 - Stemming/Lemmatization
+    const stemmedWords = expanded.split(/\s+/).map(word => stemWord(word));
+    expanded = stemmedWords.join(' ');
 
     // Remover stopwords
     DOMAIN_STOPWORDS.forEach(stopword => {
@@ -205,14 +404,18 @@ const INTENTS = {
 
 /**
  * Clasifica la intención del mensaje del usuario
+ * MEJORADO v2.0: Fuzzy matching con umbral dinámico y scoring multi-señal
  */
 function classifyIntent(message, entities) {
     const expandedMsg = expandQuery(message);
     const results = [];
+    const MIN_CONFIDENCE_THRESHOLD = 0.5; // Umbral mínimo para considerar intent válido
+    const LOW_CONFIDENCE_THRESHOLD = 0.7; // Umbral para marcar como "baja confianza"
 
     for (const [intentName, config] of Object.entries(INTENTS)) {
         let score = 0;
         let matchedPatterns = [];
+        let signals = { patterns: 0, entities: 0, priority: 0, subIntent: 0 }; // Multi-señal
 
         // Score por patterns matched
         const patternMatches = config.patterns.filter(pattern => {
@@ -232,25 +435,32 @@ function classifyIntent(message, entities) {
 
         if (patternMatches.length === 0) continue;
 
-        // Score base: % de patterns matched
-        score = (patternMatches.length / config.patterns.length) * config.confidence;
+        // Score base: % de patterns matched (SEÑAL #1)
+        const patternScore = (patternMatches.length / config.patterns.length) * config.confidence;
+        score += patternScore;
+        signals.patterns = patternScore;
 
-        // Bonus: si tiene las entidades requeridas
+        // Bonus: si tiene las entidades requeridas (SEÑAL #2)
         if (config.requiredEntities) {
             const hasRequired = config.requiredEntities.every(entity => {
                 return entities[entity] && entities[entity].length > 0;
             });
             if (hasRequired) {
                 score += 0.2;
+                signals.entities = 0.2;
             } else {
-                score -= 0.3; // Penalización si falta entidad requerida
+                // Penalización REDUCIDA (antes -0.3, ahora -0.15) para ser más tolerante
+                score -= 0.15;
+                signals.entities = -0.15;
             }
         }
 
-        // Bonus: prioridad del intent
-        score += (config.priority / 100);
+        // Bonus: prioridad del intent (SEÑAL #3)
+        const priorityBonus = (config.priority / 100);
+        score += priorityBonus;
+        signals.priority = priorityBonus;
 
-        // Sub-intents (para cálculos específicos)
+        // Sub-intents (para cálculos específicos) (SEÑAL #4)
         let subIntent = null;
         if (config.subIntents) {
             for (const [subName, subPatterns] of Object.entries(config.subIntents)) {
@@ -260,6 +470,7 @@ function classifyIntent(message, entities) {
                 })) {
                     subIntent = subName;
                     score += 0.15;
+                    signals.subIntent = 0.15;
                     break;
                 }
             }
@@ -269,14 +480,34 @@ function classifyIntent(message, entities) {
             intent: intentName,
             subIntent: subIntent,
             confidence: Math.min(score, 1.0),
-            matchedPatterns: matchedPatterns
+            matchedPatterns: matchedPatterns,
+            signals: signals // Debug info
         });
     }
 
     // Ordenar por confidence
     results.sort((a, b) => b.confidence - a.confidence);
 
-    return results[0] || { intent: 'unknown', confidence: 0, matchedPatterns: [] };
+    const bestMatch = results[0] || { intent: 'unknown', confidence: 0, matchedPatterns: [] };
+
+    // NUEVO: Verificar umbral mínimo
+    if (bestMatch.confidence < MIN_CONFIDENCE_THRESHOLD) {
+        return {
+            intent: 'unknown',
+            confidence: bestMatch.confidence,
+            matchedPatterns: [],
+            reason: 'below_threshold',
+            alternatives: results.slice(0, 3) // Retornar top 3 para debugging
+        };
+    }
+
+    // NUEVO: Marcar como baja confianza si está entre 0.5-0.7
+    if (bestMatch.confidence >= MIN_CONFIDENCE_THRESHOLD && bestMatch.confidence < LOW_CONFIDENCE_THRESHOLD) {
+        bestMatch.lowConfidence = true;
+        bestMatch.alternatives = results.slice(1, 3); // Retornar alternativas
+    }
+
+    return bestMatch;
 }
 
 // ========================================
@@ -285,8 +516,12 @@ function classifyIntent(message, entities) {
 
 /**
  * Extrae entidades del mensaje (números + conceptos)
+ * MEJORADO v2.0 NLP #5: Context-aware entity extraction
+ * @param {string} message - Mensaje del usuario
+ * @param {object} speakerDatabase - Base de datos de modelos
+ * @param {object} previousContext - Contexto conversacional previo (opcional)
  */
-function extractAdvancedEntities(message, speakerDatabase) {
+function extractAdvancedEntities(message, speakerDatabase, previousContext = null) {
     const msg = message.toLowerCase();
     const entities = {
         // Numéricas (ya existentes - mejoradas)
@@ -311,8 +546,44 @@ function extractAdvancedEntities(message, speakerDatabase) {
         comparisons: [],            // [{model1, model2}]
 
         // Validación
-        validationErrors: []
+        validationErrors: [],
+
+        // NUEVO: Metadata de contexto
+        inferredFromContext: []     // Lista de entidades inferidas del contexto previo
     };
+
+    // ===== NLP #5: INFERIR ENTIDADES DEL CONTEXTO PREVIO =====
+    if (previousContext && previousContext.entities) {
+        // Si el mensaje actual no menciona eventType pero el contexto previo sí
+        if (!/(festival|teatro|corporativo|outdoor|indoor)/.test(msg) && previousContext.entities.eventType) {
+            entities.eventType = previousContext.entities.eventType;
+            entities.inferredFromContext.push('eventType');
+        }
+
+        // Si el mensaje actual no menciona distance pero el contexto previo sí
+        if (!/\d+\s*(m|metro|meter)/.test(msg) && previousContext.entities.distance) {
+            entities.distance = previousContext.entities.distance;
+            entities.inferredFromContext.push('distance');
+        }
+
+        // Si el mensaje actual no menciona people pero el contexto previo sí
+        if (!/\d+\s*(persona|gente|audiencia|public)/.test(msg) && previousContext.entities.people) {
+            entities.people = previousContext.entities.people;
+            entities.inferredFromContext.push('people');
+        }
+
+        // Inferir budget del contexto
+        if (previousContext.entities.budget && !/(budget|presupuesto|costo|precio)/.test(msg)) {
+            entities.budget = previousContext.entities.budget;
+            entities.inferredFromContext.push('budget');
+        }
+
+        // Inferir venueType del contexto
+        if (previousContext.entities.venueType && entities.eventType === null) {
+            entities.venueType = previousContext.entities.venueType;
+            entities.inferredFromContext.push('venueType');
+        }
+    }
 
     // ===== ENTIDADES NUMÉRICAS (MEJORADAS CON VALIDACIÓN) =====
 
