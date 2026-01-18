@@ -91,7 +91,93 @@ const SYNONYMS = {
     'where': ['dónde', 'donde'],
     'when': ['cuándo', 'cuando'],
     'which': ['cuál', 'cual'],
-    'why': ['por qué', 'porque']
+    'why': ['por qué', 'porque'],
+
+    // ===== GLOSARIO TÉCNICO LIVESYNC PRO =====
+    // Entorno y Atmósfera
+    'temperatura': ['temp', 'temperatura ambiente', 'temperatura del aire', 'temperatura showtime', 'grados'],
+    'humedad': ['humedad relativa', 'hr', 'humidity', 'humedad del aire'],
+    'altitud': ['altura', 'metros sobre nivel del mar', 'elevation', 'altitude'],
+    'viento': ['velocidad del viento', 'dirección del viento', 'wind', 'headwind', 'tailwind', 'crosswind'],
+    'ground effect': ['efecto suelo', 'reflexión del suelo', 'comb filtering por suelo', 'ground reflection'],
+
+    // Acústica de Sala
+    'rt60': ['tiempo de reverberación', 'reverb time', 'decay time', 'reverberación'],
+    'sabine': ['fórmula sabine', 'sabine formula', 'ecuación sabine'],
+    'eyring': ['fórmula eyring', 'eyring formula', 'ecuación eyring'],
+    'room modes': ['modos de sala', 'modos axiales', 'standing waves', 'ondas estacionarias'],
+    'critical distance': ['distancia crítica', 'dc', 'radio crítico', 'reverb radius'],
+    'sti': ['speech transmission index', 'inteligibilidad', 'intelligibility'],
+
+    // Room EQ y DSP
+    'room eq': ['room eq correction', 'corrección de sala', 'room correction', 'eq de sala'],
+    'hpf': ['high pass filter', 'filtro paso alto', 'paso alto', 'highpass'],
+    'q factor': ['ancho de banda', 'bandwidth', 'q', 'factor q'],
+
+    // Sistema PA Avanzado
+    'power alley': ['acoplamiento', 'coupling', 'suma de potencia'],
+    'array length': ['longitud del array', 'largo del arreglo', 'número de cajas'],
+    'splay': ['splay angles', 'ángulos de apertura', 'ángulo splay', 'inter-cabinet angle'],
+    'wst': ['wst criteria', 'wavefront sculpture', 'criterio wst'],
+    'broken line source': ['fuente lineal rota', 'broken line', 'line source'],
+
+    // Subwoofer Arrays
+    'cardioid': ['cardioide', 'sub cardioide', 'pattern cardioide', 'arreglo cardioide'],
+    'end-fire': ['endfire', 'end fire', 'arreglo endfire'],
+
+    // Calibración y Targets
+    'target spl': ['spl objetivo', 'nivel objetivo', 'spl target', 'presión objetivo'],
+    'foh distance': ['distancia foh', 'distancia a la consola', 'foh mix position'],
+    'headroom': ['margen de pico', 'peak headroom', 'margen dinámico'],
+    'crest factor': ['factor de cresta', 'peak to average', 'ratio pico-rms'],
+
+    // Layout de Escenario
+    'proscenium': ['proscenio', 'teatro proscenio', 'escenario italiano'],
+    'thrust': ['thrust stage', 'escenario thrust', 'teatro thrust'],
+    'arena': ['arena 360', '360 grados', 'round stage', 'escenario circular'],
+
+    // Amplificación
+    'amp topology': ['topología', 'clase del amplificador', 'clase ab', 'clase d'],
+    'damping factor': ['factor de amortiguamiento', 'damping', 'control de driver'],
+
+    // Electricidad
+    'power phase': ['fase eléctrica', 'monofásico', 'trifásico', 'single phase', 'three phase'],
+    'voltage drop': ['caída de tensión', 'caída de voltaje', 'drop de voltaje'],
+    'breaker': ['breakers', 'interruptor', 'protección eléctrica', 'circuit breaker'],
+    'cable gauge': ['calibre', 'sección de cable', 'awg', 'wire gauge'],
+
+    // Audio Digital
+    'sample rate': ['frecuencia de muestreo', 'sample frequency', '48khz', '96khz'],
+    'bit depth': ['resolución', 'profundidad de bits', '24 bit', '16 bit'],
+
+    // Rigging
+    'safety margin': ['margen de seguridad', 'factor de seguridad', 'safety factor'],
+    'bridle': ['bridle configuration', 'configuración bridle', 'rigging bridle'],
+
+    // Crossover y Filtros
+    'crossover': ['crossover frequency', 'frecuencia de cruce', 'punto de cruce'],
+    'linkwitz-riley': ['linkwitz riley', 'lr', 'lr4', 'lr2'],
+    'butterworth': ['butterworth filter', 'filtro butterworth'],
+
+    // Delay y Propagación
+    'required delay': ['delay requerido', 'tiempo de delay', 'retardo requerido'],
+    'slant distance': ['distancia inclinada', 'slant range', 'distancia real'],
+
+    // Acústica Avanzada
+    'distance loss': ['pérdida por distancia', 'inverse square law', 'ley cuadrado inverso'],
+    'atmospheric loss': ['pérdida atmosférica', 'absorción del aire', 'air absorption'],
+    'refraction': ['refracción', 'curvatura del sonido', 'refracción acústica'],
+    'coherence': ['coherencia', 'phase coherence', 'coherencia de fase'],
+    'haas effect': ['efecto haas', 'precedence effect', 'efecto de precedencia'],
+    'comb filtering': ['filtrado de peine', 'cancelación de fase', 'phase cancellation'],
+    'direct field': ['campo directo', 'sonido directo', 'direct sound'],
+    'reverberant field': ['campo reverberante', 'sonido reverberante', 'reverb field'],
+
+    // Normas y Estándares
+    'iso 3382': ['iso3382', 'norma iso', 'estándar acústico'],
+
+    // Transiciones y Efectos
+    'line array transition': ['distancia de transición', 'transition distance', 'near field to far field']
 };
 
 // Palabras de relleno (stopwords específicas del dominio)
@@ -121,7 +207,16 @@ const TECHNICAL_KEYWORDS = [
     // Técnico
     'rigging', 'dante', 'spl', 'cobertura', 'dispersion', 'potencia', 'frecuencia',
     // Marcas
-    'lacoustics', 'panther', 'kara', 'meyer', 'leopard'
+    'lacoustics', 'panther', 'kara', 'meyer', 'leopard',
+    // Glosario Técnico
+    'temperatura', 'humedad', 'altitud', 'viento', 'ground effect', 'rt60', 'sabine', 'eyring',
+    'room modes', 'critical distance', 'sti', 'room eq', 'hpf', 'q factor', 'power alley',
+    'array length', 'splay', 'wst', 'cardioid', 'endfire', 'target spl', 'foh distance',
+    'headroom', 'crest factor', 'proscenium', 'thrust', 'arena', 'damping factor',
+    'power phase', 'voltage drop', 'breaker', 'cable gauge', 'sample rate', 'bit depth',
+    'safety margin', 'bridle', 'crossover', 'linkwitz-riley', 'butterworth', 'required delay',
+    'slant distance', 'distance loss', 'atmospheric loss', 'refraction', 'coherence',
+    'haas effect', 'comb filtering', 'direct field', 'reverberant field', 'iso 3382'
 ];
 
 /**
@@ -396,7 +491,41 @@ const INTENTS = {
         priority: 7
     },
     'technical_concept': {
-        patterns: ['haas', 'power alley', 'array limit', 'grating lobe', 'wst', 'splay', 'ground bounce'],
+        patterns: [
+            // Preguntas sobre conceptos
+            'qué es', 'que es', 'explica', 'explicame', 'define', 'definición', 'concepto', 'término',
+            // Términos técnicos originales
+            'haas', 'power alley', 'array limit', 'grating lobe', 'wst', 'splay', 'ground bounce',
+            // Glosario: Entorno y Atmósfera
+            'temperatura', 'humedad', 'altitud', 'viento', 'ground effect', 'refracción',
+            // Glosario: Acústica de Sala
+            'rt60', 'sabine', 'eyring', 'room modes', 'critical distance', 'sti',
+            // Glosario: Room EQ
+            'room eq', 'hpf', 'q factor',
+            // Glosario: PA Avanzado
+            'array length', 'broken line source', 'coupling gain',
+            // Glosario: Subwoofers
+            'cardioid', 'endfire', 'end-fire',
+            // Glosario: Calibración
+            'target spl', 'foh distance', 'headroom', 'crest factor',
+            // Glosario: Layout
+            'proscenium', 'thrust', 'arena',
+            // Glosario: Amplificación
+            'amp topology', 'damping factor',
+            // Glosario: Electricidad
+            'power phase', 'voltage drop', 'breaker', 'cable gauge',
+            // Glosario: Audio Digital
+            'sample rate', 'bit depth',
+            // Glosario: Rigging
+            'safety margin', 'bridle',
+            // Glosario: Crossover
+            'crossover', 'linkwitz-riley', 'butterworth',
+            // Glosario: Delay
+            'required delay', 'slant distance',
+            // Glosario: Acústica Avanzada
+            'distance loss', 'atmospheric loss', 'coherence', 'haas effect', 'comb filtering',
+            'direct field', 'reverberant field', 'line array transition'
+        ],
         confidence: 0.9,
         priority: 8
     }
