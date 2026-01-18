@@ -915,26 +915,350 @@ body {
     line-height: 1.4;
 }
 
+/* ========================================
+   HAMBURGER MENU (Mobile)
+   ======================================== */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+}
+
+.hamburger-menu span {
+    width: 24px;
+    height: 2px;
+    background: var(--cyan-400);
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Sidebar toggle button (Mobile) */
+.sidebar-toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--cyan-400);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: var(--transition);
+}
+
+.sidebar-toggle-btn:hover {
+    color: var(--cyan-500);
+}
+
+/* Sidebar close button */
+.sidebar-close {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--red-500);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: var(--transition);
+    z-index: 10;
+}
+
+.sidebar-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* Chat header title (Mobile) */
+.chat-header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+}
+
+.chat-status-mobile {
+    display: none;
+    color: var(--emerald-400);
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+.chat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+    /* ========================================
+       HEADER - Responsive
+       ======================================== */
+    .header {
+        padding: 0.75rem 0;
+    }
+
+    .header .container {
+        padding: 0 1rem;
+    }
+
+    /* Logo compacto en móviles */
+    .logo {
+        gap: 8px;
+    }
+
+    .logo img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo h1 {
+        font-size: 0.875rem;
+    }
+
+    .logo-text p {
+        display: none; /* Ocultar subtítulo en móviles */
+    }
+
+    /* Hamburger menu visible */
+    .hamburger-menu {
+        display: flex;
+    }
+
+    /* Nav menu oculto por defecto en móviles */
+    .nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: var(--bg-card);
+        border-left: 1px solid var(--border-medium);
+        flex-direction: column;
+        padding: 5rem 1.5rem 1.5rem;
+        gap: 0.5rem;
+        transition: right 0.3s ease;
+        z-index: 1000;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav.active {
+        right: 0;
+    }
+
+    .nav-link {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        width: 100%;
+        text-align: left;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-subtle);
+    }
+
+    .nav-link.active {
+        background: rgba(6, 182, 212, 0.1);
+        border-color: var(--cyan-400);
+    }
+
+    /* ========================================
+       CHAT SECTION - Mobile (WhatsApp Style)
+       ======================================== */
     .chat-container {
         grid-template-columns: 1fr;
-        height: auto;
+        height: calc(100vh - 60px); /* Fullscreen minus header */
+        gap: 0;
+        margin: 0;
     }
 
+    /* Sidebar oculto por defecto en móviles */
     .chat-sidebar {
-        height: auto;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        z-index: 2000;
+        transition: left 0.3s ease;
+        padding: 4rem 1.5rem 1.5rem;
+        border-radius: 0;
+        border: none;
+        border-right: 1px solid var(--border-medium);
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
     }
 
-    .chat-main {
-        height: 500px;
+    .chat-sidebar.active {
+        left: 0;
     }
 
-    .nav {
-        width: 100%;
+    .sidebar-close {
+        display: flex;
+        align-items: center;
         justify-content: center;
     }
 
+    /* Chat main - Fullscreen tipo WhatsApp */
+    .chat-main {
+        height: 100%;
+        border-radius: 0;
+        border: none;
+        border-top: 1px solid var(--border-medium);
+    }
+
+    /* Chat header compacto */
+    .chat-header {
+        padding: 0.75rem 1rem;
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border-medium);
+        flex-wrap: nowrap;
+        gap: 0.75rem;
+    }
+
+    .sidebar-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-header h3 {
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .chat-status-mobile {
+        display: block;
+    }
+
+    /* Ocultar elementos desktop en móvil */
+    .chat-status {
+        display: none;
+    }
+
+    .btn-clear-history .btn-text {
+        display: none;
+    }
+
+    .btn-clear-history {
+        background: none;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--red-500);
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+    }
+
+    /* Chat messages - Más espacio */
+    .chat-messages {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    /* Messages - Estilo WhatsApp */
+    .message {
+        max-width: 85%;
+    }
+
+    .message.user {
+        align-self: flex-end;
+    }
+
+    .message.bot {
+        align-self: flex-start;
+    }
+
+    /* Avatar más pequeño en móvil */
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
+    }
+
+    /* Message content más compacto */
+    .message-content {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .message-content p {
+        font-size: 0.9rem;
+    }
+
+    .message-time {
+        font-size: 0.7rem;
+    }
+
+    /* Chat input - Fixed bottom tipo WhatsApp */
+    .chat-input-container {
+        padding: 0.75rem 1rem;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-medium);
+        gap: 0.5rem;
+    }
+
+    #chatInput {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 1.5rem;
+    }
+
+    .btn-send {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 50%;
+    }
+
+    /* Quick action buttons más pequeños */
+    .quick-action-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    /* Feedback buttons más compactos */
+    .feedback-buttons {
+        margin-top: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .feedback-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    /* ========================================
+       OTRAS SECCIONES - Mobile
+       ======================================== */
     .hero h2 {
         font-size: 1.5rem;
     }
@@ -952,7 +1276,35 @@ body {
         text-align: center;
     }
 
+    /* Ocultar inicio section cuando chat está activo */
+    #chat.section.active ~ .footer {
+        display: none;
+    }
+
+    /* Main content sin padding en chat */
+    #chat .container {
+        padding: 0;
+        max-width: 100%;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
     .logo h1 {
-        font-size: 1rem;
+        font-size: 0.75rem;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    .nav {
+        width: 100%;
+        right: -100%;
+    }
+
+    .chat-sidebar {
+        width: 90%;
+        max-width: none;
     }
 }
