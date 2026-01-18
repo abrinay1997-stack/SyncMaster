@@ -56,6 +56,72 @@ function initNavigation() {
 // SISTEMA DE CHAT INTELIGENTE (OPTIMIZADO)
 // ========================================
 
+// ========================================
+// ERROR HANDLING - UTILIDADES SEGURAS
+// ========================================
+
+/**
+ * Lee de localStorage de forma segura con manejo de errores
+ */
+function safeLocalStorageGet(key, defaultValue) {
+    try {
+        const item = localStorage.getItem(key);
+        if (!item) return defaultValue;
+        return JSON.parse(item);
+    } catch (e) {
+        console.error(`Error leyendo localStorage[${key}]:`, e.message);
+        // Si JSON está corrupto, limpiar y retornar default
+        try {
+            localStorage.removeItem(key);
+        } catch (cleanupError) {
+            // Ignorar errores de cleanup
+        }
+        return defaultValue;
+    }
+}
+
+/**
+ * Escribe a localStorage de forma segura con manejo de errores
+ */
+function safeLocalStorageSet(key, value) {
+    try {
+        const serialized = JSON.stringify(value);
+        localStorage.setItem(key, serialized);
+        return true;
+    } catch (e) {
+        if (e.name === 'QuotaExceededError') {
+            console.warn(`localStorage lleno. Limpiando datos antiguos...`);
+            // Intentar limpiar datos antiguos
+            try {
+                // Limpiar historial viejo (mantener solo últimos 50)
+                if (key === 'syncmaster-history' && Array.isArray(value)) {
+                    const trimmed = value.slice(-50);
+                    localStorage.setItem(key, JSON.stringify(trimmed));
+                    return true;
+                }
+            } catch (retryError) {
+                console.error(`Error guardando ${key} después de cleanup:`, retryError.message);
+            }
+        } else {
+            console.error(`Error guardando localStorage[${key}]:`, e.message);
+        }
+        return false;
+    }
+}
+
+/**
+ * Elimina de localStorage de forma segura
+ */
+function safeLocalStorageRemove(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (e) {
+        console.error(`Error eliminando localStorage[${key}]:`, e.message);
+        return false;
+    }
+}
+
 // Estado del chatbot
 let chatState = {
     messageCount: 0,
@@ -65,11 +131,15 @@ let chatState = {
     showCTA: false    // Alternar CTAs (cada 3 mensajes)
 };
 
-// NUEVO: Sistema de feedback con localStorage
-let feedbackData = JSON.parse(localStorage.getItem('syncmaster-feedback') || '{"helpful": [], "notHelpful": [], "responses": {}}');
+// NUEVO: Sistema de feedback con localStorage (SEGURO)
+let feedbackData = safeLocalStorageGet('syncmaster-feedback', {
+    helpful: [],
+    notHelpful: [],
+    responses: {}
+});
 
-// NUEVO: Historial persistente
-let chatHistory = JSON.parse(localStorage.getItem('syncmaster-history') || '[]');
+// NUEVO: Historial persistente (SEGURO)
+let chatHistory = safeLocalStorageGet('syncmaster-history', []);
 
 // ========================================
 // FASE 1+2: NLP & CONTEXTO AVANZADO
@@ -274,7 +344,7 @@ function initChat() {
     function clearChatHistory() {
         if (confirm('¿Estás seguro de que quieres borrar todo el historial de la conversación?')) {
             chatHistory = [];
-            localStorage.removeItem('syncmaster-history');
+            safeLocalStorageRemove('syncmaster-history');
 
             // Limpiar visualmente
             chatMessages.innerHTML = '';
@@ -302,8 +372,8 @@ function initChat() {
             chatHistory = chatHistory.slice(-100);
         }
 
-        // Guardar en localStorage
-        localStorage.setItem('syncmaster-history', JSON.stringify(chatHistory));
+        // Guardar en localStorage (SEGURO)
+        safeLocalStorageSet('syncmaster-history', chatHistory);
 
         // Agregar al DOM
         addMessageToDOM(text, sender, false);
@@ -319,7 +389,7 @@ function initChat() {
                 sender: sender,
                 timestamp: Date.now()
             });
-            localStorage.setItem('syncmaster-history', JSON.stringify(chatHistory));
+            safeLocalStorageSet('syncmaster-history', chatHistory);
         }
 
         const messageDiv = document.createElement('div');
@@ -416,8 +486,8 @@ function initChat() {
             });
         }
 
-        // Guardar en localStorage
-        localStorage.setItem('syncmaster-feedback', JSON.stringify(feedbackData));
+        // Guardar en localStorage (SEGURO)
+        safeLocalStorageSet('syncmaster-feedback', feedbackData);
 
         // Feedback visual
         const allButtons = buttonElement.parentElement.querySelectorAll('.feedback-btn');
@@ -452,22 +522,53 @@ function initChat() {
     // ========================================
     // PARSEAR MARKDOWN A HTML (NUEVO)
     // ========================================
-    function parseMarkdownToHTML(text) {
-        let html = text;
+    /**
+     * SEGURIDAD: Sanitiza HTML para prevenir XSS
+     * Escapa caracteres peligrosos pero preserva HTML seguro de botones
+     */
+    function sanitizeHTML(text) {
+        // Preservar botones seguros temporalmente
+        const buttonPlaceholders = [];
+        let sanitized = text.replace(/(<button[^>]*>.*?<\/button>)/g, (match) => {
+            const placeholder = `__BUTTON_${buttonPlaceholders.length}__`;
+            buttonPlaceholders.push(match);
+            return placeholder;
+        });
 
-        // Convertir **bold** a <strong>
+        // Escapar HTML peligroso (excepto placeholders de botones)
+        const div = document.createElement('div');
+        div.textContent = sanitized; // Escapa automáticamente HTML
+        sanitized = div.innerHTML;
+
+        // Restaurar botones seguros
+        buttonPlaceholders.forEach((button, index) => {
+            sanitized = sanitized.replace(`__BUTTON_${index}__`, button);
+        });
+
+        return sanitized;
+    }
+
+    /**
+     * Convierte markdown a HTML de forma segura
+     * CRÍTICO: Sanitiza input para prevenir XSS
+     */
+    function parseMarkdownToHTML(text) {
+        // PASO 1: Sanitizar input (escapar HTML malicioso)
+        let html = sanitizeHTML(text);
+
+        // PASO 2: Convertir **bold** a <strong>
         html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
-        // Convertir URLs a links clickeables
+        // PASO 3: Convertir URLs a links clickeables (solo http/https)
         html = html.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: var(--cyan-400); text-decoration: underline;">$1</a>');
 
-        // Convertir \n\n a <br><br> (doble salto)
+        // PASO 4: Convertir \n\n a <br><br> (doble salto)
         html = html.replace(/\n\n/g, '<br><br>');
 
-        // Convertir \n simple a <br>
+        // PASO 5: Convertir \n simple a <br>
         html = html.replace(/\n/g, '<br>');
 
-        // Convertir bullets • a <li>
+        // PASO 6: Convertir bullets • a <li>
         html = html.replace(/^• (.+)$/gm, '<li style="margin-left: 1rem;">$1</li>');
 
         return html;
@@ -702,22 +803,29 @@ function initChat() {
         let entities = null;
         let intent = null;
 
-        // CRÍTICO 2: Validar SPEAKER_DATABASE antes de usar
+        // CRÍTICO 2: Validar SPEAKER_DATABASE antes de usar (CON ERROR HANDLING)
         if (typeof analyzeMessage !== 'undefined' &&
             conversationContext &&
             typeof SPEAKER_DATABASE !== 'undefined' &&
             SPEAKER_DATABASE !== null) {
 
-            // Usar motor NLP avanzado
-            analysisResult = analyzeMessage(userMessage, SPEAKER_DATABASE);
-            entities = analysisResult.entities;
-            intent = analysisResult.intent;
+            try {
+                // Usar motor NLP avanzado (FIX NLP #5: Pasar conversationContext)
+                analysisResult = analyzeMessage(userMessage, SPEAKER_DATABASE, conversationContext);
+                entities = analysisResult.entities;
+                intent = analysisResult.intent;
 
-            console.log('🧠 NLP Analysis:', {
-                intent: intent.intent,
-                confidence: intent.confidence,
-                entities: Object.keys(entities).filter(k => entities[k] !== null && (Array.isArray(entities[k]) ? entities[k].length > 0 : true))
-            });
+                console.log('🧠 NLP Analysis:', {
+                    intent: intent.intent,
+                    confidence: intent.confidence,
+                    entities: Object.keys(entities).filter(k => entities[k] !== null && (Array.isArray(entities[k]) ? entities[k].length > 0 : true)),
+                    inferredFromContext: entities.inferredFromContext || [] // Debug NLP #5
+                });
+            } catch (nlpError) {
+                console.error('Error en NLP engine:', nlpError);
+                // Fallback a sistema antiguo si NLP falla
+                entities = extractEntities(userMessage);
+            }
         } else {
             // Fallback a sistema antiguo
             entities = extractEntities(userMessage);
