@@ -524,25 +524,41 @@ function initChat() {
     // ========================================
     /**
      * SEGURIDAD: Sanitiza HTML para prevenir XSS
-     * Escapa caracteres peligrosos pero preserva HTML seguro de botones
+     * Preserva etiquetas seguras (strong, em, br, button, a) pero escapa las peligrosas
      */
     function sanitizeHTML(text) {
-        // Preservar botones seguros temporalmente
-        const buttonPlaceholders = [];
-        let sanitized = text.replace(/(<button[^>]*>.*?<\/button>)/g, (match) => {
-            const placeholder = `__BUTTON_${buttonPlaceholders.length}__`;
-            buttonPlaceholders.push(match);
+        // WHITELIST de etiquetas seguras a preservar
+        const safeTags = [];
+
+        // 1. Preservar <button> con atributos
+        let sanitized = text.replace(/(<button[^>]*>.*?<\/button>)/gi, (match) => {
+            const placeholder = `__SAFE_TAG_${safeTags.length}__`;
+            safeTags.push(match);
             return placeholder;
         });
 
-        // Escapar HTML peligroso (excepto placeholders de botones)
+        // 2. Preservar <a> con atributos seguros
+        sanitized = sanitized.replace(/(<a\s+[^>]*href=["'][^"']*["'][^>]*>.*?<\/a>)/gi, (match) => {
+            const placeholder = `__SAFE_TAG_${safeTags.length}__`;
+            safeTags.push(match);
+            return placeholder;
+        });
+
+        // 3. Preservar etiquetas simples seguras: strong, em, br
+        sanitized = sanitized.replace(/(<\/?(?:strong|em|br)\s*\/?>)/gi, (match) => {
+            const placeholder = `__SAFE_TAG_${safeTags.length}__`;
+            safeTags.push(match);
+            return placeholder;
+        });
+
+        // 4. Escapar TODO el HTML restante (etiquetas peligrosas)
         const div = document.createElement('div');
-        div.textContent = sanitized; // Escapa automáticamente HTML
+        div.textContent = sanitized; // Escapa automáticamente script, iframe, etc.
         sanitized = div.innerHTML;
 
-        // Restaurar botones seguros
-        buttonPlaceholders.forEach((button, index) => {
-            sanitized = sanitized.replace(`__BUTTON_${index}__`, button);
+        // 5. Restaurar etiquetas seguras
+        safeTags.forEach((tag, index) => {
+            sanitized = sanitized.replace(`__SAFE_TAG_${index}__`, tag);
         });
 
         return sanitized;
@@ -1544,6 +1560,102 @@ O dímelo directamente, ej: "delay para 60 metros a 25°C"`, analysisResult);
                     return formatBotResponse(response, analysisResult);
                 }
             }
+        }
+
+        // ===================================
+        // HANDLERS INTELIGENTES PARA ENTIDADES SIN INTENT CLARO (NUEVO)
+        // ===================================
+        // Si detectamos entidades importantes pero el intent es unclear, responder inteligentemente
+
+        // CASO 1: Usuario solo menciona tipo de evento (festival, teatro, corporativo)
+        if (entities && entities.eventType && !entities.distance && !entities.people && msg.length < 30) {
+            chatState.lastTopic = 'event-type-' + entities.eventType;
+
+            const eventInfo = {
+                'festival': {
+                    icon: '🎪',
+                    title: 'Setup Festival Outdoor',
+                    description: 'Eventos masivos al aire libre con grandes distancias y alta audiencia.',
+                    typical: '• Audiencia: 2000-10000+ personas\n• Distancia: 60-120m\n• SPL objetivo: 105-110dB @ FOH',
+                    equipment: '• Main PA: K2, Panther, GSL8 (line arrays large)\n• Subs: KS28, 1100-LFC (cardioid)\n• Delay towers cada 30-40m',
+                    buttons: '<button class="quick-action-btn" data-action="setup festival">📋 Ver setup completo</button> <button class="quick-action-btn" data-action="mejor line array para festival">🔍 Mejores line arrays</button> <button class="quick-action-btn" data-action="calcular delay 80m">🧮 Calcular delays</button>'
+                },
+                'teatro': {
+                    icon: '🎭',
+                    title: 'Setup Teatro Indoor',
+                    description: 'Espacios cerrados con acústica controlada y distancias cortas.',
+                    typical: '• Audiencia: 200-1000 personas\n• Distancia: 15-30m\n• SPL objetivo: 95-100dB @ FOH',
+                    equipment: '• Main PA: K3, Kara II, J8 (line arrays medium)\n• Subs: SB28, V-SUB (end-fire)\n• Sin delay towers (distancia corta)',
+                    buttons: '<button class="quick-action-btn" data-action="setup teatro">📋 Ver setup completo</button> <button class="quick-action-btn" data-action="mejor line array para teatro">🔍 Mejores line arrays</button> <button class="quick-action-btn" data-action="qué es RT60">📚 Acústica de sala</button>'
+                },
+                'corporativo': {
+                    icon: '🏢',
+                    title: 'Setup Corporativo',
+                    description: 'Conferencias, presentaciones y eventos empresariales.',
+                    typical: '• Audiencia: 50-500 personas\n• Distancia: 10-20m\n• SPL objetivo: 90-95dB (inteligibilidad)',
+                    equipment: '• Main PA: Line arrays small o point source\n• Sin subs (o 2-4 pequeños para fullness)\n• Prioridad: inteligibilidad sobre potencia',
+                    buttons: '<button class="quick-action-btn" data-action="setup corporativo">📋 Ver setup completo</button> <button class="quick-action-btn" data-action="qué es STI">📚 Inteligibilidad</button> <button class="quick-action-btn" data-action="mejor para corporativo">🔍 Equipos recomendados</button>'
+                }
+            };
+
+            const info = eventInfo[entities.eventType];
+            if (info) {
+                return formatBotResponse(`${info.icon} <strong>${info.title}</strong>\n\n${info.description}\n\n<strong>Típicamente:</strong>\n${info.typical}\n\n<strong>Equipamiento:</strong>\n${info.equipment}\n\n💡 LiveSync Pro calcula automáticamente la configuración exacta según tus parámetros.\n\n${info.buttons}${cta}`, analysisResult);
+            }
+        }
+
+        // CASO 2: Usuario solo menciona distancia (50m, 80 metros, etc.)
+        if (entities && entities.distance && !entities.eventType && !entities.people && msg.length < 30) {
+            chatState.lastTopic = 'distance-only';
+
+            let recommendations = '';
+            if (entities.distance < 30) {
+                recommendations = '• Line arrays Medium: K3, Kara II, J8, LINA\n• Ideal para: teatro, corporativo, indoor';
+            } else if (entities.distance < 60) {
+                recommendations = '• Line arrays Medium-Large: K2, Leopard, KSL8\n• Ideal para: conciertos, festivales medianos';
+            } else {
+                recommendations = '• Line arrays Large: K1, Panther, GSL8, VTX A12\n• Ideal para: festivales grandes, outdoor masivo';
+            }
+
+            return formatBotResponse(`📏 <strong>Para cubrir ${entities.distance}m necesitas:</strong>\n\n${recommendations}\n\n<strong>Ayúdame con más info para una mejor recomendación:</strong>\n\n<button class="quick-action-btn" data-action="festival ${entities.distance}m">🎪 Festival outdoor</button> <button class="quick-action-btn" data-action="teatro ${entities.distance}m">🎭 Teatro indoor</button> <button class="quick-action-btn" data-action="corporativo ${entities.distance}m">🏢 Corporativo</button>\n\nO dime: "mejor line array para ${entities.distance}m"${cta}`, analysisResult);
+        }
+
+        // CASO 3: Usuario solo menciona cantidad de personas
+        if (entities && entities.people && !entities.eventType && !entities.distance && msg.length < 30) {
+            chatState.lastTopic = 'people-only';
+
+            let recommendations = '';
+            let estimatedDistance = 0;
+
+            if (entities.people < 500) {
+                recommendations = '• Evento pequeño: 200-500 personas\n• Distancia estimada: 20-30m\n• Line arrays Medium o point source';
+                estimatedDistance = 25;
+            } else if (entities.people < 2000) {
+                recommendations = '• Evento mediano: 500-2000 personas\n• Distancia estimada: 30-50m\n• Line arrays Medium-Large';
+                estimatedDistance = 40;
+            } else {
+                recommendations = '• Evento grande: 2000+ personas\n• Distancia estimada: 60-100m\n• Line arrays Large + delay towers';
+                estimatedDistance = 80;
+            }
+
+            return formatBotResponse(`👥 <strong>Para ${entities.people} personas:</strong>\n\n${recommendations}\n\n<strong>¿Qué tipo de evento es?</strong>\n\n<button class="quick-action-btn" data-action="festival ${entities.people} personas">🎪 Festival</button> <button class="quick-action-btn" data-action="teatro ${entities.people} personas">🎭 Teatro</button> <button class="quick-action-btn" data-action="corporativo ${entities.people} personas">🏢 Corporativo</button>\n\nO dime: "necesito sistema para ${estimatedDistance}m"${cta}`, analysisResult);
+        }
+
+        // CASO 4: Usuario menciona características técnicas (cardioid, high spl, etc.)
+        if (entities && entities.characteristics && entities.characteristics.length > 0 && msg.length < 40) {
+            chatState.lastTopic = 'characteristics-only';
+
+            const charDescriptions = {
+                'high-spl': '🔊 Alto SPL (>135dB)',
+                'light': '🪶 Ligero (<30kg/caja)',
+                'cardioid': '📡 Patrón cardioide',
+                'long-throw': '🎯 Largo alcance',
+                'compact': '📦 Compacto'
+            };
+
+            const detectedChars = entities.characteristics.map(c => charDescriptions[c] || c).join(', ');
+
+            return formatBotResponse(`🔍 <strong>Buscas equipos con:</strong> ${detectedChars}\n\n<strong>Ayúdame a refinar la búsqueda:</strong>\n\n<button class="quick-action-btn" data-action="mejor line array ${entities.characteristics.join(' ')}">🔍 Line arrays</button> <button class="quick-action-btn" data-action="mejor subwoofer ${entities.characteristics.join(' ')}">🔊 Subwoofers</button> <button class="quick-action-btn" data-action="mejor monitor ${entities.characteristics.join(' ')}">🔈 Monitores</button>\n\nO especifica: "mejor ${entities.characteristics.join(' ')} para festival 50m"${cta}`, analysisResult);
         }
 
         // ===================================
