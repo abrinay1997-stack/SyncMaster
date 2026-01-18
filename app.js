@@ -1659,6 +1659,100 @@ O dímelo directamente, ej: "delay para 60 metros a 25°C"`, analysisResult);
         }
 
         // ===================================
+        // HANDLERS PARA TÉRMINOS ESPECÍFICOS SIN CONTEXTO (NUEVO)
+        // ===================================
+
+        // EQUIPAMIENTO: Speaker/Altavoz/Bocina
+        if (/(^|\s)(speaker|altavoz|bocina|parlante|caja|bafle)s?($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'speakers';
+            return formatBotResponse(`🔊 <strong>Speakers / Altavoces</strong>\n\nLiveSync Pro soporta catálogos completos de:\n\n<strong>LINE ARRAYS:</strong>\n• L-Acoustics (K1, K2, K3, Kara II)\n• d&b audiotechnik (GSL, KSL, J-Series)\n• Meyer Sound (Panther, LEO-M, Leopard)\n• JBL Professional (VTX A-Series)\n\n<strong>SUBWOOFERS:</strong>\n• KS28, SB28, 1100-LFC, V-SUB\n\n<strong>MONITORES:</strong>\n• Wedges de piso (X15, M2, dV-DOSC)\n• Sidefills (Kiva II, Y-Series)\n\n<strong>¿Qué tipo de speaker buscas?</strong>\n\n<button class="quick-action-btn" data-action="line arrays">📡 Line Arrays</button> <button class="quick-action-btn" data-action="mejor subwoofer">🔊 Subwoofers</button> <button class="quick-action-btn" data-action="monitores">🔈 Monitores</button>${cta}`, analysisResult);
+        }
+
+        // EQUIPAMIENTO: Mixer/Consola
+        if (/(^|\s)(mixer|consola|mezcladora|mesa|mixing|board)s?($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'mixer';
+            return formatBotResponse(`🎛️ <strong>Consolas / Mixers</strong>\n\nLiveSync Pro calcula IO lists y configuraciones para:\n\n<strong>FOH (Front of House):</strong>\n• DiGiCo (SD7, SD5, Quantum)\n• Avid (S6L, Venue)\n• Yamaha (RIVAGE PM, CL/QL Series)\n• Allen & Heath (dLive, SQ Series)\n\n<strong>MONITORES:</strong>\n• DiGiCo SD12\n• Yamaha CL5, QL5\n• Midas M32\n\n<strong>Funcionalidades:</strong>\n• Patcheo automático Dante/AVB\n• IO lists por mixer\n• Channel counts\n• Cálculo de cables necesarios\n\n<button class="quick-action-btn" data-action="foh">🎚️ Ver procesadores FOH</button> <button class="quick-action-btn" data-action="dante">🌐 Configuración Dante</button>${cta}`, analysisResult);
+        }
+
+        // EQUIPAMIENTO: Amplificador/Potencia
+        if (/(^|\s)(amp|amplificador|potencia|power amp|ampli)s?($|\s)/i.test(msg) && msg.length < 30 && !/(topology|clase)/i.test(msg)) {
+            chatState.lastTopic = 'amplifiers';
+            return formatBotResponse(`⚡ <strong>Amplificadores / Power Amps</strong>\n\nLiveSync Pro soporta amplificadores de todas las marcas:\n\n<strong>L-ACOUSTICS:</strong>\n• LA12X (8.4kW) - Clase D con DSP integrado\n• LA8 (3.3kW) - Para sistemas pequeños\n• LA-RAK II - Racks completos\n\n<strong>POWERSOFT:</strong>\n• X8 (8kW), Quattrocanali (10kW)\n• Mezzo Series (2-4kW)\n• Topología Clase D moderna con PFC\n\n<strong>LAB.GRUPPEN:</strong>\n• PLM 20000Q (20kW)\n• IPD Series (touring grade)\n\n<strong>d&b:</strong>\n• D80 (4kW), D20 (2kW), D6 (1kW)\n\n💡 LiveSync calcula:\n• Cantidad de amps necesarios\n• Consumo eléctrico total\n• Distribución por rack\n\n<button class="quick-action-btn" data-action="potencia eléctrica">⚡ Cálculo de potencia</button> <button class="quick-action-btn" data-action="qué es amp topology">📚 Topologías de amp</button>${cta}`, analysisResult);
+        }
+
+        // MARCAS: L-Acoustics
+        if (/(^|\s)(l-acoustics|lacoustics|l acoustics|la|ele acoustics)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'lacoustics';
+            return formatBotResponse(`🔷 <strong>L-Acoustics</strong>\n\nCatálogo completo en LiveSync Pro:\n\n<strong>LINE ARRAYS LARGE:</strong>\n• K1 (138dB) - Flagship, >100m\n• K2 (137dB) - Touring standard, 80-100m\n\n<strong>LINE ARRAYS MEDIUM:</strong>\n• K3 (136dB) - Teatro, 30-50m\n• Kara II (135dB) - Versátil, indoor/outdoor\n\n<strong>SUBWOOFERS:</strong>\n• KS28 (146dB) - Reference standard\n• SB28 (141dB) - Compacto, end-fire\n\n<strong>AMPLIFICACIÓN:</strong>\n• LA12X (8.4kW), LA8 (3.3kW)\n\n<strong>SOFTWARE NATIVO:</strong>\n• Soundvision (L-Acoustics)\n• LiveSync Pro (compatible, más rápido)\n\n<button class="quick-action-btn" data-action="specs K2">📊 Specs K2</button> <button class="quick-action-btn" data-action="K2 vs K3">⚖️ K2 vs K3</button> <button class="quick-action-btn" data-action="KS28">🔊 KS28 Specs</button>${cta}`, analysisResult);
+        }
+
+        // MARCAS: d&b audiotechnik
+        if (/(^|\s)(d&b|d and b|deb|db audiotechnik)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'db';
+            return formatBotResponse(`🔷 <strong>d&b audiotechnik</strong>\n\nCatálogo completo en LiveSync Pro:\n\n<strong>GSL-SERIES (Large):</strong>\n• GSL8 (138dB) - Flagship, >100m\n• GSL12 (137dB) - Similar a K2\n\n<strong>KSL-SERIES (Medium):</strong>\n• KSL8 (136dB) - Teatro grande, 40-60m\n• KSL12 (135dB) - Compacto\n\n<strong>J-SERIES (Medium):</strong>\n• J8, J12 - Versátiles, indoor/outdoor\n\n<strong>V-SERIES (Medium):</strong>\n• V8, V12 - Instalación, corporate\n\n<strong>SUBWOOFERS:</strong>\n• SL-SUB, V-SUB, J-SUB\n\n<strong>AMPLIFICACIÓN:</strong>\n• D80 (4kW), D20 (2kW)\n\n<button class="quick-action-btn" data-action="specs GSL8">📊 Specs GSL8</button> <button class="quick-action-btn" data-action="KSL8 vs J8">⚖️ KSL8 vs J8</button>${cta}`, analysisResult);
+        }
+
+        // MARCAS: Meyer Sound
+        if (/(^|\s)(meyer|meyer sound)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'meyer';
+            return formatBotResponse(`🔷 <strong>Meyer Sound</strong>\n\nCatálogo completo en LiveSync Pro:\n\n<strong>LINE ARRAYS LARGE:</strong>\n• Panther (139dB) - Máximo SPL, >100m\n• LEO-M (136dB) - Compacto pero potente\n\n<strong>LINE ARRAYS MEDIUM:</strong>\n• Leopard (135dB) - Versatile touring, 40-60m\n• LINA (134dB) - Compacto, instalación\n\n<strong>SUBWOOFERS:</strong>\n• 1100-LFC (147dB) - Reference, potencia brutal\n• 900-LFC (144dB)\n\n<strong>AMPLIFICACIÓN:</strong>\n• MPS-488 (integrado en cajas)\n• Sistema propio Meyer\n\n<strong>SOFTWARE:</strong>\n• Compass (Meyer)\n• LiveSync Pro (compatible)\n\n<button class="quick-action-btn" data-action="specs Panther">📊 Specs Panther</button> <button class="quick-action-btn" data-action="Panther vs K2">⚖️ Panther vs K2</button> <button class="quick-action-btn" data-action="Leopard">🔍 Leopard</button>${cta}`, analysisResult);
+        }
+
+        // MARCAS: JBL
+        if (/(^|\s)(jbl|jbl professional)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'jbl';
+            return formatBotResponse(`🔷 <strong>JBL Professional</strong>\n\nCatálogo en LiveSync Pro:\n\n<strong>VTX A-SERIES (Large):</strong>\n• VTX A12 (138dB) - Flagship, touring\n• VTX A8 (136dB) - Medium-large\n\n<strong>VTX V-SERIES (Medium):</strong>\n• VTX V25 (135dB) - Compacto, versátil\n• VTX V20 (134dB)\n\n<strong>SUBWOOFERS:</strong>\n• VTX B28 (144dB)\n• VTX G28 (142dB)\n\n<strong>AMPLIFICACIÓN:</strong>\n• Crown (serie IT, DCi)\n• Compatible con Crown/JBL\n\n<button class="quick-action-btn" data-action="specs VTX A12">📊 Specs VTX A12</button> <button class="quick-action-btn" data-action="VTX A12 vs K2">⚖️ A12 vs K2</button>${cta}`, analysisResult);
+        }
+
+        // CARACTERÍSTICAS: SPL
+        if (/(^|\s)(spl|presión sonora|sound pressure level|decibeles|db)($|\s)/i.test(msg) && msg.length < 40 && !/(target|objetivo|cuánto)/i.test(msg)) {
+            chatState.lastTopic = 'spl-concept';
+            return formatBotResponse(`📊 <strong>SPL (Sound Pressure Level)</strong>\n\n<strong>Concepto:</strong>\nPresión sonora en decibeles (dB). Mide qué tan "fuerte" es el sonido.\n\n<strong>Rangos típicos:</strong>\n• 90-95 dB → Corporativo (speech, inteligibilidad)\n• 95-100 dB → Teatro, conciertos acústicos\n• 100-105 dB → Conciertos rock, festivales medianos\n• 105-110 dB → Festivales grandes, EDM\n• >110 dB → Eventos masivos (necesita permisos)\n\n<strong>SPL de equipos:</strong>\n• K2: 137dB @ 1m\n• Panther: 139dB @ 1m\n• KS28 (sub): 146dB @ 1m\n\n<strong>Pérdida por distancia:</strong>\n• -6dB cada vez que duplicas distancia\n• Ejemplo: K2 @ 50m ≈ 107dB\n\n💡 LiveSync calcula SPL exacto en cada punto del venue.\n\n<button class="quick-action-btn" data-action="qué es target spl">🎯 SPL objetivo</button> <button class="quick-action-btn" data-action="qué es distance loss">📐 Pérdida por distancia</button> <button class="quick-action-btn" data-action="mejor line array high spl">🔊 Equipos alto SPL</button>${cta}`, analysisResult);
+        }
+
+        // CARACTERÍSTICAS: Cobertura/Coverage
+        if (/(^|\s)(cobertura|coverage|alcance|rango)($|\s)/i.test(msg) && msg.length < 30 && !entities.distance) {
+            chatState.lastTopic = 'coverage';
+            return formatBotResponse(`📡 <strong>Cobertura / Coverage</strong>\n\n<strong>Concepto:</strong>\nÁrea que puede cubrir un sistema de sonido con SPL adecuado.\n\n<strong>Tipos de cobertura:</strong>\n• <strong>Horizontal:</strong> Ancho (left-right)\n  - Line arrays: 70-110° típico\n  - Point source: 40-90°\n\n• <strong>Vertical:</strong> Alto (up-down)\n  - Line arrays: 5-15° por caja\n  - Control con splay angles\n\n• <strong>Distancia:</strong> Qué tan lejos llega\n  - Line arrays large: >80m\n  - Line arrays medium: 30-60m\n  - Point source: <30m\n\n<strong>Factores que afectan:</strong>\n• SPL del equipo\n• Cantidad de cajas (coupling gain)\n• Ground effect\n• Atmospheric loss\n\n💡 LiveSync genera mapas de cobertura automáticos.\n\n<button class="quick-action-btn" data-action="mejor para 50m">📏 Por distancia</button> <button class="quick-action-btn" data-action="qué es splay">📐 Ángulos splay</button> <button class="quick-action-btn" data-action="qué es power alley">⚡ Power alley</button>${cta}`, analysisResult);
+        }
+
+        // CARACTERÍSTICAS: Dispersión
+        if (/(^|\s)(dispersión|dispersion|ángulo|apertura|pattern)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'dispersion';
+            return formatBotResponse(`📐 <strong>Dispersión / Dispersion</strong>\n\n<strong>Concepto:</strong>\nÁngulo de apertura del patrón de radiación del altavoz.\n\n<strong>Dispersión horizontal típica:</strong>\n• 70° - Estrecho, gran distancia (K1, Panther)\n• 90° - Estándar, versátil (K2, Leopard)\n• 110° - Amplio, indoor (K3, Kara II)\n\n<strong>Dispersión vertical:</strong>\n• Line arrays: 5-15° por caja\n• Control con curvatura (splay)\n\n<strong>¿Cómo elegir?</strong>\n• <strong>70-80°:</strong> Venues largos y estrechos, outdoor\n• <strong>90°:</strong> Configuración estándar, versátil\n• <strong>110°:</strong> Salas anchas, indoor, wrap-around\n\n<strong>Dispersión de subwoofers:</strong>\n• Omni: 360° (suma en todas direcciones)\n• Cardioid: Direccional, rechazo trasero\n• End-fire: Muy direccional\n\n💡 LiveSync simula patrones de dispersión 3D.\n\n<button class="quick-action-btn" data-action="qué es directividad">📊 Directividad</button> <button class="quick-action-btn" data-action="qué es cardioid">🎯 Patrón cardioide</button>${cta}`, analysisResult);
+        }
+
+        // CARACTERÍSTICAS: Impedancia
+        if (/(^|\s)(impedancia|impedance|ohms|ohmios|z)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'impedance';
+            return formatBotResponse(`⚡ <strong>Impedancia / Impedance</strong>\n\n<strong>Concepto:</strong>\nResistencia eléctrica del altavoz (en Ohms Ω).\n\n<strong>Impedancias estándar:</strong>\n• 4Ω - Más corriente, más potencia\n• 8Ω - Estándar profesional\n• 16Ω - Menos corriente, alta eficiencia\n\n<strong>Importante:</strong>\n• Amplificador debe soportar la impedancia\n• Ej: Amp 8Ω @ 1000W → 4Ω @ 1600W (más potencia)\n• Conectar 8Ω a amp de 4Ω = subpotencia\n• Conectar 4Ω a amp de 8Ω = puede dañar amp\n\n<strong>En sistemas profesionales:</strong>\n• Line arrays modernos: 8Ω típico\n• Amps modernos: soportan 2-4-8Ω switchable\n• Clase D: Más tolerantes a impedancia variable\n\n💡 LiveSync calcula matching amp-speaker automáticamente.\n\n<button class="quick-action-btn" data-action="amplificadores">⚡ Ver amplificadores</button> <button class="quick-action-btn" data-action="qué es damping factor">🔧 Damping factor</button>${cta}`, analysisResult);
+        }
+
+        // CARACTERÍSTICAS: Sensibilidad
+        if (/(^|\s)(sensibilidad|sensitivity|eficiencia|efficiency)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'sensitivity';
+            return formatBotResponse(`📊 <strong>Sensibilidad / Sensitivity</strong>\n\n<strong>Concepto:</strong>\nEficiencia del altavoz. Cuánto SPL produce por cada watt de potencia.\n\n<strong>Medida:</strong>\n• dB SPL @ 1W/1m\n• Ejemplo: 100 dB @ 1W/1m\n\n<strong>Rangos típicos:</strong>\n• 95-100 dB → Baja sensibilidad (necesita más watts)\n• 100-105 dB → Sensibilidad media\n• 105-110 dB → Alta sensibilidad (eficiente)\n• >110 dB → Muy eficiente (horn-loaded)\n\n<strong>Ejemplo práctico:</strong>\n• Speaker A: 100dB @ 1W/1m con 1000W → 130dB max\n• Speaker B: 105dB @ 1W/1m con 500W → 132dB max\n→ B es más eficiente (menos watts, más SPL)\n\n<strong>Ventajas alta sensibilidad:</strong>\n• Menos potencia necesaria\n• Menos calor generado\n• Menor consumo eléctrico\n\n💡 LiveSync optimiza eficiencia amp-speaker.\n\n<button class="quick-action-btn" data-action="qué es spl">📊 SPL</button> <button class="quick-action-btn" data-action="potencia">⚡ Cálculo de potencia</button>${cta}`, analysisResult);
+        }
+
+        // CARACTERÍSTICAS: Frecuencia
+        if (/(^|\s)(frecuencia|frequency|hz|hertz|rango.*frecuencias)($|\s)/i.test(msg) && msg.length < 40 && !/(crossover|cruce)/i.test(msg)) {
+            chatState.lastTopic = 'frequency';
+            return formatBotResponse(`🎵 <strong>Frecuencia / Frequency</strong>\n\n<strong>Concepto:</strong>\nCantidad de vibraciones por segundo (Hz = Hertz).\n\n<strong>Rango audible humano:</strong>\n• 20 Hz - 20,000 Hz (20 kHz)\n• Graves: 20-250 Hz\n• Medios: 250-4000 Hz\n• Agudos: 4000-20000 Hz\n\n<strong>Rangos de equipos:</strong>\n• <strong>Subwoofers:</strong> 25-100 Hz (graves profundos)\n• <strong>Line arrays:</strong> 50-18000 Hz (full-range)\n• <strong>Tweeters:</strong> 2000-20000 Hz (solo agudos)\n\n<strong>Frecuencias críticas:</strong>\n• 50-80 Hz: Kick drum, bajo\n• 100-250 Hz: Body de voces, calidez\n• 1000-4000 Hz: Inteligibilidad, claridad\n• 8000-16000 Hz: Air, brillantez\n\n<strong>En LiveSync Pro:</strong>\n• Response de cada modelo\n• Crossover frequencies\n• EQ sugerido por venue\n\n<button class="quick-action-btn" data-action="qué es crossover">🔀 Crossover</button> <button class="quick-action-btn" data-action="subwoofers">🔊 Subwoofers</button> <button class="quick-action-btn" data-action="qué es hpf">🔧 HPF</button>${cta}`, analysisResult);
+        }
+
+        // CARACTERÍSTICAS: Peso
+        if (/(^|\s)(peso|weight|cuánto pesa|cuanto pesa|kg|kilogramos)($|\s)/i.test(msg) && msg.length < 40 && !/(total|sistema|rigging)/i.test(msg)) {
+            chatState.lastTopic = 'weight';
+            return formatBotResponse(`⚖️ <strong>Peso de Equipos</strong>\n\n<strong>Peso por tipo:</strong>\n\n<strong>LINE ARRAYS LARGE (por caja):</strong>\n• K2: 56kg\n• Panther: 68kg\n• GSL8: 64kg\n• VTX A12: 55kg\n\n<strong>LINE ARRAYS MEDIUM:</strong>\n• K3: 42kg\n• Kara II: 34kg\n• Leopard: 36kg\n\n<strong>SUBWOOFERS:</strong>\n• KS28: 115kg (pesado pero potente)\n• SB28: 75kg\n• 1100-LFC: 118kg\n\n<strong>Consideraciones de peso:</strong>\n• <strong>Rigging:</strong> Peso total determina truss necesario\n• <strong>Transporte:</strong> Más peso = más trucks\n• <strong>Setup time:</strong> Cajas pesadas = más crew/tiempo\n\n<strong>Factor de seguridad rigging:</strong>\n• Mínimo 5:1 (ejemplo: 500kg array = 2500kg WLL truss)\n\n💡 LiveSync calcula peso total y rigging automáticamente.\n\n<button class="quick-action-btn" data-action="rigging">⚙️ Rigging</button> <button class="quick-action-btn" data-action="mejor line array ligero">🪶 Equipos ligeros</button> <button class="quick-action-btn" data-action="qué es safety margin">🔒 Factor de seguridad</button>${cta}`, analysisResult);
+        }
+
+        // TECNOLOGÍA: AVB
+        if (/(^|\s)(avb|audio video bridging|milan)($|\s)/i.test(msg) && msg.length < 30) {
+            chatState.lastTopic = 'avb';
+            return formatBotResponse(`🌐 <strong>AVB (Audio Video Bridging)</strong>\n\n<strong>Concepto:</strong>\nProtocolo de red para audio/video en tiempo real, alternativa a Dante.\n\n<strong>AVB vs Dante:</strong>\n\n<strong>AVB:</strong>\n• Estándar IEEE abierto\n• Requiere switches AVB certificados\n• Latencia garantizada (<2ms)\n• Meyer Sound, Biamp, QSC\n• MILAN: AVB certificado interoperable\n\n<strong>DANTE:</strong>\n• Protocolo propietario Audinate\n• Switches estándar con QoS\n• Más adoption en touring\n• L-Acoustics, d&b, Yamaha, etc.\n\n<strong>Bandwidth AVB:</strong>\n• Similar a Dante\n• 48kHz/24bit ≈ 1.5 Mbps/canal\n• 96kHz/24bit ≈ 3 Mbps/canal\n\n<strong>Ventajas AVB:</strong>\n• Latencia predecible garantizada\n• Estándar abierto (sin licencias)\n• Sincronización precisa (gPTP)\n\n<strong>Marcas con AVB:</strong>\n• Meyer Sound (MPS-488)\n• Biamp (Tesira)\n• QSC (Q-SYS)\n\n<button class="quick-action-btn" data-action="dante">🌐 Comparar con Dante</button> <button class="quick-action-btn" data-action="qué es sample rate">📊 Sample rate</button> <button class="quick-action-btn" data-action="meyer">🔷 Meyer Sound</button>${cta}`, analysisResult);
+        }
+
+        // ===================================
         // RESPUESTA GENÉRICA CON SUGERENCIAS INTELIGENTES (FASE 2)
         // ===================================
         const smartSuggestions = generateSmartSuggestions(userMessage);
