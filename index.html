@@ -136,7 +136,7 @@
                     <div class="chat-main">
                         <div class="chat-header">
                             <!-- Info button for mobile -->
-                            <button class="sidebar-toggle-btn" id="toggleSidebar" title="Ver información del bot">
+                            <button class="sidebar-toggle-btn" id="toggleSidebar" title="Ver información del bot" aria-label="Ver información del bot">
                                 <i class="fas fa-info-circle"></i>
                             </button>
                             <div class="chat-header-title">
@@ -144,7 +144,7 @@
                                 <span class="chat-status-mobile">🤖 Activo</span>
                             </div>
                             <div class="chat-header-actions">
-                                <button id="clearHistoryBtn" title="Borrar historial de conversación" class="btn-clear-history">
+                                <button id="clearHistoryBtn" title="Borrar historial de conversación" class="btn-clear-history" aria-label="Borrar historial de conversación">
                                     <i class="fas fa-trash-alt"></i> <span class="btn-text">Limpiar chat</span>
                                 </button>
                                 <span class="chat-status">🤖 Bot Activo</span>
@@ -164,6 +164,9 @@
                                 </div>
                             </div>
                         </div>
+                        <button class="scroll-to-bottom" id="scrollToBottom" aria-label="Ir al final del chat">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
                         <div class="chat-input-container">
                             <input type="text" id="chatInput" placeholder="Escribe tu pregunta sobre LiveSync Pro..." maxlength="500" autocomplete="off" />
                             <button id="sendMessage" class="btn-send" aria-label="Enviar mensaje">
