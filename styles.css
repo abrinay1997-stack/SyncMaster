@@ -818,6 +818,11 @@ body {
     color: var(--cyan-400);
 }
 
+/* Ocultar footer cuando la sección de chat está activa */
+#chat.section.active ~ .footer {
+    display: none;
+}
+
 /* Utility Classes */
 .text-gradient {
     background: linear-gradient(to right, var(--cyan-400), var(--purple-500));
@@ -1186,11 +1191,18 @@ body {
         text-align: left;
         background: var(--bg-primary);
         border: 1px solid var(--border-subtle);
+        color: white;
+    }
+
+    .nav-link:hover {
+        color: var(--cyan-400);
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .nav-link.active {
         background: rgba(6, 182, 212, 0.1);
         border-color: var(--cyan-400);
+        color: white;
     }
 
     /* ========================================
