@@ -2002,3 +2002,63 @@ document.addEventListener('scroll', () => {
         header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
     }
 });
+
+// ========================================
+// MOBILE MENU & SIDEBAR CONTROLS
+// ========================================
+
+// Hamburger Menu Toggle
+const hamburgerMenu = document.getElementById('hamburgerMenu');
+const nav = document.querySelector('.nav');
+
+if (hamburgerMenu && nav) {
+    hamburgerMenu.addEventListener('click', () => {
+        hamburgerMenu.classList.toggle('active');
+        nav.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a nav link
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburgerMenu.classList.remove('active');
+            nav.classList.remove('active');
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!hamburgerMenu.contains(e.target) && !nav.contains(e.target)) {
+            hamburgerMenu.classList.remove('active');
+            nav.classList.remove('active');
+        }
+    });
+}
+
+// Chat Sidebar Toggle (Mobile)
+const toggleSidebarBtn = document.getElementById('toggleSidebar');
+const closeSidebarBtn = document.getElementById('closeSidebar');
+const chatSidebar = document.getElementById('chatSidebar');
+
+if (toggleSidebarBtn && chatSidebar) {
+    toggleSidebarBtn.addEventListener('click', () => {
+        chatSidebar.classList.add('active');
+    });
+}
+
+if (closeSidebarBtn && chatSidebar) {
+    closeSidebarBtn.addEventListener('click', () => {
+        chatSidebar.classList.remove('active');
+    });
+}
+
+// Close sidebar when clicking outside (mobile)
+if (chatSidebar) {
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768 &&
+            chatSidebar.classList.contains('active') &&
+            !chatSidebar.contains(e.target) &&
+            !toggleSidebarBtn.contains(e.target)) {
+            chatSidebar.classList.remove('active');
+        }
+    });
+}

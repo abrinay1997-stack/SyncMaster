@@ -40,17 +40,25 @@
                      height="48"
                      style="object-fit: contain;"
                      aria-hidden="true">
-                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <div class="logo-text">
                     <h1>SOPORTE LIVESYNC PRO</h1>
                     <p style="color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; font-weight: 400;">Asistencia Técnica 24/7</p>
                 </div>
             </div>
+
+            <!-- Hamburger Menu Button (Mobile) -->
+            <button class="hamburger-menu" id="hamburgerMenu" aria-label="Menú de navegación">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <nav class="nav" role="navigation" aria-label="Navegación principal">
                 <a href="#inicio" class="nav-link active" data-section="inicio" aria-label="Ir a la página de inicio" aria-current="page">
-                    <i class="fas fa-home" aria-hidden="true"></i> Inicio
+                    <i class="fas fa-home" aria-hidden="true"></i> <span class="nav-text">Inicio</span>
                 </a>
                 <a href="#chat" class="nav-link" data-section="chat" aria-label="Abrir asistente de chat automático">
-                    <i class="fas fa-comments" aria-hidden="true"></i> Chat en Vivo
+                    <i class="fas fa-comments" aria-hidden="true"></i> <span class="nav-text">Chat en Vivo</span>
                 </a>
             </nav>
         </div>
@@ -109,7 +117,11 @@
         <section id="chat" class="section">
             <div class="container">
                 <div class="chat-container">
-                    <div class="chat-sidebar">
+                    <!-- Sidebar (Hidden on mobile by default) -->
+                    <div class="chat-sidebar" id="chatSidebar">
+                        <button class="sidebar-close" id="closeSidebar" aria-label="Cerrar información">
+                            <i class="fas fa-times"></i>
+                        </button>
                         <h3>Asistente Automático</h3>
                         <div class="agent-status">
                             <div class="status-indicator online"></div>
@@ -120,12 +132,20 @@
                             <p style="margin-top: 0.5rem; font-size: 0.85rem;"><i class="fas fa-envelope"></i> Para soporte humano: <a href="mailto:abrinay@livesyncpro.com" style="color: var(--primary-light);">abrinay@livesyncpro.com</a></p>
                         </div>
                     </div>
+
                     <div class="chat-main">
                         <div class="chat-header">
-                            <h3>Asistente Automático - LiveSync Pro</h3>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <button id="clearHistoryBtn" title="Borrar historial de conversación" style="background: none; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 0.4rem 0.8rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem;">
-                                    <i class="fas fa-trash-alt"></i> Limpiar chat
+                            <!-- Info button for mobile -->
+                            <button class="sidebar-toggle-btn" id="toggleSidebar" title="Ver información del bot">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                            <div class="chat-header-title">
+                                <h3>Asistente Automático</h3>
+                                <span class="chat-status-mobile">🤖 Activo</span>
+                            </div>
+                            <div class="chat-header-actions">
+                                <button id="clearHistoryBtn" title="Borrar historial de conversación" class="btn-clear-history">
+                                    <i class="fas fa-trash-alt"></i> <span class="btn-text">Limpiar chat</span>
                                 </button>
                                 <span class="chat-status">🤖 Bot Activo</span>
                             </div>
