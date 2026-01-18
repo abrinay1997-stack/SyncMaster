@@ -1444,6 +1444,109 @@ O dímelo directamente, ej: "delay para 60 metros a 25°C"`, analysisResult);
         }
 
         // ===================================
+        // GLOSARIO TÉCNICO LIVESYNC PRO (NUEVO)
+        // ===================================
+        if (typeof LIVESYNC_GLOSSARY !== 'undefined' && LIVESYNC_GLOSSARY !== null) {
+            // Detectar consultas sobre términos técnicos del glosario
+            if (/(qu[eé] es|que es|explica|explicame|define|definici[oó]n|concepto|t[ée]rmino)/i.test(msg)) {
+                // Extraer el término buscado
+                let searchTerm = null;
+                let foundEntry = null;
+
+                // Buscar directamente en el glosario por coincidencia de claves
+                for (const [key, entry] of Object.entries(LIVESYNC_GLOSSARY)) {
+                    // Normalizar para búsqueda
+                    const normalizedKey = key.toLowerCase();
+                    const normalizedMsg = msg.toLowerCase();
+
+                    // Buscar coincidencia exacta o parcial
+                    if (normalizedMsg.includes(normalizedKey) ||
+                        normalizedMsg.includes(normalizedKey.replace(/ /g, ''))) {
+                        searchTerm = key;
+                        foundEntry = entry;
+                        break;
+                    }
+
+                    // También buscar en términos relacionados
+                    if (entry.relatedTerms) {
+                        for (const relatedTerm of entry.relatedTerms) {
+                            if (normalizedMsg.includes(relatedTerm.toLowerCase())) {
+                                searchTerm = key;
+                                foundEntry = entry;
+                                break;
+                            }
+                        }
+                        if (foundEntry) break;
+                    }
+                }
+
+                // Si encontramos el término, formatear respuesta
+                if (foundEntry && searchTerm) {
+                    chatState.lastTopic = 'glossary-' + searchTerm.replace(/ /g, '-');
+
+                    let response = `${foundEntry.icon || '📖'} <strong>${searchTerm.toUpperCase()}</strong>\n\n`;
+                    response += `<em>${foundEntry.category}</em>\n\n`;
+                    response += `${foundEntry.full}\n\n`;
+
+                    // Agregar fórmula si existe
+                    if (foundEntry.formula) {
+                        response += `<strong>Fórmula:</strong>\n${foundEntry.formula}\n\n`;
+                    }
+
+                    // Agregar rangos si existen
+                    if (foundEntry.ranges) {
+                        response += `<strong>Rangos:</strong>\n`;
+                        for (const [range, description] of Object.entries(foundEntry.ranges)) {
+                            response += `• <strong>${range}:</strong> ${description}\n`;
+                        }
+                        response += '\n';
+                    }
+
+                    // Agregar clasificación si existe (ej: RT60)
+                    if (foundEntry.classification) {
+                        response += `<strong>Clasificación:</strong>\n`;
+                        for (const [range, description] of Object.entries(foundEntry.classification)) {
+                            response += `• <strong>${range}:</strong> ${description}\n`;
+                        }
+                        response += '\n';
+                    }
+
+                    // Agregar directions si existen (ej: dirección del viento)
+                    if (foundEntry.directions) {
+                        response += `<strong>Direcciones:</strong>\n`;
+                        for (const [dir, description] of Object.entries(foundEntry.directions)) {
+                            response += `• <strong>${dir}:</strong> ${description}\n`;
+                        }
+                        response += '\n';
+                    }
+
+                    // Agregar types si existen (ej: ground effect)
+                    if (foundEntry.types) {
+                        response += `<strong>Tipos:</strong>\n`;
+                        for (const [type, description] of Object.entries(foundEntry.types)) {
+                            response += `• <strong>${type}:</strong> ${description}\n`;
+                        }
+                        response += '\n';
+                    }
+
+                    // Agregar ejemplo si existe
+                    if (foundEntry.example) {
+                        response += `<strong>Ejemplo:</strong>\n${foundEntry.example}\n\n`;
+                    }
+
+                    // Agregar términos relacionados
+                    if (foundEntry.relatedTerms && foundEntry.relatedTerms.length > 0) {
+                        response += `💡 <strong>Ver también:</strong> ${foundEntry.relatedTerms.join(', ')}`;
+                    }
+
+                    response += cta;
+
+                    return formatBotResponse(response, analysisResult);
+                }
+            }
+        }
+
+        // ===================================
         // RESPUESTA GENÉRICA CON SUGERENCIAS INTELIGENTES (FASE 2)
         // ===================================
         const smartSuggestions = generateSmartSuggestions(userMessage);
