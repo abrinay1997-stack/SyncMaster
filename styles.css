@@ -818,11 +818,6 @@ body {
     color: var(--cyan-400);
 }
 
-/* Ocultar footer cuando la sección de chat está activa */
-#chat.section.active ~ .footer {
-    display: none;
-}
-
 /* Utility Classes */
 .text-gradient {
     background: linear-gradient(to right, var(--cyan-400), var(--purple-500));
@@ -1419,11 +1414,6 @@ body {
     .footer .container {
         flex-direction: column;
         text-align: center;
-    }
-
-    /* Ocultar inicio section cuando chat está activo */
-    #chat.section.active ~ .footer {
-        display: none;
     }
 
     /* Main content sin padding en chat */
