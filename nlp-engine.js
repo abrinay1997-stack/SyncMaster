@@ -553,35 +553,53 @@ function extractAdvancedEntities(message, speakerDatabase, previousContext = nul
     };
 
     // ===== NLP #5: INFERIR ENTIDADES DEL CONTEXTO PREVIO =====
-    if (previousContext && previousContext.entities) {
-        // Si el mensaje actual no menciona eventType pero el contexto previo sí
-        if (!/(festival|teatro|corporativo|outdoor|indoor)/.test(msg) && previousContext.entities.eventType) {
-            entities.eventType = previousContext.entities.eventType;
-            entities.inferredFromContext.push('eventType');
+    if (previousContext) {
+        // Obtener entidades previas (soporta dos formatos)
+        let prevEntities = null;
+
+        // Formato 1: previousContext.entities (objeto directo)
+        if (previousContext.entities) {
+            prevEntities = previousContext.entities;
+        }
+        // Formato 2: previousContext.turns[] (ConversationContext)
+        else if (previousContext.turns && previousContext.turns.length > 0) {
+            const lastTurn = previousContext.turns[previousContext.turns.length - 1];
+            if (lastTurn.analysis && lastTurn.analysis.entities) {
+                prevEntities = lastTurn.analysis.entities;
+            }
         }
 
-        // Si el mensaje actual no menciona distance pero el contexto previo sí
-        if (!/\d+\s*(m|metro|meter)/.test(msg) && previousContext.entities.distance) {
-            entities.distance = previousContext.entities.distance;
-            entities.inferredFromContext.push('distance');
-        }
+        // Si hay entidades previas, inferir las que faltan
+        if (prevEntities) {
+            // Si el mensaje actual no menciona eventType pero el contexto previo sí
+            if (!/(festival|teatro|corporativo|outdoor|indoor)/.test(msg) && prevEntities.eventType) {
+                entities.eventType = prevEntities.eventType;
+                entities.inferredFromContext.push('eventType');
+            }
 
-        // Si el mensaje actual no menciona people pero el contexto previo sí
-        if (!/\d+\s*(persona|gente|audiencia|public)/.test(msg) && previousContext.entities.people) {
-            entities.people = previousContext.entities.people;
-            entities.inferredFromContext.push('people');
-        }
+            // Si el mensaje actual no menciona distance pero el contexto previo sí
+            if (!/\d+\s*(m|metro|meter)/.test(msg) && prevEntities.distance) {
+                entities.distance = prevEntities.distance;
+                entities.inferredFromContext.push('distance');
+            }
 
-        // Inferir budget del contexto
-        if (previousContext.entities.budget && !/(budget|presupuesto|costo|precio)/.test(msg)) {
-            entities.budget = previousContext.entities.budget;
-            entities.inferredFromContext.push('budget');
-        }
+            // Si el mensaje actual no menciona people pero el contexto previo sí
+            if (!/\d+\s*(persona|gente|audiencia|public)/.test(msg) && prevEntities.people) {
+                entities.people = prevEntities.people;
+                entities.inferredFromContext.push('people');
+            }
 
-        // Inferir venueType del contexto
-        if (previousContext.entities.venueType && entities.eventType === null) {
-            entities.venueType = previousContext.entities.venueType;
-            entities.inferredFromContext.push('venueType');
+            // Inferir budget del contexto
+            if (prevEntities.budget && !/(budget|presupuesto|costo|precio)/.test(msg)) {
+                entities.budget = prevEntities.budget;
+                entities.inferredFromContext.push('budget');
+            }
+
+            // Inferir venueType del contexto
+            if (prevEntities.venueType && entities.eventType === null) {
+                entities.venueType = prevEntities.venueType;
+                entities.inferredFromContext.push('venueType');
+            }
         }
     }
 
@@ -838,13 +856,16 @@ function filterNegatedEntities(message, entities) {
 
 /**
  * Analiza el mensaje del usuario y retorna intent + entidades
+ * @param {string} message - Mensaje del usuario
+ * @param {object} speakerDatabase - Base de datos de modelos
+ * @param {object} previousContext - Contexto conversacional previo (OPCIONAL - para NLP #5)
  */
-function analyzeMessage(message, speakerDatabase) {
+function analyzeMessage(message, speakerDatabase, previousContext = null) {
     // 1. Expandir con sinónimos
     const expandedMessage = expandQuery(message);
 
-    // 2. Extraer entidades
-    let entities = extractAdvancedEntities(message, speakerDatabase);
+    // 2. Extraer entidades (FIX NLP #5: Pasar previousContext)
+    let entities = extractAdvancedEntities(message, speakerDatabase, previousContext);
 
     // 3. Filtrar negaciones
     entities = filterNegatedEntities(message, entities);
