@@ -524,25 +524,41 @@ function initChat() {
     // ========================================
     /**
      * SEGURIDAD: Sanitiza HTML para prevenir XSS
-     * Escapa caracteres peligrosos pero preserva HTML seguro de botones
+     * Preserva etiquetas seguras (strong, em, br, button, a) pero escapa las peligrosas
      */
     function sanitizeHTML(text) {
-        // Preservar botones seguros temporalmente
-        const buttonPlaceholders = [];
-        let sanitized = text.replace(/(<button[^>]*>.*?<\/button>)/g, (match) => {
-            const placeholder = `__BUTTON_${buttonPlaceholders.length}__`;
-            buttonPlaceholders.push(match);
+        // WHITELIST de etiquetas seguras a preservar
+        const safeTags = [];
+
+        // 1. Preservar <button> con atributos
+        let sanitized = text.replace(/(<button[^>]*>.*?<\/button>)/gi, (match) => {
+            const placeholder = `__SAFE_TAG_${safeTags.length}__`;
+            safeTags.push(match);
             return placeholder;
         });
 
-        // Escapar HTML peligroso (excepto placeholders de botones)
+        // 2. Preservar <a> con atributos seguros
+        sanitized = sanitized.replace(/(<a\s+[^>]*href=["'][^"']*["'][^>]*>.*?<\/a>)/gi, (match) => {
+            const placeholder = `__SAFE_TAG_${safeTags.length}__`;
+            safeTags.push(match);
+            return placeholder;
+        });
+
+        // 3. Preservar etiquetas simples seguras: strong, em, br
+        sanitized = sanitized.replace(/(<\/?(?:strong|em|br)\s*\/?>)/gi, (match) => {
+            const placeholder = `__SAFE_TAG_${safeTags.length}__`;
+            safeTags.push(match);
+            return placeholder;
+        });
+
+        // 4. Escapar TODO el HTML restante (etiquetas peligrosas)
         const div = document.createElement('div');
-        div.textContent = sanitized; // Escapa automáticamente HTML
+        div.textContent = sanitized; // Escapa automáticamente script, iframe, etc.
         sanitized = div.innerHTML;
 
-        // Restaurar botones seguros
-        buttonPlaceholders.forEach((button, index) => {
-            sanitized = sanitized.replace(`__BUTTON_${index}__`, button);
+        // 5. Restaurar etiquetas seguras
+        safeTags.forEach((tag, index) => {
+            sanitized = sanitized.replace(`__SAFE_TAG_${index}__`, tag);
         });
 
         return sanitized;
