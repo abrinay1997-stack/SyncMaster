@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
     const sections = document.querySelectorAll('.section');
+    const footer = document.querySelector('.footer');
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -27,6 +28,15 @@ function initNavigation() {
                     section.classList.add('active');
                 }
             });
+
+            // Ocultar footer cuando estamos en chat, mostrarlo en otras secciones
+            if (footer) {
+                if (targetSection === 'chat') {
+                    footer.style.display = 'none';
+                } else {
+                    footer.style.display = 'block';
+                }
+            }
 
             // Actualizar URL sin recargar
             window.history.pushState({}, '', `#${targetSection}`);
