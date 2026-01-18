@@ -804,6 +804,98 @@ function initChat() {
         }
 
         // ===================================
+        // SUGERENCIAS PROACTIVAS INTELIGENTES (NUEVO - MEJORA #4)
+        // ===================================
+        // Detectar queries incompletas y pedir información proactivamente
+
+        // Usuario dice "necesito un line array" o "busco un PA" SIN especificar detalles
+        if (/(necesito|busco|quiero|requiero).*(line array|pa|sistema|speaker|altavoz)/i.test(msg) &&
+            !entities.eventType && !entities.distance && !entities.people) {
+
+            chatState.lastTopic = 'proactive-recommendation';
+
+            const clarificationMsg = typeof getAdaptiveResponse !== 'undefined'
+                ? getAdaptiveResponse('clarification', expertise)
+                : '🎯 Para darte la mejor recomendación, necesito saber:';
+
+            return formatBotResponse(`${clarificationMsg}
+
+<strong>🎪 ¿Para qué tipo de evento?</strong>
+<button class="quick-action-btn" data-action="festival outdoor">🎪 Festival</button>
+<button class="quick-action-btn" data-action="teatro indoor">🎭 Teatro</button>
+<button class="quick-action-btn" data-action="corporativo">🏢 Corporativo</button>
+
+<strong>📏 ¿Qué distancia necesitas cubrir?</strong>
+<button class="quick-action-btn" data-action="necesito sistema para 30 metros">30m</button>
+<button class="quick-action-btn" data-action="necesito sistema para 60 metros">60m</button>
+<button class="quick-action-btn" data-action="necesito sistema para 100 metros">100m</button>
+
+<strong>👥 ¿Cuántas personas aproximadamente?</strong>
+<button class="quick-action-btn" data-action="evento 500 personas">500</button>
+<button class="quick-action-btn" data-action="evento 2000 personas">2000</button>
+<button class="quick-action-btn" data-action="evento 5000 personas">5000</button>
+
+💡 O dime todo junto, ej: "Necesito PA para festival de 3000 personas a 80m"`, analysisResult);
+        }
+
+        // Usuario pregunta "cuál es mejor?" sin contexto
+        if (/(cu[aá]l.*mejor|qu[eé].*recomiend|qu[eé].*conviene)/i.test(msg) &&
+            msg.length < 40 && // Query corta = probablemente incompleta
+            !entities.speakerModels.length &&
+            !entities.eventType) {
+
+            chatState.lastTopic = 'proactive-clarification';
+
+            return formatBotResponse(`🤔 Para recomendarte el mejor equipo, ayúdame con esto:
+
+<strong>¿Qué tipo de equipo buscas?</strong>
+<button class="quick-action-btn" data-action="mejor line array">Line Array</button>
+<button class="quick-action-btn" data-action="mejor subwoofer">Subwoofer</button>
+<button class="quick-action-btn" data-action="mejor monitor">Monitor</button>
+
+<strong>¿Para qué aplicación?</strong>
+<button class="quick-action-btn" data-action="mejor para festival">Festival</button>
+<button class="quick-action-btn" data-action="mejor para teatro">Teatro</button>
+<button class="quick-action-btn" data-action="mejor para corporativo">Corporativo</button>
+
+O pregunta directamente, ej: "Mejor line array para teatro 40m"`, analysisResult);
+        }
+
+        // Usuario pregunta por precio/costo sin especificar qué
+        if (/(cuánto|precio|costo)/i.test(msg) &&
+            msg.length < 25 && // Query muy corta
+            !/(livesync|plan|membres[ií]a|suscripci[oó]n)/i.test(msg)) {
+
+            chatState.lastTopic = 'proactive-pricing';
+
+            return formatBotResponse(`💰 ¿Qué precio necesitas saber?
+
+<strong>Planes de LiveSync Pro:</strong>
+<button class="quick-action-btn" data-action="¿Cuánto cuesta LiveSync Pro?">💰 Ver Planes</button>
+
+<strong>O si buscas precio de equipos:</strong>
+LiveSync Pro es un software de diseño, no vendemos equipos. Pero puedo darte specs de modelos para que cotices con tu proveedor.
+
+¿Qué modelo te interesa? Ej: "specs del K2"`, analysisResult);
+        }
+
+        // Usuario pregunta "cómo calculo..." sin especificar qué
+        if (/(c[oó]mo.*calcul|calcul.*c[oó]mo)/i.test(msg) &&
+            !entities.distance && !entities.channels && msg.length < 35) {
+
+            chatState.lastTopic = 'proactive-calculation';
+
+            return formatBotResponse(`🧮 ¿Qué necesitas calcular?
+
+<button class="quick-action-btn" data-action="calcular delay 50m 20°C">⏱️ Delay (tiempo de alineación)</button>
+<button class="quick-action-btn" data-action="48 canales dante">🌐 Dante Bandwidth</button>
+<button class="quick-action-btn" data-action="calcular potencia">⚡ Potencia Eléctrica</button>
+<button class="quick-action-btn" data-action="calcular rigging">🔗 Carga de Rigging</button>
+
+O dímelo directamente, ej: "delay para 60 metros a 25°C"`, analysisResult);
+        }
+
+        // ===================================
         // PROCESAMIENTO NLP - PREGUNTAS COMPLEJAS (NUEVO)
         // ===================================
 
