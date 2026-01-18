@@ -51,6 +51,11 @@ body {
     color: var(--slate-400);
     background-color: var(--bg-primary);
     min-height: 100vh;
+    /* iOS Safe Areas (notch, home indicator) */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 .container {
@@ -139,6 +144,16 @@ body {
     color: black;
     font-weight: 700;
     border-color: var(--cyan-500);
+}
+
+.nav-link:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+.nav-link:focus-visible {
+    outline: 2px solid var(--cyan-400);
+    outline-offset: 2px;
 }
 
 /* Main Content */
@@ -325,6 +340,16 @@ body {
     border-color: var(--cyan-500);
     transform: translateY(-5px);
     box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.action-card:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+}
+
+.action-card:focus-visible {
+    outline: 2px solid var(--cyan-400);
+    outline-offset: 4px;
 }
 
 .action-card i {
@@ -677,6 +702,11 @@ body {
     transform: scale(0.95);
 }
 
+.btn-send:focus-visible {
+    outline: 2px solid var(--cyan-400);
+    outline-offset: 3px;
+}
+
 /* NUEVO: Estados disabled */
 .btn-send:disabled,
 .chat-input-container input:disabled {
@@ -843,6 +873,11 @@ body {
     transform: scale(0.95);
 }
 
+.quick-action-btn:focus-visible {
+    outline: 2px solid var(--cyan-400);
+    outline-offset: 2px;
+}
+
 .message.bot .message-content .quick-action-btn {
     background: rgba(6, 182, 212, 0.2);
     color: var(--cyan-400);
@@ -949,15 +984,67 @@ body {
     transform: rotate(-45deg) translate(7px, -6px);
 }
 
-/* Sidebar toggle button (Mobile) */
+.hamburger-menu:focus-visible {
+    outline: 2px solid var(--cyan-400);
+    outline-offset: 4px;
+    border-radius: 0.25rem;
+}
+
+/* Scroll to bottom button */
+.scroll-to-bottom {
+    position: absolute;
+    bottom: 5.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--cyan-500);
+    color: black;
+    border: none;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+    transition: all 0.3s ease;
+    z-index: 100;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.scroll-to-bottom.visible {
+    display: flex;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.scroll-to-bottom:hover {
+    background: var(--cyan-400);
+    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.5);
+    transform: scale(1.05);
+}
+
+.scroll-to-bottom:active {
+    transform: scale(0.95);
+}
+
+.scroll-to-bottom:focus-visible {
+    outline: 2px solid var(--cyan-400);
+    outline-offset: 3px;
+}
+
+/* Sidebar toggle button (Mobile) - Touch target 44px */
 .sidebar-toggle-btn {
     display: none;
     background: none;
     border: none;
     color: var(--cyan-400);
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     cursor: pointer;
     padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
     transition: var(--transition);
 }
 
@@ -965,7 +1052,18 @@ body {
     color: var(--cyan-500);
 }
 
-/* Sidebar close button */
+.sidebar-toggle-btn:active {
+    transform: scale(0.9);
+    color: var(--cyan-400);
+}
+
+.sidebar-toggle-btn:focus-visible {
+    outline: 2px solid var(--cyan-400);
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+}
+
+/* Sidebar close button - Touch target 44px */
 .sidebar-close {
     display: none;
     position: absolute;
@@ -974,17 +1072,27 @@ body {
     background: rgba(239, 68, 68, 0.1);
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: var(--red-500);
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 1rem;
     transition: var(--transition);
     z-index: 10;
 }
 
 .sidebar-close:hover {
     background: rgba(239, 68, 68, 0.2);
+}
+
+.sidebar-close:active {
+    transform: scale(0.9);
+    background: rgba(239, 68, 68, 0.3);
+}
+
+.sidebar-close:focus-visible {
+    outline: 2px solid var(--red-500);
+    outline-offset: 3px;
 }
 
 /* Chat header title (Mobile) */
@@ -1128,6 +1236,13 @@ body {
         border-radius: 0;
         border: none;
         border-top: 1px solid var(--border-medium);
+        position: relative;
+    }
+
+    /* Scroll to bottom button on mobile */
+    .scroll-to-bottom {
+        bottom: 4.5rem;
+        right: 1rem;
     }
 
     /* Chat header compacto */
@@ -1170,12 +1285,18 @@ body {
         padding: 0.5rem;
         border-radius: 0.375rem;
         cursor: pointer;
-        font-size: 0.875rem;
+        font-size: 1rem;
         transition: all 0.2s;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-width: 36px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .btn-clear-history:active {
+        transform: scale(0.9);
+        background: rgba(239, 68, 68, 0.1);
     }
 
     /* Chat messages - Más espacio */
@@ -1215,12 +1336,15 @@ body {
     }
 
     .message-time {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
+        color: var(--slate-400);
+        opacity: 0.9;
     }
 
     /* Chat input - Fixed bottom tipo WhatsApp */
     .chat-input-container {
         padding: 0.75rem 1rem;
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         background: var(--bg-card);
         border-top: 1px solid var(--border-medium);
         gap: 0.5rem;
@@ -1239,21 +1363,30 @@ body {
         border-radius: 50%;
     }
 
-    /* Quick action buttons más pequeños */
+    /* Quick action buttons - Touch targets mínimos 44px */
     .quick-action-btn {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* Feedback buttons más compactos */
+    /* Feedback buttons - Touch targets mínimos 44px */
     .feedback-buttons {
         margin-top: 0.5rem;
         gap: 0.5rem;
     }
 
     .feedback-btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
     /* ========================================

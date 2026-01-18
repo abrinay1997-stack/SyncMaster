@@ -2062,3 +2062,71 @@ if (chatSidebar) {
         }
     });
 }
+
+// ========================================
+// SCROLL TO BOTTOM BUTTON
+// ========================================
+
+const scrollToBottomBtn = document.getElementById('scrollToBottom');
+
+// Function to check if user is at bottom of chat
+function isAtBottom() {
+    const threshold = 100; // pixels from bottom
+    return chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < threshold;
+}
+
+// Show/hide scroll-to-bottom button based on scroll position
+if (chatMessages && scrollToBottomBtn) {
+    chatMessages.addEventListener('scroll', () => {
+        if (isAtBottom()) {
+            scrollToBottomBtn.classList.remove('visible');
+        } else {
+            scrollToBottomBtn.classList.add('visible');
+        }
+    });
+
+    // Click handler to scroll to bottom
+    scrollToBottomBtn.addEventListener('click', () => {
+        chatMessages.scrollTo({
+            top: chatMessages.scrollHeight,
+            behavior: 'smooth'
+        });
+    });
+}
+
+// ========================================
+// KEYBOARD HANDLING (Mobile)
+// ========================================
+
+const chatInput = document.getElementById('chatInput');
+
+// Auto-scroll when keyboard appears (focus on input)
+if (chatInput && chatMessages) {
+    chatInput.addEventListener('focus', () => {
+        // Small delay to wait for keyboard animation
+        setTimeout(() => {
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 300);
+    });
+
+    // Handle viewport resize (keyboard open/close)
+    let lastHeight = window.innerHeight;
+    window.addEventListener('resize', () => {
+        const currentHeight = window.innerHeight;
+
+        // Keyboard opened (viewport shrank)
+        if (currentHeight < lastHeight && document.activeElement === chatInput) {
+            setTimeout(() => {
+                chatMessages.scrollTo({
+                    top: chatMessages.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+
+        lastHeight = currentHeight;
+    });
+}
