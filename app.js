@@ -14,8 +14,15 @@ function initNavigation() {
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
             const targetSection = link.getAttribute('data-section');
+
+            // Si el enlace no tiene data-section (enlaces externos), dejar que funcione normalmente
+            if (!targetSection) {
+                return;
+            }
+
+            // Solo prevenir comportamiento por defecto en enlaces internos
+            e.preventDefault();
 
             // Actualizar enlaces activos
             navLinks.forEach(l => l.classList.remove('active'));
