@@ -1,0 +1,55 @@
+# Configuración de Netlify para Soporte LiveSync Pro
+
+[build]
+  # Directorio de publicación (root porque todos los archivos están en raíz)
+  publish = "."
+
+  # No hay comando de build porque es un sitio estático
+  command = ""
+
+[build.environment]
+  # Variables de entorno (si fueran necesarias)
+  NODE_VERSION = "18"
+
+# Headers de seguridad
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Cache para assets estáticos
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML sin cache para actualizaciones inmediatas
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Redirecciones (todas las rutas van a index.html para SPA)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+  # No aplicar redirección a archivos existentes
+  conditions = {fileExtension = "!js,!css,!html,!png,!jpg,!jpeg,!gif,!svg,!ico,!woff,!woff2,!ttf,!eot"}
+
+# Configuración de errores
+[[redirects]]
+  from = "/404"
+  to = "/index.html"
+  status = 404

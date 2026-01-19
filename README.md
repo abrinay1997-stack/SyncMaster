@@ -115,6 +115,50 @@ Sí, SyncMaster está optimizado para funcionar en móviles, tablets y desktop.
 
 ---
 
+## 🚀 Despliegue en Netlify
+
+Este proyecto está listo para ser desplegado en Netlify. Sigue estos pasos:
+
+### Método 1: Despliegue Automático desde GitHub
+
+1. **Sube el repositorio a GitHub** (si aún no lo has hecho)
+2. Ve a [Netlify](https://app.netlify.com/)
+3. Haz clic en "Add new site" → "Import an existing project"
+4. Conecta tu cuenta de GitHub
+5. Selecciona este repositorio
+6. **Configuración del build**:
+   - Build command: (dejar vacío)
+   - Publish directory: `.` (punto)
+7. Haz clic en "Deploy site"
+
+### Método 2: Despliegue Manual (Drag & Drop)
+
+1. Ve a [Netlify](https://app.netlify.com/)
+2. Haz clic en "Add new site" → "Deploy manually"
+3. Arrastra la carpeta del proyecto completa
+4. Espera a que se complete el despliegue
+
+### Configuración Incluida
+
+El proyecto incluye:
+- ✅ `netlify.toml` - Configuración de Netlify con headers de seguridad
+- ✅ `_redirects` - Reglas de redirección para SPA
+- ✅ `.gitignore` - Archivos a ignorar en Git
+
+### Después del Despliegue
+
+Una vez desplegado:
+- Tu sitio estará disponible en: `https://[nombre-aleatorio].netlify.app`
+- Puedes configurar un dominio personalizado desde el panel de Netlify
+- Los cambios que hagas en GitHub se desplegarán automáticamente
+
+### Requisitos
+
+- Cuenta gratuita de Netlify (no requiere tarjeta de crédito)
+- Repositorio en GitHub/GitLab/Bitbucket (opcional, para despliegue automático)
+
+---
+
 Desarrollado para proporcionar soporte automatizado a usuarios de LiveSync Pro
 
 **Última actualización**: Enero 2026

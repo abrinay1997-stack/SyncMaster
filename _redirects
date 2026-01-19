@@ -1,0 +1,4 @@
+# Netlify Redirects
+# Todas las rutas van a index.html para soportar navegación SPA
+
+/*    /index.html   200
