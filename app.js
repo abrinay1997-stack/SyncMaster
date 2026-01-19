@@ -2117,6 +2117,13 @@ function initQuickActions() {
     actionCards.forEach(card => {
         card.addEventListener('click', () => {
             const action = card.getAttribute('data-action');
+
+            // Manejo especial para manuales
+            if (action === 'manuals') {
+                showNotification('📚 Los manuales estarán disponibles próximamente', 'info');
+                return;
+            }
+
             const navLink = document.querySelector(`[data-section="${action}"]`);
 
             if (navLink) {

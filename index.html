@@ -54,6 +54,9 @@
             </button>
 
             <nav class="nav" role="navigation" aria-label="Navegación principal">
+                <a href="https://livesyncpro.com/" class="nav-link" aria-label="Volver a LiveSync Pro" target="_blank" rel="noopener noreferrer" style="color: var(--primary-light);">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i> <span class="nav-text">LiveSync Pro</span>
+                </a>
                 <a href="#inicio" class="nav-link active" data-section="inicio" aria-label="Ir a la página de inicio" aria-current="page">
                     <i class="fas fa-home" aria-hidden="true"></i> <span class="nav-text">Inicio</span>
                 </a>
@@ -72,18 +75,6 @@
                 <div class="hero">
                     <h2 style="background: linear-gradient(to right, rgb(34 211 238), rgb(168 85 247)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Bienvenido a Soporte LiveSync Pro</h2>
                     <p class="subtitle">Centro de Soporte Técnico y Atención al Cliente para LiveSync Pro</p>
-                    <div class="hero-stats">
-                        <div class="stat-card">
-                            <i class="fas fa-clock"></i>
-                            <h3>24/7</h3>
-                            <p>Soporte Disponible</p>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-bolt"></i>
-                            <h3>&lt;15min</h3>
-                            <p>Tiempo de Respuesta</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="quick-actions">
@@ -93,6 +84,11 @@
                             <i class="fas fa-comments"></i>
                             <h4>Chat en Vivo</h4>
                             <p>Habla con nuestro asistente automático</p>
+                        </button>
+                        <button class="action-card" data-action="manuals">
+                            <i class="fas fa-book"></i>
+                            <h4>Manuales</h4>
+                            <p>Consulta la documentación oficial</p>
                         </button>
                     </div>
                 </div>
@@ -145,7 +141,7 @@
                             </div>
                             <div class="chat-header-actions">
                                 <button id="clearHistoryBtn" title="Borrar historial de conversación" class="btn-clear-history" aria-label="Borrar historial de conversación">
-                                    <i class="fas fa-trash-alt"></i> <span class="btn-text">Limpiar chat</span>
+                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                                 <span class="chat-status">🤖 Bot Activo</span>
                             </div>
