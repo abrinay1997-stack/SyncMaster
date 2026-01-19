@@ -14,6 +14,12 @@ const KNOWLEDGE_BASE = {
             proTip: "Mida siempre la temperatura en el FOH a la sombra. Un sensor al sol puede dar +5°C de error.",
             formula: "c = 331.3 + 0.6 * T (m/s)"
         },
+        altitude: {
+            basic: "La altitud geográfica afecta la presión atmosférica y la densidad del aire. A mayor altura, el aire es menos denso.",
+            advanced: "Por cada 1000m de altura, la presión cae ~12%. Esto afecta: la impedancia acústica del aire, la eficiencia de radiación de los drivers, y la potencia térmica disipada. A 2500m (Ciudad de México), espera ~2dB menos SPL que al nivel del mar.",
+            proTip: "En altitudes >1500m, aumenta el headroom de amplificadores un 20% para compensar pérdida de eficiencia.",
+            effect: "~2dB de pérdida por cada 2500m de altitud"
+        },
         humidity: {
             basic: "La humedad afecta qué tan lejos viajan los sonidos agudos. Aire muy seco = el sonido muere rápido.",
             advanced: "El aire húmedo es menos denso que el aire seco (H2O es más ligero que N2/O2). Con humedad <30%, la atenuación a 10kHz puede superar 1dB por cada 30 metros.",
@@ -50,6 +56,16 @@ const KNOWLEDGE_BASE = {
                 monoCenter: "Sistema mono central (corporativos, discursos)"
             }
         },
+        trimHeight: {
+            basic: "La altura a la que cuelgas el array afecta la cobertura y el sonido que llega al público.",
+            advanced: "Trim height típico: 8-12m para festivales, 6-8m para teatros. Altura excesiva (>15m) dificulta apuntar a primeras filas. Altura baja (<6m) limita throw y crea obstrucciones visuales. La altura define el ángulo de apuntamiento inicial.",
+            proTip: "Regla de oro: Trim = 1.5x distancia a primera fila. Para FOH a 30m, trim ~8-10m es ideal.",
+            ranges: {
+                festival: "8-12m",
+                teatro: "6-8m",
+                corporativo: "4-6m"
+            }
+        },
         splayAngles: {
             basic: "La curvatura de la banana. Si está muy recta (0°), dispara lejos como un láser. Si está muy curva, abre el sonido.",
             advanced: "Los ángulos determinan la cobertura vertical y la suma de componentes. Ángulos pequeños (0-1°) crean suma coherente para largo alcance. Ángulos grandes desacoplan las fuentes para corto alcance.",
@@ -72,6 +88,72 @@ const KNOWLEDGE_BASE = {
                     max: "50m"
                 }
             }
+        },
+        venueTypes: {
+            basic: "El tipo de recinto define las condiciones acústicas y la estrategia de diseño del sistema.",
+            advanced: "Cada tipo de venue presenta desafíos únicos: Indoor cerrado (reflexiones, modos propios), Outdoor open air (pérdida HF, viento, sin reflexiones), Carpa/Cubierto (mix de ambos, reflexiones de techo pero sin paredes laterales).",
+            types: {
+                indoorCerrado: {
+                    description: "Espacios cerrados con paredes y techo",
+                    challenges: "Reflexiones tempranas, modos propios, reverberación",
+                    considerations: "Control direccional crítico, tratamiento acústico necesario, RT60 <2s ideal"
+                },
+                outdoorOpenAir: {
+                    description: "Espacios abiertos sin techo ni paredes",
+                    challenges: "Pérdida de HF por distancia, viento, temperatura variable",
+                    considerations: "Máximo SPL necesario, wind covers en micrófonos, delay towers esenciales"
+                },
+                carpaCubierto: {
+                    description: "Estructuras temporales con techo pero abiertos lateralmente",
+                    challenges: "Reflexiones de techo, pérdida lateral de energía",
+                    considerations: "Altura de trim limitada, apuntamiento crítico para evitar techo"
+                }
+            },
+            proTip: "En carpas, siempre verifica la altura disponible antes de diseñar. Muchas tienen solo 6-8m de clearance."
+        },
+        audienceControl: {
+            basic: "El control de aforo y distribución del público afecta directamente el diseño del sistema de audio.",
+            advanced: "La densidad de público cambia la absorción acústica (~0.9 sabins/persona). Áreas de alta densidad actúan como 'trampa' de HF. La distribución define zonas de cobertura y necesidad de fills. El movimiento del público durante el show puede cambiar la acústica +3dB.",
+            proTip: "Diseña para venue al 80% lleno, no vacío. Un teatro vacío suena completamente diferente lleno.",
+            effects: {
+                absorption: "~0.9 sabins por persona",
+                hfLoss: "Audiencia absorbe >50% de energía >4kHz",
+                distribution: "Define zonas de cobertura y necesidad de fills"
+            }
+        },
+        stageLayout: {
+            basic: "La configuración del escenario define la posición del PA, subs, y zonas de cobertura.",
+            advanced: "Layouts comunes: PROSCENIO (teatro tradicional, PA a los lados), THRUST (escenario saliente, requiere outfills laterales), IN-THE-ROUND (360°, múltiples PAs o distributed system), FESTIVAL (escenario amplio, L/R standard).",
+            proTip: "En thrust stages, los outfills son OBLIGATORIOS. El público lateral no recibe cobertura del PA principal.",
+            types: {
+                proscenio: "Escenario tradicional, PA L/R estándar",
+                thrust: "Escenario saliente, requiere outfills y frontfills",
+                inTheRound: "Escenario central 360°, sistema distribuido",
+                festival: "Escenario amplio abierto, configuración L/R clásica"
+            }
+        },
+        fills: {
+            frontfills: {
+                basic: "Altavoces pequeños que cubren las primeras filas donde el PA principal 'pasa por encima'.",
+                advanced: "Típicamente: altavoces punto-fuente (12\", 8\") con cobertura 90°x50°. Montaje: en el lip del escenario o en el piso. Delay crítico: alinear con PA principal para evitar comb filtering. Nivel: -6dB respecto al PA en zona de transición.",
+                proTip: "Los frontfills NO son para 'más volumen'. Son para recuperar HF perdido por geometría del array.",
+                models: "L-Acoustics X8, X12 / d&b E8, E12 / Meyer MM-4XP",
+                placement: "Lip de escenario o piso, cada 4-6m",
+                delayTip: "Alinea fase en 1-3kHz donde se cruza con PA principal"
+            },
+            outfills: {
+                basic: "Sistemas laterales que cubren público fuera del eje horizontal del PA principal (zonas laterales).",
+                advanced: "Necesarios en: escenarios thrust, venues anchos (>40m), configuraciones asimétricas. Pueden ser line arrays pequeños (4-6 cajas) o punto-fuente potentes. Delay crítico: suma con PA principal en zona de traslape.",
+                proTip: "En teatro, los outfills previenen 'agujeros' en balcones laterales donde el PA L/R no llega.",
+                models: "Line arrays: Kara, SB18 / Punto fuente: d&b E12, Meyer UPA",
+                when: "Venues >40m ancho, thrust stages, balcones laterales"
+            },
+            subwooferIndividual: {
+                basic: "Un subwoofer individual (no en array) para refuerzo de graves en zonas específicas.",
+                advanced: "Uso: refuerzo bajo DJ booth, fills de graves bajo balcón, zonas VIP. Problema: en LF (<100Hz) es difícil controlar dirección, puede causar cancelaciones con sub array principal. Solución: delay cuidadoso y verificación de fase.",
+                proTip: "Evita subs individuales sueltos. Si necesitas cobertura zonal, usa arrays compactos (2-4 subs) con topología cardioid.",
+                applications: "DJ booth, bajo balcón, VIP con necesidad de extra LF"
+            }
         }
     },
 
@@ -87,6 +169,16 @@ const KNOWLEDGE_BASE = {
             basic: "No pongas la torre al 100% de volumen. Debe mezclarse suavemente con el sonido que viene del escenario.",
             advanced: "El nivel de la torre debe ser solo 2-3dB por encima del PA principal en el punto de escucha de la torre para una transición sin problemas. Nivel excesivo colapsa el efecto Haas.",
             recommendation: "2-3dB por encima del PA principal"
+        },
+        psychoacousticOffset: {
+            basic: "Un pequeño 'empuje' adicional de tiempo (5-15ms) que se agrega al delay calculado físicamente para que suene más natural.",
+            advanced: "El offset psicoacústico compensa la percepción humana de localización. Valores típicos: +10ms para delay towers (refuerza precedencia del PA principal), +5ms para frontfills (integración suave). Sin offset, el sistema puede sonar 'plano' o crear confusión de localización espacial.",
+            proTip: "Empieza con +10ms en delay towers. Si el público reporta que 'el sonido viene de atrás', reduce a +5ms.",
+            typical: {
+                delayTowers: "+10ms (refuerza precedencia)",
+                frontfills: "+5ms (integración)",
+                outfills: "+7ms (balance lateral)"
+            }
         }
     },
 
@@ -273,6 +365,51 @@ const KNOWLEDGE_BASE = {
                 standard: "12 AWG",
                 subOver30m: "8 AWG o 4 AWG"
             }
+        },
+        operatingMode: {
+            basic: "El modo de operación eléctrica define cómo distribuyes la potencia: monofásica (120V/220V simple) o trifásica (3 fases balanceadas).",
+            advanced: "MONOFÁSICA: Cargas pequeñas (<10kW), instalaciones simples, desbalance no crítico. TRIFÁSICA: Sistemas grandes (>15kW), distribución eficiente, 3 líneas (L1/L2/L3) + Neutro + Tierra. Balance crítico: desbalance >20% genera corriente de retorno en neutro (zumbido).",
+            proTip: "En sistemas >20 amplificadores, trifásica es OBLIGATORIA. Distribuye racks uniformemente entre fases.",
+            types: {
+                monofasica: {
+                    description: "Una fase (120V o 220V)",
+                    ideal: "Cargas <10kW, instalaciones pequeñas",
+                    limitation: "Limitado por amperaje de línea única"
+                },
+                trifasica: {
+                    description: "Tres fases balanceadas (L1/L2/L3)",
+                    ideal: "Cargas >15kW, sistemas grandes",
+                    advantage: "Capacidad triple, distribución eficiente",
+                    balanceRule: "Mantén desbalance <20% entre fases"
+                }
+            }
+        },
+        speakerCableGauge: {
+            basic: "El calibre (grosor) del cable que conecta amplificador a altavoz. Cable delgado = pérdida de potencia y sonido débil.",
+            advanced: "La resistencia del cable (Ohms/metro) roba potencia y reduce el damping factor. Para mantener DF>100, la resistencia del cable debe ser <0.04Ω (1% de impedancia de 4Ω). A 30m, 12 AWG = 0.15Ω (inaceptable). Usa 8 AWG o mejor.",
+            proTip: "REGLA: 12 AWG hasta 15m, 10 AWG hasta 30m, 8 AWG hasta 50m, 4 AWG para >50m o subwoofers de alta potencia.",
+            recommendations: {
+                upTo15m: "12 AWG (3.3 mm²)",
+                upTo30m: "10 AWG (5.3 mm²)",
+                upTo50m: "8 AWG (8.4 mm²)",
+                over50m: "4 AWG (21.1 mm²) - especialmente para subs"
+            },
+            warning: "Cable inadecuado puede causar pérdida de 1-3dB SPL en subwoofers"
+        },
+        physicalGround: {
+            basic: "La conexión física a tierra (ground) que protege el equipo y elimina zumbidos. Tierra mala = ruido y peligro eléctrico.",
+            advanced: "Tierra física verificada significa: continuidad <1Ω entre chasis y barra de tierra, sin loops de tierra (ground loops), resistencia tierra-neutral <5Ω. Ground loops causan zumbido 60Hz (50Hz en Europa). Usa tierra 'star' (única) o aisladores en consolas de invitados.",
+            proTip: "SIEMPRE verifica tierra con multímetro antes de conectar PA. Tierra flotante puede matar.",
+            verification: {
+                resistance: "<1Ω chasis a barra de tierra",
+                groundToNeutral: "<5Ω (verifica con multímetro)",
+                noLoops: "Evita múltiples caminos a tierra"
+            },
+            troubleshooting: {
+                hum60Hz: "Ground loop - desconecta tierras de señal excepto en FOH",
+                floatingGround: "PELIGRO - No conectes PA hasta resolver",
+                highResistance: ">5Ω indica tierra deficiente - solicita electricista"
+            }
         }
     },
 
@@ -288,6 +425,19 @@ const KNOWLEDGE_BASE = {
                 fiber: ">100m, inmune a EMI",
                 cat6: "Limitado a 100m"
             }
+        },
+        driveProcessor: {
+            basic: "Procesador de sistema (System Drive Processor) que controla EQ, delay, crossover y limitación de todo el PA.",
+            advanced: "El Drive Processor es la matriz central: recibe señal de FOH, aplica EQ/delay/crossover/limiting por zona (PA L/R, Subs, Fills, Delays), y envía señal procesada a amplificadores. Tipos: Lake LM44/26 (industria estándar), XTA DP448 (touring), BSS BLU (instalación), Meyer Galaxy (integrado), L-Acoustics P1 (AVB nativo).",
+            proTip: "El procesador es tu 'firewall'. NUNCA bypasees limiters en el procesador, incluso si el artista pide 'más volumen'.",
+            features: [
+                "EQ global por zona (PA/Subs/Fills)",
+                "Delays de alineación acústica",
+                "Crossovers activos (LF/HF splits)",
+                "Limiters de protección",
+                "Matrix routing (FOH + Guest consoles)"
+            ],
+            topology: "FOH Console → Drive Processor → Amplifiers → Speakers"
         },
         processors: {
             list: [

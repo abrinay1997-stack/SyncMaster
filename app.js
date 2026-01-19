@@ -1470,6 +1470,101 @@ O dímelo directamente, ej: "delay para 60 metros a 25°C"`, analysisResult);
         }
 
         // ===================================
+        // NUEVOS HANDLERS - TÉRMINOS ADICIONALES
+        // ===================================
+
+        // ALTITUD GEOGRÁFICA
+        if (/(altitud|altura.*geogr[aá]fica|elevaci[oó]n|sobre.*nivel.*mar|presi[oó]n.*atmosf[eé]rica)/.test(msg) && msg.length < 60) {
+            chatState.lastTopic = 'altitude';
+            return formatBotResponse(`⛰️ <strong>Altitud Geográfica</strong>\n\n${KNOWLEDGE_BASE.environmental.altitude.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.environmental.altitude.advanced}\n\n<strong>Efecto:</strong> ${KNOWLEDGE_BASE.environmental.altitude.effect}\n\n💡 ${KNOWLEDGE_BASE.environmental.altitude.proTip}${cta}`, analysisResult);
+        }
+
+        // OFFSET PSICOACÚSTICO
+        if (/(offset.*psicoac[uú]stico|psychoacoustic.*offset|delay.*adicional|empuje.*temporal)/.test(msg)) {
+            chatState.lastTopic = 'psychoacoustic-offset';
+            return formatBotResponse(`🧠 <strong>Offset Psicoacústico</strong>\n\n${KNOWLEDGE_BASE.delayAlignment.psychoacousticOffset.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.delayAlignment.psychoacousticOffset.advanced}\n\n<strong>Valores típicos:</strong>\n• Delay towers: ${KNOWLEDGE_BASE.delayAlignment.psychoacousticOffset.typical.delayTowers}\n• Frontfills: ${KNOWLEDGE_BASE.delayAlignment.psychoacousticOffset.typical.frontfills}\n• Outfills: ${KNOWLEDGE_BASE.delayAlignment.psychoacousticOffset.typical.outfills}\n\n💡 ${KNOWLEDGE_BASE.delayAlignment.psychoacousticOffset.proTip}${cta}`, analysisResult);
+        }
+
+        // TIPO DE RECINTOS
+        if (/(tipo.*recinto|venue.*type|indoor.*cerrado|outdoor.*open.*air|carpa.*cubierto|espacios.*abiertos|salas.*cerradas)/.test(msg) && msg.length < 80) {
+            chatState.lastTopic = 'venue-types';
+            const types = KNOWLEDGE_BASE.systemConfig.venueTypes.types;
+            return formatBotResponse(`🏛️ <strong>Tipos de Recintos</strong>\n\n${KNOWLEDGE_BASE.systemConfig.venueTypes.basic}\n\n<strong>INDOOR CERRADO:</strong>\n${types.indoorCerrado.description}\n• Desafíos: ${types.indoorCerrado.challenges}\n• Consideraciones: ${types.indoorCerrado.considerations}\n\n<strong>OUTDOOR OPEN AIR:</strong>\n${types.outdoorOpenAir.description}\n• Desafíos: ${types.outdoorOpenAir.challenges}\n• Consideraciones: ${types.outdoorOpenAir.considerations}\n\n<strong>CARPA/CUBIERTO:</strong>\n${types.carpaCubierto.description}\n• Desafíos: ${types.carpaCubierto.challenges}\n• Consideraciones: ${types.carpaCubierto.considerations}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.venueTypes.proTip}${cta}`, analysisResult);
+        }
+
+        // CONTROL DE OCUPACIÓN Y PÚBLICO
+        if (/(control.*ocupaci[oó]n|control.*p[uú]blico|aforo|densidad.*audiencia|distribuci[oó]n.*p[uú]blico)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'audience-control';
+            return formatBotResponse(`👥 <strong>Control de Ocupación y Público</strong>\n\n${KNOWLEDGE_BASE.systemConfig.audienceControl.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.audienceControl.advanced}\n\n<strong>Efectos clave:</strong>\n• Absorción: ${KNOWLEDGE_BASE.systemConfig.audienceControl.effects.absorption}\n• Pérdida HF: ${KNOWLEDGE_BASE.systemConfig.audienceControl.effects.hfLoss}\n• Distribución: ${KNOWLEDGE_BASE.systemConfig.audienceControl.effects.distribution}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.audienceControl.proTip}${cta}`, analysisResult);
+        }
+
+        // LAYOUT DEL ESCENARIO
+        if (/(layout.*escenario|configuraci[oó]n.*escenario|stage.*layout|proscenio|thrust.*stage|in.*the.*round)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'stage-layout';
+            const types = KNOWLEDGE_BASE.systemConfig.stageLayout.types;
+            return formatBotResponse(`🎭 <strong>Layout del Escenario</strong>\n\n${KNOWLEDGE_BASE.systemConfig.stageLayout.basic}\n\n<strong>Tipos:</strong>\n• <strong>Proscenio:</strong> ${types.proscenio}\n• <strong>Thrust:</strong> ${types.thrust}\n• <strong>In-the-Round:</strong> ${types.inTheRound}\n• <strong>Festival:</strong> ${types.festival}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.stageLayout.advanced}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.stageLayout.proTip}${cta}`, analysisResult);
+        }
+
+        // ALTURA ARRAY / TRIM HEIGHT
+        if (/(altura.*array|trim.*height|altura.*colgar|cu[aá]nto.*alto.*array|hang.*height)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'trim-height';
+            const ranges = KNOWLEDGE_BASE.systemConfig.trimHeight.ranges;
+            return formatBotResponse(`📏 <strong>Altura Array (Trim Height)</strong>\n\n${KNOWLEDGE_BASE.systemConfig.trimHeight.basic}\n\n<strong>Rangos típicos:</strong>\n• Festival: ${ranges.festival}\n• Teatro: ${ranges.teatro}\n• Corporativo: ${ranges.corporativo}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.trimHeight.advanced}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.trimHeight.proTip}${cta}`, analysisResult);
+        }
+
+        // SUBWOOFER (individual, no array)
+        if (/(^|\s)subwoofer($|\s)/i.test(msg) && !/(array|arreglo|cardioid|end.*fire|omni)/i.test(msg) && msg.length < 60) {
+            chatState.lastTopic = 'subwoofer-individual';
+            return formatBotResponse(`🔊 <strong>Subwoofer Individual</strong>\n\n${KNOWLEDGE_BASE.systemConfig.fills.subwooferIndividual.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.subwooferIndividual.advanced}\n\n<strong>Aplicaciones:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.subwooferIndividual.applications}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.fills.subwooferIndividual.proTip}${cta}`, analysisResult);
+        }
+
+        // FRONTFILLS
+        if (/(frontfill|front.*fill|fill.*frontal|cobertura.*frontal|primeras.*filas)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'frontfills';
+            return formatBotResponse(`🎯 <strong>Frontfills</strong>\n\n${KNOWLEDGE_BASE.systemConfig.fills.frontfills.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.frontfills.advanced}\n\n<strong>Modelos típicos:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.frontfills.models}\n\n<strong>Ubicación:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.frontfills.placement}\n\n<strong>Delay:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.frontfills.delayTip}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.fills.frontfills.proTip}${cta}`, analysisResult);
+        }
+
+        // OUTFILLS
+        if (/(outfill|out.*fill|fill.*lateral|cobertura.*lateral|zonas.*laterales)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'outfills';
+            return formatBotResponse(`↔️ <strong>Outfills</strong>\n\n${KNOWLEDGE_BASE.systemConfig.fills.outfills.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.outfills.advanced}\n\n<strong>Modelos típicos:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.outfills.models}\n\n<strong>Cuándo usar:</strong> ${KNOWLEDGE_BASE.systemConfig.fills.outfills.when}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.fills.outfills.proTip}${cta}`, analysisResult);
+        }
+
+        // ÁNGULOS DE SEPARACIÓN (alias de Splay ya existente, pero con patrón adicional)
+        if (/([aá]ngulo.*separaci[oó]n|separaci[oó]n.*cajas|inter.*cabinet.*angle)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'splay';
+            return formatBotResponse(`📐 <strong>Ángulos de Separación (Splay)</strong>\n\n${KNOWLEDGE_BASE.systemConfig.splayAngles.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.systemConfig.splayAngles.advanced}\n\n💡 ${KNOWLEDGE_BASE.systemConfig.splayAngles.proTip}${cta}`, analysisResult);
+        }
+
+        // DRIVE PROCESSOR
+        if (/(drive.*processor|procesador.*sistema|system.*processor|matriz.*gesti[oó]n|lake|galaxy|xta)/.test(msg) && msg.length < 70 && !/(dante|avb|bandwidth)/i.test(msg)) {
+            chatState.lastTopic = 'drive-processor';
+            return formatBotResponse(`🎛️ <strong>Drive Processor</strong>\n\n${KNOWLEDGE_BASE.foh.driveProcessor.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.foh.driveProcessor.advanced}\n\n<strong>Funciones principales:</strong>\n• ${KNOWLEDGE_BASE.foh.driveProcessor.features.join('\n• ')}\n\n<strong>Topología:</strong> ${KNOWLEDGE_BASE.foh.driveProcessor.topology}\n\n💡 ${KNOWLEDGE_BASE.foh.driveProcessor.proTip}${cta}`, analysisResult);
+        }
+
+        // MODO DE OPERACIÓN ELÉCTRICA
+        if (/(modo.*operaci[oó]n|trif[aá]sica|monof[aá]sica|tres.*fases|fase.*el[eé]ctrica|power.*distribution.*mode)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'operating-mode';
+            const types = KNOWLEDGE_BASE.power.operatingMode.types;
+            return formatBotResponse(`⚡ <strong>Modo de Operación Eléctrica</strong>\n\n${KNOWLEDGE_BASE.power.operatingMode.basic}\n\n<strong>MONOFÁSICA:</strong>\n• ${types.monofasica.description}\n• Ideal: ${types.monofasica.ideal}\n• Limitación: ${types.monofasica.limitation}\n\n<strong>TRIFÁSICA:</strong>\n• ${types.trifasica.description}\n• Ideal: ${types.trifasica.ideal}\n• Ventaja: ${types.trifasica.advantage}\n• Balance: ${types.trifasica.balanceRule}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.power.operatingMode.advanced}\n\n💡 ${KNOWLEDGE_BASE.power.operatingMode.proTip}${cta}`, analysisResult);
+        }
+
+        // CALIBRE CABLE ALTAVOZ
+        if (/(calibre.*cable|cable.*altavoz|awg|speaker.*cable|grosor.*cable)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'speaker-cable';
+            const rec = KNOWLEDGE_BASE.power.speakerCableGauge.recommendations;
+            return formatBotResponse(`🔌 <strong>Calibre Cable Altavoz</strong>\n\n${KNOWLEDGE_BASE.power.speakerCableGauge.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.power.speakerCableGauge.advanced}\n\n<strong>Recomendaciones:</strong>\n• Hasta 15m: ${rec.upTo15m}\n• Hasta 30m: ${rec.upTo30m}\n• Hasta 50m: ${rec.upTo50m}\n• Más de 50m: ${rec.over50m}\n\n⚠️ <strong>Advertencia:</strong> ${KNOWLEDGE_BASE.power.speakerCableGauge.warning}\n\n💡 ${KNOWLEDGE_BASE.power.speakerCableGauge.proTip}${cta}`, analysisResult);
+        }
+
+        // TIERRA FÍSICA VERIFICADA
+        if (/(tierra.*f[ií]sica|ground.*verified|puesta.*tierra|verificar.*tierra|ground.*loop|zumbido.*tierra)/.test(msg) && msg.length < 70) {
+            chatState.lastTopic = 'physical-ground';
+            const ver = KNOWLEDGE_BASE.power.physicalGround.verification;
+            const trouble = KNOWLEDGE_BASE.power.physicalGround.troubleshooting;
+            return formatBotResponse(`⚡ <strong>Tierra Física Verificada</strong>\n\n${KNOWLEDGE_BASE.power.physicalGround.basic}\n\n<strong>Técnico:</strong> ${KNOWLEDGE_BASE.power.physicalGround.advanced}\n\n<strong>Verificación:</strong>\n• Resistencia: ${ver.resistance}\n• Tierra-Neutral: ${ver.groundToNeutral}\n• Sin loops: ${ver.noLoops}\n\n<strong>Solución de problemas:</strong>\n• Zumbido 60Hz: ${trouble.hum60Hz}\n• Tierra flotante: ${trouble.floatingGround}\n• Alta resistencia: ${trouble.highResistance}\n\n💡 ${KNOWLEDGE_BASE.power.physicalGround.proTip}${cta}`, analysisResult);
+        }
+
+        // ===================================
         // GLOSARIO TÉCNICO LIVESYNC PRO (NUEVO)
         // ===================================
         if (typeof LIVESYNC_GLOSSARY !== 'undefined' && LIVESYNC_GLOSSARY !== null) {
