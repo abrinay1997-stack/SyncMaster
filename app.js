@@ -2127,7 +2127,7 @@ function initQuickActions() {
 
             // Manejo especial para manuales
             if (action === 'manuals') {
-                showNotification('📚 Los manuales estarán disponibles próximamente', 'info');
+                window.open('./manual/index.html', '_blank');
                 return;
             }
 
