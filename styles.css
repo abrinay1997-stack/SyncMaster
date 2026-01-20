@@ -433,6 +433,17 @@ body {
     height: 700px;
 }
 
+/* Manual Section */
+.manual-container {
+    width: 100%;
+    height: calc(100vh - 120px);
+    background: var(--bg-card);
+    border: 1px solid var(--border-medium);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
 .chat-sidebar {
     background: var(--bg-card);
     border: 1px solid var(--border-medium);
