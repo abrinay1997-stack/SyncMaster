@@ -2122,9 +2122,12 @@ function generateDidYouMeanMessage(originalQuery, suggestion) {
 function initQuickActions() {
     const actionCards = document.querySelectorAll('.action-card');
 
+    console.log('🔧 initQuickActions() - Found', actionCards.length, 'action cards');
+
     actionCards.forEach(card => {
         card.addEventListener('click', () => {
             const action = card.getAttribute('data-action');
+            console.log('🔘 Action card clicked:', action);
 
             // Convertir 'manuals' a 'manuales' para que coincida con data-section
             const sectionName = action === 'manuals' ? 'manuales' : action;
@@ -2132,7 +2135,10 @@ function initQuickActions() {
             const navLink = document.querySelector(`[data-section="${sectionName}"]`);
 
             if (navLink) {
+                console.log('✅ Navigating to section:', sectionName);
                 navLink.click();
+            } else {
+                console.error('❌ Nav link not found for section:', sectionName);
             }
         });
     });
@@ -2250,24 +2256,36 @@ if (chatSidebar) {
 // MANUAL LIVESYNC PRO
 // ========================================
 function initManual() {
+    console.log('🔧 initManual() called');
+
     if (typeof MANUAL_CONTENT === 'undefined') {
-        console.warn('Manual content not loaded');
+        console.error('❌ MANUAL_CONTENT is undefined - manual-content.js not loaded!');
         return;
     }
+
+    console.log('✅ MANUAL_CONTENT loaded:', MANUAL_CONTENT.parts.length, 'parts');
 
     const manualNav = document.getElementById('manualNav');
     const manualContent = document.getElementById('manualContent');
 
-    if (!manualNav || !manualContent) {
+    if (!manualNav) {
+        console.error('❌ Element #manualNav not found!');
         return;
     }
+
+    if (!manualContent) {
+        console.error('❌ Element #manualContent not found!');
+        return;
+    }
+
+    console.log('✅ DOM elements found, rendering navigation...');
 
     // Render navigation items
     MANUAL_CONTENT.parts.forEach((part, index) => {
         const navItem = document.createElement('div');
         navItem.className = 'manual-nav-item';
         navItem.dataset.partId = part.id;
-        
+
         navItem.innerHTML = `
             <span class="icon">${part.icon}</span>
             <span>${part.title}</span>
@@ -2287,6 +2305,7 @@ function initManual() {
         });
 
         manualNav.appendChild(navItem);
+        console.log('✅ Added nav item:', part.title);
 
         // Load first part by default
         if (index === 0) {
@@ -2294,6 +2313,8 @@ function initManual() {
             loadManualPart(part);
         }
     });
+
+    console.log('✅ Manual initialization complete!');
 }
 
 function loadManualPart(part) {
