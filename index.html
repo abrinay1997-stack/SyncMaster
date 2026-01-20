@@ -180,13 +180,25 @@
         <!-- Manuales Section -->
         <section id="manuales" class="section">
             <div class="container">
-                <div class="manual-container">
-                    <iframe
-                        src="./manual/index.html"
-                        title="Manual LiveSync Pro"
-                        id="manualFrame"
-                        style="width: 100%; height: calc(100vh - 120px); border: none; border-radius: 8px; background: #050505;"
-                    ></iframe>
+                <div class="manual-main-container">
+                    <!-- Manual Sidebar -->
+                    <div class="manual-sidebar">
+                        <h3>📚 Manual LiveSync Pro</h3>
+                        <p style="font-size: 0.85rem; color: var(--slate-500); margin-bottom: 1rem;">Guía completa de uso</p>
+                        <nav class="manual-nav" id="manualNav">
+                            <!-- Populated by JavaScript -->
+                        </nav>
+                    </div>
+
+                    <!-- Manual Content Area -->
+                    <div class="manual-content-area">
+                        <div class="manual-content" id="manualContent">
+                            <div style="text-align: center; padding: 3rem; color: var(--slate-500);">
+                                <i class="fas fa-book" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                <p>Selecciona una sección del menú lateral</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -223,6 +235,7 @@
     <script src="knowledge-base.js"></script>
     <script src="chatbot-data.js"></script>
     <script src="glossary-knowledge.js"></script>
+    <script src="manual-content.js"></script>
     <!-- NLP & AI Engine (Fase 1 + 2) -->
     <script src="nlp-engine.js"></script>
     <script src="context-manager.js"></script>
