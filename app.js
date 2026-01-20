@@ -2125,13 +2125,10 @@ function initQuickActions() {
         card.addEventListener('click', () => {
             const action = card.getAttribute('data-action');
 
-            // Manejo especial para manuales
-            if (action === 'manuals') {
-                window.open('./manual/index.html', '_blank');
-                return;
-            }
+            // Convertir 'manuals' a 'manuales' para que coincida con data-section
+            const sectionName = action === 'manuals' ? 'manuales' : action;
 
-            const navLink = document.querySelector(`[data-section="${action}"]`);
+            const navLink = document.querySelector(`[data-section="${sectionName}"]`);
 
             if (navLink) {
                 navLink.click();
