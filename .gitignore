@@ -3,6 +3,8 @@
 
 # Node modules (si se agregaran dependencias en el futuro)
 node_modules/
+manual/node_modules/
+manual/.git/
 
 # Logs
 *.log
