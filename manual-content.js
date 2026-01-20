@@ -362,3 +362,6 @@ const MANUAL_CONTENT = {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = MANUAL_CONTENT;
 }
+
+// Confirmar que el archivo se cargó
+console.log('✅ manual-content.js loaded successfully -', MANUAL_CONTENT.parts.length, 'parts available');
