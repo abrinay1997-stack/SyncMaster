@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initChat();
     initQuickActions();
+    initManual();
 });
 
 // Navegación entre secciones
@@ -2243,4 +2244,74 @@ if (chatSidebar) {
             chatSidebar.classList.remove('active');
         }
     });
+}
+
+// ========================================
+// MANUAL LIVESYNC PRO
+// ========================================
+function initManual() {
+    if (typeof MANUAL_CONTENT === 'undefined') {
+        console.warn('Manual content not loaded');
+        return;
+    }
+
+    const manualNav = document.getElementById('manualNav');
+    const manualContent = document.getElementById('manualContent');
+
+    if (!manualNav || !manualContent) {
+        return;
+    }
+
+    // Render navigation items
+    MANUAL_CONTENT.parts.forEach((part, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'manual-nav-item';
+        navItem.dataset.partId = part.id;
+        
+        navItem.innerHTML = `
+            <span class="icon">${part.icon}</span>
+            <span>${part.title}</span>
+        `;
+
+        navItem.addEventListener('click', () => {
+            // Remove active from all items
+            document.querySelectorAll('.manual-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active to clicked item
+            navItem.classList.add('active');
+
+            // Load content
+            loadManualPart(part);
+        });
+
+        manualNav.appendChild(navItem);
+
+        // Load first part by default
+        if (index === 0) {
+            navItem.classList.add('active');
+            loadManualPart(part);
+        }
+    });
+}
+
+function loadManualPart(part) {
+    const manualContent = document.getElementById('manualContent');
+    if (!manualContent) return;
+
+    // Build content HTML
+    let contentHTML = '';
+
+    part.sections.forEach(section => {
+        contentHTML += section.content;
+    });
+
+    manualContent.innerHTML = contentHTML;
+
+    // Scroll to top
+    const contentArea = manualContent.closest('.manual-content-area');
+    if (contentArea) {
+        contentArea.scrollTop = 0;
+    }
 }
