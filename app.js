@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initChat();
     initQuickActions();
-    initManual();
 });
 
 // Navegación entre secciones
@@ -2129,16 +2128,20 @@ function initQuickActions() {
             const action = card.getAttribute('data-action');
             console.log('🔘 Action card clicked:', action);
 
-            // Convertir 'manuals' a 'manuales' para que coincida con data-section
-            const sectionName = action === 'manuals' ? 'manuales' : action;
+            // Redirect to manual.livesyncpro.com for manuals button
+            if (action === 'manuals') {
+                window.location.href = 'https://manual.livesyncpro.com';
+                return;
+            }
 
-            const navLink = document.querySelector(`[data-section="${sectionName}"]`);
+            // For other actions, use the existing navigation
+            const navLink = document.querySelector(`[data-section="${action}"]`);
 
             if (navLink) {
-                console.log('✅ Navigating to section:', sectionName);
+                console.log('✅ Navigating to section:', action);
                 navLink.click();
             } else {
-                console.error('❌ Nav link not found for section:', sectionName);
+                console.error('❌ Nav link not found for section:', action);
             }
         });
     });
@@ -2252,87 +2255,3 @@ if (chatSidebar) {
     });
 }
 
-// ========================================
-// MANUAL LIVESYNC PRO
-// ========================================
-function initManual() {
-    console.log('🔧 initManual() called');
-
-    if (typeof MANUAL_CONTENT === 'undefined') {
-        console.error('❌ MANUAL_CONTENT is undefined - manual-content.js not loaded!');
-        return;
-    }
-
-    console.log('✅ MANUAL_CONTENT loaded:', MANUAL_CONTENT.parts.length, 'parts');
-
-    const manualNav = document.getElementById('manualNav');
-    const manualContent = document.getElementById('manualContent');
-
-    if (!manualNav) {
-        console.error('❌ Element #manualNav not found!');
-        return;
-    }
-
-    if (!manualContent) {
-        console.error('❌ Element #manualContent not found!');
-        return;
-    }
-
-    console.log('✅ DOM elements found, rendering navigation...');
-
-    // Render navigation items
-    MANUAL_CONTENT.parts.forEach((part, index) => {
-        const navItem = document.createElement('div');
-        navItem.className = 'manual-nav-item';
-        navItem.dataset.partId = part.id;
-
-        navItem.innerHTML = `
-            <span class="icon">${part.icon}</span>
-            <span>${part.title}</span>
-        `;
-
-        navItem.addEventListener('click', () => {
-            // Remove active from all items
-            document.querySelectorAll('.manual-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Add active to clicked item
-            navItem.classList.add('active');
-
-            // Load content
-            loadManualPart(part);
-        });
-
-        manualNav.appendChild(navItem);
-        console.log('✅ Added nav item:', part.title);
-
-        // Load first part by default
-        if (index === 0) {
-            navItem.classList.add('active');
-            loadManualPart(part);
-        }
-    });
-
-    console.log('✅ Manual initialization complete!');
-}
-
-function loadManualPart(part) {
-    const manualContent = document.getElementById('manualContent');
-    if (!manualContent) return;
-
-    // Build content HTML
-    let contentHTML = '';
-
-    part.sections.forEach(section => {
-        contentHTML += section.content;
-    });
-
-    manualContent.innerHTML = contentHTML;
-
-    // Scroll to top
-    const contentArea = manualContent.closest('.manual-content-area');
-    if (contentArea) {
-        contentArea.scrollTop = 0;
-    }
-}
