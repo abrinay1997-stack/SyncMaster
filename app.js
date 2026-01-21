@@ -2124,12 +2124,15 @@ function initQuickActions() {
     console.log('🔧 initQuickActions() - Found', actionCards.length, 'action cards');
 
     actionCards.forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevenir cualquier comportamiento por defecto
+
             const action = card.getAttribute('data-action');
             console.log('🔘 Action card clicked:', action);
 
             // Redirect to manual.livesyncpro.com for manuals button
             if (action === 'manuals') {
+                console.log('✅ Redirecting to manual.livesyncpro.com');
                 window.location.href = 'https://manual.livesyncpro.com';
                 return;
             }
